@@ -1,3 +1,8 @@
+
 <resources>
     <string name="app_name">Demandi</string>
+    <string name="class_name">Название предмета</string>
+    <string name="create">Создать</string>
+    <string name="create_auditorium">Создать аудиторию</string>
+    <string name="join_auditorium">Присоединиться к аудитории</string>
 </resources>
