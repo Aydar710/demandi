@@ -1,4 +1,4 @@
-package com.aydar.demandi.join
+package com.aydar.demandi.feature.join
 
 import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater

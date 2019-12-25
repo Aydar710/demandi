@@ -1,4 +1,4 @@
-package com.aydar.demandi.create
+package com.aydar.demandi.feature.create
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothServerSocket
@@ -8,9 +8,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProviders
 import com.aydar.demandi.BL_UUID
-import com.aydar.demandi.BaseBluetoothActivity
-import com.aydar.demandi.BaseViewModelFactory
-import com.aydar.demandi.room.TeachersRoomActivity
+import com.aydar.demandi.base.BaseBluetoothActivity
+import com.aydar.demandi.base.BaseViewModelFactory
+import com.aydar.demandi.feature.room.teacher.TeachersRoomActivity
 import kotlinx.android.synthetic.main.activity_create_room.*
 import java.io.IOException
 import java.util.*
@@ -33,9 +33,10 @@ class CreateRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun initViewModel() {
-        teachersViewModel = ViewModelProviders.of(this, BaseViewModelFactory {
-            TeachersViewModel()
-        })[TeachersViewModel::class.java]
+        teachersViewModel = ViewModelProviders.of(this,
+            BaseViewModelFactory {
+                TeachersViewModel()
+            })[TeachersViewModel::class.java]
     }
 
     private fun requestDiscoverable() {

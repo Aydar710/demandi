@@ -4,4 +4,7 @@
     <string name="join_auditorium">Присоединиться к аудитории</string>
     <string name="class_name">Название предмета</string>
     <string name="create">Создать</string>
+    <string name="ask_question">Задать вопрос</string>
+    <string name="question">Вопрос</string>
+    <string name="send">Отправить</string>
 </resources>

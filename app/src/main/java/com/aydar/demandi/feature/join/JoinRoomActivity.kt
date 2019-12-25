@@ -1,4 +1,4 @@
-package com.aydar.demandi.join
+package com.aydar.demandi.feature.join
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
@@ -8,12 +8,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.ViewModelProviders
 import com.aydar.demandi.BL_UUID
-import com.aydar.demandi.BaseBluetoothActivity
-import com.aydar.demandi.BaseViewModelFactory
 import com.aydar.demandi.R
-import com.aydar.demandi.room.StudentsRoomActivity
+import com.aydar.demandi.base.BaseBluetoothActivity
+import com.aydar.demandi.feature.room.student.StudentsRoomActivity
 import kotlinx.android.synthetic.main.activity_join_room.*
 import java.io.IOException
 import java.util.*
@@ -21,8 +19,6 @@ import java.util.*
 class JoinRoomActivity : BaseBluetoothActivity() {
 
     private lateinit var adapter: JoinAdapter
-
-    private lateinit var studentsViewModel: StudentsViewModel
 
     private val receiver = object : BroadcastReceiver() {
 
@@ -34,7 +30,6 @@ class JoinRoomActivity : BaseBluetoothActivity() {
                     val device: BluetoothDevice =
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
                     val deviceName = device.name
-                    val deviceHardwareAddress = device.address // MAC address
                     if (deviceName != null) {
                         adapter.addDevice(device)
                     }
@@ -88,14 +83,9 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         rv_rooms.adapter = adapter
     }
 
-    private fun initViewModel(teachersSocket: BluetoothSocket) {
-        studentsViewModel = ViewModelProviders.of(this, BaseViewModelFactory {
-            StudentsViewModel(teachersSocket)
-        })[StudentsViewModel::class.java]
-    }
-
     private fun openStudentsRoomActivity() {
-        startActivity(Intent(this, StudentsRoomActivity::class.java))
+        val intent = Intent(this, StudentsRoomActivity::class.java)
+        startActivity(intent)
     }
 
     private inner class ConnectThread(device: BluetoothDevice) : Thread() {
@@ -130,7 +120,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
 
         private fun manageMyConnectedSocket(socket: BluetoothSocket) {
             runOnUiThread {
-                initViewModel(socket)
+                SocketHolder.teachersSocket = socket
                 openStudentsRoomActivity()
             }
             cancel()

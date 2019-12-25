@@ -1,4 +1,4 @@
-package com.aydar.demandi.create
+package com.aydar.demandi.feature.create
 
 import android.bluetooth.BluetoothSocket
 import androidx.lifecycle.ViewModel

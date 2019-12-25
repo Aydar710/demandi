@@ -19,10 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".room.TeachersRoomActivity"></activity>
-        <activity android:name=".join.JoinRoomActivity" />
-        <activity android:name=".create.CreateRoomActivity" />
-        <activity android:name=".MainActivity">
+
+        <activity android:name="com.aydar.demandi.feature.room.teacher.TeachersRoomActivity" />
+        <activity android:name="com.aydar.demandi.feature.room.student.StudentsRoomActivity" />
+        <activity android:name="com.aydar.demandi.feature.join.JoinRoomActivity" />
+        <activity android:name="com.aydar.demandi.feature.create.CreateRoomActivity" />
+        <activity android:name=".feature.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

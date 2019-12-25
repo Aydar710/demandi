@@ -1,4 +1,4 @@
-package com.aydar.demandi
+package com.aydar.demandi.base
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
