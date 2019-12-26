@@ -6,21 +6,16 @@ import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
 import com.aydar.demandi.MY_UUID_INSECURE
+import com.aydar.demandi.feature.room.common.MESSAGE_TOAST
+import com.aydar.demandi.feature.room.common.MESSAGE_WRITE
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
 
-
-// Defines several constants used when transmitting messages between the
-// service and the UI.
-const val MESSAGE_READ: Int = 0
-const val MESSAGE_WRITE: Int = 1
-const val MESSAGE_TOAST: Int = 2
-
 class StudentBluetoothService() {
 
-    private lateinit var handler: Handler
+    lateinit var handler: Handler
 
     private var mConnectThread: ConnectThread? = null
 
@@ -112,23 +107,7 @@ class StudentBluetoothService() {
         private val mmBuffer: ByteArray = ByteArray(1024)
 
         override fun run() {
-            var numBytes: Int // bytes returned from read()
 
-            while (true) {
-                numBytes = try {
-                    mmInStream.read(mmBuffer)
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    continue
-                }
-
-                // Send the obtained bytes to the UI activity.
-                val readMsg = handler.obtainMessage(
-                    MESSAGE_READ, numBytes, -1,
-                    mmBuffer
-                )
-                readMsg.sendToTarget()
-            }
         }
 
         // Call this from the main activity to send data to the remote device.
@@ -148,6 +127,10 @@ class StudentBluetoothService() {
                 handler.sendMessage(writeErrorMsg)
                 return
             }
+
+            val writtenMsg = handler.obtainMessage(MESSAGE_WRITE, text)
+
+            handler.sendMessage(writtenMsg)
         }
 
         // Call this method from the main activity to shut down the connection.

@@ -66,10 +66,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
                         BluetoothDevice.BOND_BONDED -> {
                             //ConnectThread(device).startServer()
                             //TestSocketHolder.bluetoothConnectionService?.startClient(device)
-                            ServiceHolder.studentService.startStudentsRoomActivity = {
-                                startStudentsRoomActivity()
-                            }
-                            ServiceHolder.studentService.startConnecting(device)
+                            connectToDevice(device)
                         }
                         BluetoothDevice.BOND_BONDING -> {
                             print("")
@@ -82,13 +79,24 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         registerReceiver(receiver, filter)
     }
 
+    private fun connectToDevice(device: BluetoothDevice) {
+        ServiceHolder.studentService.startStudentsRoomActivity = {
+            startStudentsRoomActivity()
+        }
+        ServiceHolder.studentService.startConnecting(device)
+    }
+
     private fun startStudentsRoomActivity() {
         startActivity(Intent(this, StudentRoomActivity::class.java))
     }
 
     private fun initRecycler() {
         adapter = JoinAdapter {
-            it.createBond()
+            if (it.bondState == BluetoothDevice.BOND_BONDED) {
+                connectToDevice(it)
+            } else {
+                it.createBond()
+            }
         }
         rv_rooms.adapter = adapter
     }

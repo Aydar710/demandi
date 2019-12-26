@@ -5,16 +5,11 @@ import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.os.Handler
 import com.aydar.demandi.MY_UUID_INSECURE
+import com.aydar.demandi.feature.room.common.MESSAGE_READ
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
-
-// Defines several constants used when transmitting messages between the
-// service and the UI.
-const val MESSAGE_READ: Int = 0
-const val MESSAGE_WRITE: Int = 1
-const val MESSAGE_TOAST: Int = 2
 
 class TeacherBluetoothService() {
 
@@ -57,18 +52,17 @@ class TeacherBluetoothService() {
 
             var socket: BluetoothSocket? = null
 
-            try {
-                // This is a blocking call and will only return on a
-                // successful connection or an exception
+            while (true) {
+                try {
+                    socket = mmServerSocket?.accept()
 
-                socket = mmServerSocket!!.accept()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
 
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-
-            if (socket != null) {
-                manageConnectedSocket(socket)
+                if (socket != null) {
+                    manageConnectedSocket(socket)
+                }
             }
         }
 
@@ -105,7 +99,8 @@ class TeacherBluetoothService() {
                     inStream.read(buffer)
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    continue
+                    cancel()
+                    break
                 }
 
                 val incomingMessage = String(buffer, 0, numBytes)

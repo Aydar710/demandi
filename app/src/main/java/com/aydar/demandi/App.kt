@@ -10,7 +10,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        TestSocketHolder.bluetoothConnectionService = BluetoothConnectionService()
         ServiceHolder.studentService = StudentBluetoothService()
         ServiceHolder.teacherService = TeacherBluetoothService()
     }
