@@ -1,4 +1,4 @@
-package com.aydar.demandi.feature.room.student
+package com.aydar.demandi.feature.room.common
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,9 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_question.view.*
 
 class QuestionsAdapter :
-    ListAdapter<Question, QuestionsAdapter.QuestionViewHolder>(QuestionDiffCallback()) {
+    ListAdapter<Question, QuestionsAdapter.QuestionViewHolder>(
+        QuestionDiffCallback()
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionViewHolder {
         val view =

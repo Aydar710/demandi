@@ -6,18 +6,15 @@ import android.bluetooth.BluetoothSocket
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.ViewModelProviders
 import com.aydar.demandi.BL_UUID
 import com.aydar.demandi.base.BaseBluetoothActivity
-import com.aydar.demandi.base.BaseViewModelFactory
+import com.aydar.demandi.base.ServiceHolder
 import com.aydar.demandi.feature.room.teacher.TeachersRoomActivity
 import kotlinx.android.synthetic.main.activity_create_room.*
 import java.io.IOException
 import java.util.*
 
 class CreateRoomActivity : BaseBluetoothActivity() {
-
-    private lateinit var teachersViewModel: TeachersViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,17 +23,13 @@ class CreateRoomActivity : BaseBluetoothActivity() {
         requestDiscoverable()
 
         btn_create.setOnClickListener {
-            AcceptThread().start()
+            ServiceHolder.teacherService.startServer()
+            startTeacherRoomActivity()
         }
-
-        initViewModel()
     }
 
-    private fun initViewModel() {
-        teachersViewModel = ViewModelProviders.of(this,
-            BaseViewModelFactory {
-                TeachersViewModel()
-            })[TeachersViewModel::class.java]
+    private fun startTeacherRoomActivity() {
+        startActivity(Intent(this, TeachersRoomActivity::class.java))
     }
 
     private fun requestDiscoverable() {
@@ -48,6 +41,7 @@ class CreateRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun openTeachersRoomActivity() {
+        val checkingSocket = ServiceHolder.studentSocket
         startActivity(Intent(this, TeachersRoomActivity::class.java))
     }
 
@@ -68,7 +62,6 @@ class CreateRoomActivity : BaseBluetoothActivity() {
                     mmServerSocket?.accept()
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    Log.e("T", "Socket's accept() method failed", e)
                     shouldLoop = false
                     null
                 }
@@ -89,8 +82,10 @@ class CreateRoomActivity : BaseBluetoothActivity() {
 
         private fun manageMyConnectedSocket(bluetoothSocket: BluetoothSocket) {
             runOnUiThread {
-                teachersViewModel.addStudent(bluetoothSocket)
-                cancel()
+                ServiceHolder.studentSocket = bluetoothSocket
+                print("")
+                //TODO: Don't close the socket
+                //cancel()
                 openTeachersRoomActivity()
             }
         }

@@ -11,7 +11,8 @@ import android.util.Log
 import com.aydar.demandi.BL_UUID
 import com.aydar.demandi.R
 import com.aydar.demandi.base.BaseBluetoothActivity
-import com.aydar.demandi.feature.room.student.StudentsRoomActivity
+import com.aydar.demandi.base.ServiceHolder
+import com.aydar.demandi.feature.room.student.StudentRoomActivity
 import kotlinx.android.synthetic.main.activity_join_room.*
 import java.io.IOException
 import java.util.*
@@ -27,9 +28,9 @@ class JoinRoomActivity : BaseBluetoothActivity() {
                 BluetoothDevice.ACTION_FOUND -> {
                     // Discovery has found a device. Get the BluetoothDevice
                     // object and its info from the Intent.
-                    val device: BluetoothDevice =
+                    val device: BluetoothDevice? =
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    val deviceName = device.name
+                    val deviceName = device?.name
                     if (deviceName != null) {
                         adapter.addDevice(device)
                     }
@@ -58,12 +59,17 @@ class JoinRoomActivity : BaseBluetoothActivity() {
             override fun onReceive(context: Context?, intent: Intent) {
                 val action = intent.action
                 if (action == BluetoothDevice.ACTION_BOND_STATE_CHANGED) {
-                    val device: BluetoothDevice =
+                    val device: BluetoothDevice? =
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
 
-                    when (device.bondState) {
+                    when (device?.bondState) {
                         BluetoothDevice.BOND_BONDED -> {
-                            ConnectThread(device).start()
+                            //ConnectThread(device).startServer()
+                            //TestSocketHolder.bluetoothConnectionService?.startClient(device)
+                            ServiceHolder.studentService.startStudentsRoomActivity = {
+                                startStudentsRoomActivity()
+                            }
+                            ServiceHolder.studentService.startConnecting(device)
                         }
                         BluetoothDevice.BOND_BONDING -> {
                             print("")
@@ -76,6 +82,10 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         registerReceiver(receiver, filter)
     }
 
+    private fun startStudentsRoomActivity() {
+        startActivity(Intent(this, StudentRoomActivity::class.java))
+    }
+
     private fun initRecycler() {
         adapter = JoinAdapter {
             it.createBond()
@@ -84,7 +94,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun openStudentsRoomActivity() {
-        val intent = Intent(this, StudentsRoomActivity::class.java)
+        val intent = Intent(this, StudentRoomActivity::class.java)
         startActivity(intent)
     }
 
@@ -120,10 +130,10 @@ class JoinRoomActivity : BaseBluetoothActivity() {
 
         private fun manageMyConnectedSocket(socket: BluetoothSocket) {
             runOnUiThread {
-                SocketHolder.teachersSocket = socket
                 openStudentsRoomActivity()
             }
-            cancel()
+            //TODO: Don't close the socket
+            //cancel()
         }
     }
 

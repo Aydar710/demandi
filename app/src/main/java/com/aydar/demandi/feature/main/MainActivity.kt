@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //startActivity(Intent(this, StudentsRoomActivity::class.java))
+        //startActivity(Intent(this, StudentRoomActivity::class.java))
 
         btn_create.setOnClickListener {
             startActivity(Intent(this, CreateRoomActivity::class.java))

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 class TeachersViewModel : ViewModel() {
 
     private val students = mutableListOf<BluetoothSocket>()
+    
 
     fun addStudent(socket: BluetoothSocket) {
         students.add(socket)
