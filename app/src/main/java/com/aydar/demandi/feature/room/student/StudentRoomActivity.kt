@@ -1,12 +1,16 @@
 package com.aydar.demandi.feature.room.student
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.aydar.demandi.EXTRA_ROOM_NAME
 import com.aydar.demandi.base.BaseBluetoothActivity
 import com.aydar.demandi.base.BaseViewModelFactory
 import com.aydar.demandi.base.ServiceHolder
@@ -16,6 +20,7 @@ import com.aydar.demandi.feature.room.common.QuestionsAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
 import kotlinx.android.synthetic.main.content_students_room.*
+
 
 class StudentRoomActivity : BaseBluetoothActivity() {
 
@@ -29,45 +34,38 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         super.onCreate(savedInstanceState)
         setContentView(com.aydar.demandi.R.layout.activity_students_room)
 
+        tv_send.visibility = View.INVISIBLE
+        initToolbar()
+
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_ask)
 
-        sheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        sheetBehavior.setBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             var isDragging = false
-            var isSettled = false
 
             @SuppressLint("SwitchIntDef")
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+
                 when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                    }
                     BottomSheetBehavior.STATE_EXPANDED -> {
-                        isDragging = false
-                        if (isSettled){
-                            rv_questions.visibility = View.GONE
-                        }
-                        isSettled = false
+                        tv_send.visibility = View.VISIBLE
                     }
-
                     BottomSheetBehavior.STATE_COLLAPSED -> {
-                        rv_questions.visibility = View.VISIBLE
-                        isDragging = false
+                        if (isDragging) {
+                            tv_send.visibility = View.INVISIBLE
+                        }
                     }
-
                     BottomSheetBehavior.STATE_DRAGGING -> {
                         isDragging = true
                     }
-
                     BottomSheetBehavior.STATE_SETTLING -> {
-                        isSettled = true
-                    }
-
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        rv_questions.visibility = View.VISIBLE
                     }
                 }
             }
 
-            override fun onSlide(p0: View, p1: Float) {
-
-            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
         initClickListeners()
@@ -76,6 +74,12 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         initRecycler()
         initViewModel()
         initObservers()
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(inc_toolbar as Toolbar)
+        val roomName = intent.getStringExtra(EXTRA_ROOM_NAME)
+        supportActionBar?.title = roomName
     }
 
     private fun initHandler() {
@@ -107,11 +111,15 @@ class StudentRoomActivity : BaseBluetoothActivity() {
             toggleBottomSheet()
         }
 
-        btn_test_send.setOnClickListener {
+        tv_send.setOnClickListener {
             val questionText = et_question.text.toString()
-            sendQuestion(questionText)
-            toggleBottomSheet()
-            et_question.text?.clear()
+            if (questionText.isNotEmpty()) {
+                hideKeyboard {
+                    toggleBottomSheet()
+                }
+                sendQuestion(questionText)
+                et_question.text?.clear()
+            }
         }
     }
 
@@ -129,8 +137,31 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     private fun toggleBottomSheet() {
         if (sheetBehavior.state !== BottomSheetBehavior.STATE_EXPANDED) {
             sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            tv_send.visibility = View.VISIBLE
         } else {
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            tv_send.visibility = View.INVISIBLE
         }
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        var view = currentFocus
+        if (view == null) {
+            view = View(this)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun hideKeyboard(hidden: () -> Unit) {
+        val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        var view = currentFocus
+        if (view == null) {
+            view = View(this)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        Handler().postDelayed({
+            hidden.invoke()
+        }, 100)
     }
 }

@@ -1,5 +1,6 @@
 package com.aydar.demandi.feature.join
 
+import android.app.ProgressDialog
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.BroadcastReceiver
@@ -7,11 +8,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import androidx.appcompat.widget.Toolbar
 import com.aydar.demandi.BL_UUID
+import com.aydar.demandi.EXTRA_ROOM_NAME
 import com.aydar.demandi.R
+import com.aydar.demandi.ROOM_NAME_PREFIX
 import com.aydar.demandi.base.BaseBluetoothActivity
 import com.aydar.demandi.base.ServiceHolder
+import com.aydar.demandi.feature.room.common.MESSAGE_HIDE_DIALOG
+import com.aydar.demandi.feature.room.common.MESSAGE_SHOW_DIALOG
 import com.aydar.demandi.feature.room.student.StudentRoomActivity
 import kotlinx.android.synthetic.main.activity_join_room.*
 import java.io.IOException
@@ -20,6 +27,8 @@ import java.util.*
 class JoinRoomActivity : BaseBluetoothActivity() {
 
     private lateinit var adapter: JoinAdapter
+
+    private lateinit var progressDialog : ProgressDialog
 
     private val receiver = object : BroadcastReceiver() {
 
@@ -32,7 +41,9 @@ class JoinRoomActivity : BaseBluetoothActivity() {
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
                     val deviceName = device?.name
                     if (deviceName != null) {
-                        adapter.addDevice(device)
+                        if (deviceName.startsWith(ROOM_NAME_PREFIX)) {
+                            adapter.addDevice(device)
+                        }
                     }
                 }
             }
@@ -43,10 +54,37 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_join_room)
 
+        setSupportActionBar(inc_toolbar as Toolbar)
         initRecycler()
+        initProgressHandler()
         registerFoundReceiver()
         registerBondStateReceiver()
-        bluetoothAdapter?.startDiscovery()
+        bluetoothAdapter!!.startDiscovery()
+    }
+
+    private fun initProgressHandler() {
+        ServiceHolder.studentService.progressHandler = Handler {
+            when(it.what){
+                MESSAGE_SHOW_DIALOG -> {
+                    showProgress();
+                    true
+                }
+                MESSAGE_HIDE_DIALOG -> {
+                    hideProgress()
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun showProgress(){
+        progressDialog = ProgressDialog.show(this,"Соединение"
+            ,"Пожалуйста, подождите...",true)
+    }
+
+    private fun hideProgress(){
+        progressDialog.dismiss()
     }
 
     private fun registerFoundReceiver() {
@@ -64,8 +102,6 @@ class JoinRoomActivity : BaseBluetoothActivity() {
 
                     when (device?.bondState) {
                         BluetoothDevice.BOND_BONDED -> {
-                            //ConnectThread(device).startServer()
-                            //TestSocketHolder.bluetoothConnectionService?.startClient(device)
                             connectToDevice(device)
                         }
                         BluetoothDevice.BOND_BONDING -> {
@@ -81,13 +117,15 @@ class JoinRoomActivity : BaseBluetoothActivity() {
 
     private fun connectToDevice(device: BluetoothDevice) {
         ServiceHolder.studentService.startStudentsRoomActivity = {
-            startStudentsRoomActivity()
+            startStudentsRoomActivity(device.name.drop(ROOM_NAME_PREFIX.length))
         }
         ServiceHolder.studentService.startConnecting(device)
     }
 
-    private fun startStudentsRoomActivity() {
-        startActivity(Intent(this, StudentRoomActivity::class.java))
+    private fun startStudentsRoomActivity(roomName: String) {
+        val intent = Intent(this, StudentRoomActivity::class.java)
+        intent.putExtra(EXTRA_ROOM_NAME, roomName)
+        startActivity(intent)
     }
 
     private fun initRecycler() {

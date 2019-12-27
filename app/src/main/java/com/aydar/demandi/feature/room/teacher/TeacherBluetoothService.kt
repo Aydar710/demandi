@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.os.Handler
-import com.aydar.demandi.MY_UUID_INSECURE
+import com.aydar.demandi.UUID_INSECURE
 import com.aydar.demandi.feature.room.common.MESSAGE_READ
 import java.io.IOException
 import java.io.InputStream
@@ -40,7 +40,7 @@ class TeacherBluetoothService() {
             try {
                 tmp = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(
                     "Demandi",
-                    UUID.fromString(MY_UUID_INSECURE)
+                    UUID.fromString(UUID_INSECURE)
                 )
             } catch (e: IOException) {
             }
@@ -75,7 +75,6 @@ class TeacherBluetoothService() {
                 e.printStackTrace()
             }
         }
-
 
         fun cancel() {
             try {

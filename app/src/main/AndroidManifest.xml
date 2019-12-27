@@ -23,7 +23,9 @@
 
         <activity android:name="com.aydar.demandi.feature.room.teacher.TeachersRoomActivity" />
         <activity android:name="com.aydar.demandi.feature.room.student.StudentRoomActivity" />
-        <activity android:name="com.aydar.demandi.feature.join.JoinRoomActivity" />
+        <activity
+            android:name="com.aydar.demandi.feature.join.JoinRoomActivity"
+            android:label="@string/choose_auditorium" />
         <activity android:name="com.aydar.demandi.feature.create.CreateRoomActivity" />
         <activity android:name=".feature.main.MainActivity">
             <intent-filter>

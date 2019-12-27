@@ -3,8 +3,10 @@ package com.aydar.demandi.feature.room.teacher
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.aydar.demandi.EXTRA_ROOM_NAME
 import com.aydar.demandi.R
 import com.aydar.demandi.base.BaseViewModelFactory
 import com.aydar.demandi.base.ServiceHolder
@@ -22,10 +24,18 @@ class TeachersRoomActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teachers_room)
 
+        initToolbar()
+
         initViewModel()
         initRecycler()
         initObservers()
         initHandler()
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(inc_toolbar as Toolbar)
+        val roomName = intent.getStringExtra(EXTRA_ROOM_NAME)
+        supportActionBar?.title = roomName
     }
 
     private fun initObservers() {

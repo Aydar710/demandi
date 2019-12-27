@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aydar.demandi.R
+import com.aydar.demandi.ROOM_NAME_PREFIX
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_room.view.*
 
@@ -44,7 +45,7 @@ class JoinAdapter(private val onDeviceClicked: (BluetoothDevice) -> Unit) :
 
         fun bind(device: BluetoothDevice) {
             with(containerView) {
-                tv_name.text = device.name
+                tv_name.text = device.name.drop(ROOM_NAME_PREFIX.length)
             }
 
             containerView.setOnClickListener {

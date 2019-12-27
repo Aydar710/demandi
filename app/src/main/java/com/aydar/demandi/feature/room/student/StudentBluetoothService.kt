@@ -5,7 +5,9 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
-import com.aydar.demandi.MY_UUID_INSECURE
+import com.aydar.demandi.UUID_INSECURE
+import com.aydar.demandi.feature.room.common.MESSAGE_HIDE_DIALOG
+import com.aydar.demandi.feature.room.common.MESSAGE_SHOW_DIALOG
 import com.aydar.demandi.feature.room.common.MESSAGE_TOAST
 import com.aydar.demandi.feature.room.common.MESSAGE_WRITE
 import java.io.IOException
@@ -17,18 +19,20 @@ class StudentBluetoothService() {
 
     lateinit var handler: Handler
 
+    lateinit var progressHandler : Handler
+
     private var mConnectThread: ConnectThread? = null
 
     private lateinit var mConnectedThread: ConnectedThread
 
     lateinit var startStudentsRoomActivity: () -> Unit
 
-
     constructor(handler: Handler) : this() {
         this.handler = handler
     }
 
     fun startConnecting(device: BluetoothDevice) {
+        progressHandler.sendEmptyMessage(MESSAGE_SHOW_DIALOG)
         mConnectThread = ConnectThread(device)
         mConnectThread!!.start()
     }
@@ -51,7 +55,7 @@ class StudentBluetoothService() {
             // given BluetoothDevice
             try {
                 tmp =
-                    mmDevice!!.createRfcommSocketToServiceRecord(UUID.fromString(MY_UUID_INSECURE))
+                    mmDevice!!.createRfcommSocketToServiceRecord(UUID.fromString(UUID_INSECURE))
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -105,6 +109,10 @@ class StudentBluetoothService() {
         private val mmInStream: InputStream = mmSocket.inputStream
         private val mmOutStream: OutputStream = mmSocket.outputStream
         private val mmBuffer: ByteArray = ByteArray(1024)
+
+        init {
+            progressHandler.sendEmptyMessage(MESSAGE_HIDE_DIALOG)
+        }
 
         override fun run() {
 

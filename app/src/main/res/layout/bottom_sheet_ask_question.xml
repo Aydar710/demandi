@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:behavior_hideable="false"
+    android:background="@android:color/white"
     app:behavior_peekHeight="50dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -13,18 +14,20 @@
         android:id="@+id/iv_bottom_sheet_header"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:alpha="0.6"
         android:src="@drawable/rounded_header"
+        android:background="@android:color/transparent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_ask"
+        android:id="@+id/tv_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ask_question"
-        android:textColor="@color/colorAccent"
+        android:text="@string/send"
+        android:textColor="@android:color/white"
+        android:visibility="visible"
+        android:layout_marginTop="6dp"
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -40,24 +43,12 @@
         android:hint="@string/question"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_ask">
+        app:layout_constraintTop_toBottomOf="@id/tv_send">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
-
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_test_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="@string/send"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
