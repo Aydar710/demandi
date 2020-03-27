@@ -1,11 +1,11 @@
-package com.aydar.demandi.feature.room.teacher
+package com.aydar.demandi.common.base.bluetooth
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.os.Handler
-import com.aydar.demandi.UUID_INSECURE
-import com.aydar.demandi.feature.room.common.MESSAGE_READ
+import com.aydar.demandi.common.base.MESSAGE_READ
+import com.aydar.demandi.common.base.UUID_INSECURE
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream

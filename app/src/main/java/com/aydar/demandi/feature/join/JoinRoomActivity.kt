@@ -15,10 +15,10 @@ import com.aydar.demandi.BL_UUID
 import com.aydar.demandi.EXTRA_ROOM_NAME
 import com.aydar.demandi.R
 import com.aydar.demandi.ROOM_NAME_PREFIX
-import com.aydar.demandi.base.BaseBluetoothActivity
-import com.aydar.demandi.base.ServiceHolder
-import com.aydar.demandi.feature.room.common.MESSAGE_HIDE_DIALOG
-import com.aydar.demandi.feature.room.common.MESSAGE_SHOW_DIALOG
+import com.aydar.demandi.common.base.BaseBluetoothActivity
+import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.common.base.MESSAGE_HIDE_DIALOG
+import com.aydar.demandi.common.base.MESSAGE_SHOW_DIALOG
 import com.aydar.demandi.feature.room.student.StudentRoomActivity
 import kotlinx.android.synthetic.main.activity_join_room.*
 import java.io.IOException

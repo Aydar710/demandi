@@ -1,4 +1,4 @@
-package com.aydar.demandi.base
+package com.aydar.demandi.common.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

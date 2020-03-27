@@ -1,2 +1,4 @@
 include ':app'
 rootProject.name='Demandi'
+include ':common'
+include ':feature-create-room'

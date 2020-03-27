@@ -8,10 +8,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.aydar.demandi.EXTRA_ROOM_NAME
 import com.aydar.demandi.R
-import com.aydar.demandi.base.BaseViewModelFactory
-import com.aydar.demandi.base.ServiceHolder
+import com.aydar.demandi.common.base.BaseViewModelFactory
+import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.data.Question
-import com.aydar.demandi.feature.room.common.MESSAGE_READ
+import com.aydar.demandi.common.base.MESSAGE_READ
 import com.aydar.demandi.feature.room.common.QuestionsAdapter
 import kotlinx.android.synthetic.main.activity_teachers_room.*
 

@@ -11,11 +11,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.aydar.demandi.EXTRA_ROOM_NAME
-import com.aydar.demandi.base.BaseBluetoothActivity
-import com.aydar.demandi.base.BaseViewModelFactory
-import com.aydar.demandi.base.ServiceHolder
+import com.aydar.demandi.common.base.BaseBluetoothActivity
+import com.aydar.demandi.common.base.BaseViewModelFactory
+import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.data.Question
-import com.aydar.demandi.feature.room.common.MESSAGE_WRITE
+import com.aydar.demandi.common.base.MESSAGE_WRITE
 import com.aydar.demandi.feature.room.common.QuestionsAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*

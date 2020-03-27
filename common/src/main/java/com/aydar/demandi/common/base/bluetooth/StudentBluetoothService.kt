@@ -1,15 +1,11 @@
-package com.aydar.demandi.feature.room.student
+package com.aydar.demandi.common.base.bluetooth
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
-import com.aydar.demandi.UUID_INSECURE
-import com.aydar.demandi.feature.room.common.MESSAGE_HIDE_DIALOG
-import com.aydar.demandi.feature.room.common.MESSAGE_SHOW_DIALOG
-import com.aydar.demandi.feature.room.common.MESSAGE_TOAST
-import com.aydar.demandi.feature.room.common.MESSAGE_WRITE
+import com.aydar.demandi.common.base.*
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -19,7 +15,7 @@ class StudentBluetoothService() {
 
     lateinit var handler: Handler
 
-    lateinit var progressHandler : Handler
+    lateinit var progressHandler: Handler
 
     private var mConnectThread: ConnectThread? = null
 
