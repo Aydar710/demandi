@@ -1,4 +1,4 @@
-package com.aydar.demandi.feature.room.student
+package com.aydar.demandi.featurerooms.student
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -10,17 +10,17 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.aydar.demandi.EXTRA_ROOM_NAME
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.BaseViewModelFactory
+import com.aydar.demandi.common.base.EXTRA_ROOM_NAME
 import com.aydar.demandi.common.base.MESSAGE_WRITE
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.data.model.Question
-import com.aydar.demandi.feature.room.common.QuestionsAdapter
+import com.aydar.demandi.featurerooms.R
+import com.aydar.demandi.featurerooms.common.QuestionsAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.android.synthetic.main.activity_teachers_room.*
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
-import kotlinx.android.synthetic.main.content_students_room.*
-
 
 class StudentRoomActivity : BaseBluetoothActivity() {
 
@@ -32,7 +32,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.aydar.demandi.R.layout.activity_students_room)
+        setContentView(R.layout.activity_students_room)
 
         tv_send.visibility = View.INVISIBLE
         initToolbar()

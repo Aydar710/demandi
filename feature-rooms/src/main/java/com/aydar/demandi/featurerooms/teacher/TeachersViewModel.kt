@@ -1,11 +1,14 @@
-package com.aydar.demandi.feature.room.student
+package com.aydar.demandi.featurerooms.teacher
 
+import android.bluetooth.BluetoothSocket
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.aydar.demandi.data.model.Question
 
-class StudentsViewModel : ViewModel() {
+class TeachersViewModel : ViewModel() {
+
+    private val students = mutableListOf<BluetoothSocket>()
 
     private val _questionsLiveData = MutableLiveData<List<Question>>()
 
@@ -14,6 +17,10 @@ class StudentsViewModel : ViewModel() {
 
     init {
         _questionsLiveData.value = listOf()
+    }
+
+    fun addStudent(socket: BluetoothSocket) {
+        students.add(socket)
     }
 
     fun addQuestion(question: Question) {

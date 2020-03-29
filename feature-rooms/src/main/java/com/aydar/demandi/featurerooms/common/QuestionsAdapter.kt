@@ -1,4 +1,4 @@
-package com.aydar.demandi.feature.room.common
+package com.aydar.demandi.featurerooms.common
 
 import android.view.LayoutInflater
 import android.view.View

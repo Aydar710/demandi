@@ -2,10 +2,10 @@ package com.aydar.demandi.router
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import com.aydar.demandi.feature.room.student.StudentRoomActivity
-import com.aydar.demandi.feature.room.teacher.TeachersRoomActivity
 import com.aydar.demandi.featurecreateroom.CreateRoomActivity
 import com.aydar.demandi.featurecreateroom.EXTRA_ROOM_NAME
+import com.aydar.demandi.featurerooms.student.StudentRoomActivity
+import com.aydar.demandi.featurerooms.teacher.TeachersRoomActivity
 
 class AppRouterImpl : AppRouter {
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".feature.room.teacher.TeachersRoomActivity">
+    tools:context="com.aydar.demandi.featurerooms.teacher.TeachersRoomActivity">
 
     <include
         android:id="@+id/inc_toolbar"

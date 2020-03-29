@@ -1,4 +1,4 @@
-package com.aydar.demandi.feature.room.teacher
+package com.aydar.demandi.featurerooms.teacher
 
 import android.os.Bundle
 import android.os.Handler
@@ -6,13 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.aydar.demandi.EXTRA_ROOM_NAME
-import com.aydar.demandi.R
 import com.aydar.demandi.common.base.BaseViewModelFactory
+import com.aydar.demandi.common.base.EXTRA_ROOM_NAME
 import com.aydar.demandi.common.base.MESSAGE_READ
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.data.model.Question
-import com.aydar.demandi.feature.room.common.QuestionsAdapter
+import com.aydar.demandi.featurerooms.R
+import com.aydar.demandi.featurerooms.common.QuestionsAdapter
 import kotlinx.android.synthetic.main.activity_teachers_room.*
 
 class TeachersRoomActivity : AppCompatActivity() {
