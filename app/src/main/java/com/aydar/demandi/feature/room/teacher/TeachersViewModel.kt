@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothSocket
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aydar.demandi.data.Question
+import com.aydar.demandi.data.model.Question
 
 class TeachersViewModel : ViewModel() {
 

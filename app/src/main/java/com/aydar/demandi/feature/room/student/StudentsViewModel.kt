@@ -3,7 +3,7 @@ package com.aydar.demandi.feature.room.student
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aydar.demandi.data.Question
+import com.aydar.demandi.data.model.Question
 
 class StudentsViewModel : ViewModel() {
 

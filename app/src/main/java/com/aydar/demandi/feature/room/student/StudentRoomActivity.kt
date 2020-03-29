@@ -13,9 +13,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.aydar.demandi.EXTRA_ROOM_NAME
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.BaseViewModelFactory
-import com.aydar.demandi.common.base.bluetooth.ServiceHolder
-import com.aydar.demandi.data.Question
 import com.aydar.demandi.common.base.MESSAGE_WRITE
+import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.feature.room.common.QuestionsAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
@@ -86,7 +86,8 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         ServiceHolder.studentService.handler = Handler {
             when (it.what) {
                 MESSAGE_WRITE -> {
-                    val question = Question(it.obj as String)
+                    val question =
+                        Question(it.obj as String)
                     studentViewModel.addQuestion(question)
                     true
                 }

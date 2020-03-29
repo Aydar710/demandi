@@ -1,7 +1,7 @@
 package com.aydar.demandi.feature.room.common
 
 import androidx.recyclerview.widget.DiffUtil
-import com.aydar.demandi.data.Question
+import com.aydar.demandi.data.model.Question
 
 class QuestionDiffCallback : DiffUtil.ItemCallback<Question>() {
 
