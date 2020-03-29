@@ -1,4 +1,4 @@
-package com.aydar.demandi.feature.join
+package com.aydar.demandi.featurejoinroom
 
 import android.bluetooth.BluetoothDevice
 import androidx.recyclerview.widget.DiffUtil

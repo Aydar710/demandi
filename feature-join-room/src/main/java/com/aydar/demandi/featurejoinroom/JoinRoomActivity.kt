@@ -1,4 +1,4 @@
-package com.aydar.demandi.feature.join
+package com.aydar.demandi.featurejoinroom
 
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothDevice
@@ -11,24 +11,20 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.appcompat.widget.Toolbar
-import com.aydar.demandi.BL_UUID
-import com.aydar.demandi.EXTRA_ROOM_NAME
-import com.aydar.demandi.R
-import com.aydar.demandi.ROOM_NAME_PREFIX
-import com.aydar.demandi.common.base.BaseBluetoothActivity
+import com.aydar.demandi.common.base.*
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
-import com.aydar.demandi.common.base.MESSAGE_HIDE_DIALOG
-import com.aydar.demandi.common.base.MESSAGE_SHOW_DIALOG
-import com.aydar.demandi.feature.room.student.StudentRoomActivity
 import kotlinx.android.synthetic.main.activity_join_room.*
+import org.koin.android.ext.android.inject
 import java.io.IOException
 import java.util.*
 
 class JoinRoomActivity : BaseBluetoothActivity() {
 
-    private lateinit var adapter: JoinAdapter
+    private lateinit var adapter: com.aydar.demandi.featurejoinroom.JoinAdapter
 
-    private lateinit var progressDialog : ProgressDialog
+    private lateinit var progressDialog: ProgressDialog
+
+    private val router: JoinRoomRouter by inject()
 
     private val receiver = object : BroadcastReceiver() {
 
@@ -64,7 +60,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
 
     private fun initProgressHandler() {
         ServiceHolder.studentService.progressHandler = Handler {
-            when(it.what){
+            when (it.what) {
                 MESSAGE_SHOW_DIALOG -> {
                     showProgress();
                     true
@@ -78,12 +74,14 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         }
     }
 
-    private fun showProgress(){
-        progressDialog = ProgressDialog.show(this,"Соединение"
-            ,"Пожалуйста, подождите...",true)
+    private fun showProgress() {
+        progressDialog = ProgressDialog.show(
+            this, "Соединение"
+            , "Пожалуйста, подождите...", true
+        )
     }
 
-    private fun hideProgress(){
+    private fun hideProgress() {
         progressDialog.dismiss()
     }
 
@@ -123,13 +121,11 @@ class JoinRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun startStudentsRoomActivity(roomName: String) {
-        val intent = Intent(this, StudentRoomActivity::class.java)
-        intent.putExtra(EXTRA_ROOM_NAME, roomName)
-        startActivity(intent)
+        router.moveToStudentsRoomActivityWithName(this, roomName)
     }
 
     private fun initRecycler() {
-        adapter = JoinAdapter {
+        adapter = com.aydar.demandi.featurejoinroom.JoinAdapter {
             if (it.bondState == BluetoothDevice.BOND_BONDED) {
                 connectToDevice(it)
             } else {
@@ -140,8 +136,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun openStudentsRoomActivity() {
-        val intent = Intent(this, StudentRoomActivity::class.java)
-        startActivity(intent)
+        router.moveToStudentsRoomActivity(this)
     }
 
     private inner class ConnectThread(device: BluetoothDevice) : Thread() {
