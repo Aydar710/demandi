@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.BaseViewModelFactory
 import com.aydar.demandi.common.base.EXTRA_ROOM_NAME
@@ -18,6 +19,8 @@ import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.featurerooms.R
 import com.aydar.demandi.featurerooms.common.QuestionsAdapter
+import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
+import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_teachers_room.*
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
@@ -26,7 +29,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
-    private lateinit var studentViewModel: StudentsViewModel
+    private lateinit var viewModel: StudentsViewModel
 
     private lateinit var adapter: QuestionsAdapter
 
@@ -88,7 +91,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                 MESSAGE_WRITE -> {
                     val question =
                         Question(it.obj as String)
-                    studentViewModel.addQuestion(question)
+                    viewModel.addQuestion(question)
                     true
                 }
                 else -> false
@@ -97,14 +100,39 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun initObservers() {
-        studentViewModel.questionsLiveData.observe(this, Observer {
-            adapter.submitList(it)
+        viewModel.questionsLiveData.observe(this, Observer {
+            //adapter.submitList(it)
         })
     }
 
     private fun initRecycler() {
         adapter = QuestionsAdapter()
-        rv_questions.adapter = adapter
+        val recycler = findViewById<DragDropSwipeRecyclerView>(R.id.rv_questions)
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.adapter = adapter
+        recycler.orientation =
+            DragDropSwipeRecyclerView.ListOrientation.VERTICAL_LIST_WITH_VERTICAL_DRAGGING
+
+        recycler.disableSwipeDirection(DragDropSwipeRecyclerView.ListOrientation.DirectionFlag.RIGHT)
+
+        val onItemSwipeListener = object : OnItemSwipeListener<Question> {
+            override fun onItemSwiped(
+                position: Int,
+                direction: OnItemSwipeListener.SwipeDirection,
+                item: Question
+            ): Boolean {
+                viewModel.onItemSwipedLeft(item, position)
+                return false
+            }
+        }
+        recycler.swipeListener = onItemSwipeListener
+
+        adapter.dataSet =
+            listOf(
+                Question("asdads"),
+                Question("asdads2"),
+                Question("asdads3")
+            )
     }
 
     private fun initClickListeners() {
@@ -129,7 +157,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun initViewModel() {
-        studentViewModel = ViewModelProviders.of(this, BaseViewModelFactory {
+        viewModel = ViewModelProviders.of(this, BaseViewModelFactory {
             StudentsViewModel()
         })[StudentsViewModel::class.java]
 

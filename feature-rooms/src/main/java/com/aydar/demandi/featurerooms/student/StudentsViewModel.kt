@@ -21,4 +21,12 @@ class StudentsViewModel : ViewModel() {
         questions?.add(question)
         _questionsLiveData.value = questions
     }
+
+    fun onItemSwipedLeft(question: Question, position: Int) {
+        deleteQuestion(question)
+    }
+
+    private fun deleteQuestion(question: Question) {
+
+    }
 }

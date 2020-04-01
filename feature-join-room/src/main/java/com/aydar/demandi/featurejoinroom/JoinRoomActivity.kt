@@ -50,6 +50,8 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_join_room)
 
+        router.moveToStudentsRoomActivity(this)
+        finish()
         setSupportActionBar(inc_toolbar as Toolbar)
         initRecycler()
         initProgressHandler()
