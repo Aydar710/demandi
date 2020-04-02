@@ -42,6 +42,17 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
         sheetBehavior = BottomSheetBehavior.from(bottom_sheet_ask)
 
+        setBottomSheetCallback()
+
+        initClickListeners()
+
+        initHandler()
+        initRecycler()
+        initViewModel()
+        initObservers()
+    }
+
+    private fun setBottomSheetCallback() {
         sheetBehavior.setBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             var isDragging = false
@@ -70,13 +81,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
-
-        initClickListeners()
-
-        initHandler()
-        initRecycler()
-        initViewModel()
-        initObservers()
     }
 
     private fun initToolbar() {
