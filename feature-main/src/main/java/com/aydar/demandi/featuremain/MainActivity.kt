@@ -13,11 +13,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
 
         //router.moveToFoo(this)
-        btn_create.setOnClickListener {
-            router.moveToCreateRoomActivity(this)
+        btn_teacher.setOnClickListener {
+            router.moveToTeacherRoomsActivity(this)
         }
 
-        btn_join.setOnClickListener {
+        btn_student.setOnClickListener {
             router.moveToJoinRoomActivity(this)
         }
     }

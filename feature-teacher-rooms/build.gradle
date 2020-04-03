@@ -40,4 +40,6 @@ dependencies {
     implementation androidDeps.values()
     implementation koinDeps.values()
     implementation firebaseDeps.values()
+    implementation coroutinesDeps.values()
+    implementation viewModelLifeCycleDeps.values()
 }

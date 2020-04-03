@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aydar.demandi.common.base.ROOM_NAME_PREFIX
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_room.view.*
+import kotlinx.android.synthetic.main.item_joining_room.view.*
 
 class JoinAdapter(private val onDeviceClicked: (BluetoothDevice) -> Unit) :
-    ListAdapter<BluetoothDevice, JoinAdapter.BluetoothDeviceViewHolder>(com.aydar.demandi.featurejoinroom.BluetoothDeviceDiffCallback()) {
+    ListAdapter<BluetoothDevice, JoinAdapter.BluetoothDeviceViewHolder>(BluetoothDeviceDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BluetoothDeviceViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_room, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_joining_room, parent, false)
         return BluetoothDeviceViewHolder(view)
     }
 

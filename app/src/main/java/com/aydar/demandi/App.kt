@@ -7,7 +7,8 @@ import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothService
 import com.aydar.demandi.data.di.repositoryModule
 import com.aydar.demandi.di.routerModule
 import com.aydar.demandi.featurecreateroom.di.createRoomModule
-import com.aydar.demandi.teacherrooms.di.viewModelModule
+import com.aydar.demandi.teacherrooms.di.teacherRoomsUseCaseModule
+import com.aydar.demandi.teacherrooms.di.teacherRoomsViewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -25,7 +26,8 @@ class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(routerModule, repositoryModule, viewModelModule, createRoomModule)
+            modules(routerModule, repositoryModule, teacherRoomsViewModelModule, createRoomModule,
+                teacherRoomsViewModelModule, teacherRoomsUseCaseModule)
         }
     }
 }
