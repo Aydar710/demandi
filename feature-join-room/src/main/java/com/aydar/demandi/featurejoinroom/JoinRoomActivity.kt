@@ -50,14 +50,22 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_join_room)
 
-        router.moveToStudentsRoomActivity(this)
-        finish()
         setSupportActionBar(inc_toolbar as Toolbar)
         initRecycler()
         initProgressHandler()
         registerFoundReceiver()
         registerBondStateReceiver()
         bluetoothAdapter!!.startDiscovery()
+        showPairedDevices()
+    }
+
+    private fun showPairedDevices(){
+        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
+        pairedDevices?.forEach { device ->
+            if (device.name.startsWith(ROOM_NAME_PREFIX)) {
+                adapter.addDevice(device)
+            }
+        }
     }
 
     private fun initProgressHandler() {

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.aydar.demandi.data.model.Question
 
-class StudentsViewModel : ViewModel() {
+class StudentRoomViewModel : ViewModel() {
 
     private val _questionsLiveData = MutableLiveData<List<Question>>()
 

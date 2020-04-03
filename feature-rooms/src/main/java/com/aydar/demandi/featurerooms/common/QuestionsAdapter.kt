@@ -9,7 +9,7 @@ import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeAdapter
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_question.view.*
 
-class QuestionsAdapter(dataSet: List<Question> = emptyList()) :
+class QuestionsAdapter(dataSet: MutableList<Question> = mutableListOf()) :
     DragDropSwipeAdapter<Question, QuestionsAdapter.QuestionViewHolder>(dataSet) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionViewHolder {
@@ -40,6 +40,10 @@ class QuestionsAdapter(dataSet: List<Question> = emptyList()) :
         position: Int
     ) {
         viewHolder.bind(item)
+    }
+
+    fun submitList(questions: List<Question>) {
+        dataSet = questions
     }
 
 

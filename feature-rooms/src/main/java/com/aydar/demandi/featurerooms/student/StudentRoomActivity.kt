@@ -9,10 +9,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aydar.demandi.common.base.BaseBluetoothActivity
-import com.aydar.demandi.common.base.BaseViewModelFactory
 import com.aydar.demandi.common.base.EXTRA_ROOM_NAME
 import com.aydar.demandi.common.base.MESSAGE_WRITE
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
@@ -24,12 +22,13 @@ import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListene
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_teachers_room.*
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class StudentRoomActivity : BaseBluetoothActivity() {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
 
-    private lateinit var viewModel: StudentsViewModel
+    private val viewModel: StudentRoomViewModel by viewModel()
 
     private lateinit var adapter: QuestionsAdapter
 
@@ -48,7 +47,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
         initHandler()
         initRecycler()
-        initViewModel()
         initObservers()
     }
 
@@ -105,7 +103,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
     private fun initObservers() {
         viewModel.questionsLiveData.observe(this, Observer {
-            //adapter.submitList(it)
+            adapter.submitList(it)
         })
     }
 
@@ -130,13 +128,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
             }
         }
         recycler.swipeListener = onItemSwipeListener
-
-        adapter.dataSet =
-            listOf(
-                Question("asdads"),
-                Question("asdads2"),
-                Question("asdads3")
-            )
     }
 
     private fun initClickListeners() {
@@ -158,13 +149,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
     private fun sendQuestion(text: String) {
         ServiceHolder.studentService.sendQuestion(text)
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, BaseViewModelFactory {
-            StudentsViewModel()
-        })[StudentsViewModel::class.java]
-
     }
 
     private fun toggleBottomSheet() {
