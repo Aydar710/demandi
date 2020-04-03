@@ -7,7 +7,7 @@ class CreateRoomViewHolder(private val activity: CreateRoomActivity) {
 
     fun getRoom(): Room {
         with(activity) {
-            return Room(name = et_name.text.toString(), subjectName = "testSubjectName")
+            return Room(name = et_name.text.toString(), subjectName = et_subject_name.text.toString())
         }
     }
 }
