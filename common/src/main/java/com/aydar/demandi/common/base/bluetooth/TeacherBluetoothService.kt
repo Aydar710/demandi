@@ -19,20 +19,14 @@ class TeacherBluetoothService() {
 
     private var mInsecureAcceptThread: AcceptThread? = null
 
-
-    constructor(handler: Handler) : this() {
-        this.handler = handler
-    }
-
     private inner class AcceptThread : Thread() {
 
         // The local server socket
         private val mmServerSocket: BluetoothServerSocket?
 
-        private val mBluetoothAdapter: BluetoothAdapter
+        private val mBluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
         init {
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
             var tmp: BluetoothServerSocket? = null
 

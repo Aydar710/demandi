@@ -23,10 +23,6 @@ class StudentBluetoothService() {
 
     lateinit var startStudentsRoomActivity: () -> Unit
 
-    constructor(handler: Handler) : this() {
-        this.handler = handler
-    }
-
     fun startConnecting(device: BluetoothDevice) {
         progressHandler.sendEmptyMessage(MESSAGE_SHOW_DIALOG)
         mConnectThread = ConnectThread(device)
@@ -36,13 +32,8 @@ class StudentBluetoothService() {
     private inner class ConnectThread(device: BluetoothDevice) : Thread() {
 
         private lateinit var mmSocket: BluetoothSocket
-        private lateinit var mmDevice: BluetoothDevice
-        private val mBluetoothAdapter: BluetoothAdapter
-
-        init {
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-            mmDevice = device
-        }
+        private var mmDevice: BluetoothDevice = device
+        private val mBluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
         override fun run() {
             lateinit var tmp: BluetoothSocket

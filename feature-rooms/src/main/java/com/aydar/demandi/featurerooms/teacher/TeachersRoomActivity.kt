@@ -40,7 +40,7 @@ class TeachersRoomActivity : AppCompatActivity() {
 
     private fun initObservers() {
         teachersViewModel.questionsLiveData.observe(this, Observer {
-            //adapter.submitList(it)
+            adapter.submitList(it)
         })
     }
 

@@ -14,6 +14,7 @@ import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.EXTRA_ROOM_NAME
 import com.aydar.demandi.common.base.MESSAGE_WRITE
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.featurerooms.R
 import com.aydar.demandi.featurerooms.common.QuestionsAdapter
@@ -22,6 +23,7 @@ import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListene
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_teachers_room.*
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class StudentRoomActivity : BaseBluetoothActivity() {
@@ -31,6 +33,9 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     private val viewModel: StudentRoomViewModel by viewModel()
 
     private lateinit var adapter: QuestionsAdapter
+
+    private val studentService1: StudentBluetoothService by inject()
+    private val studentService2: StudentBluetoothService by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
