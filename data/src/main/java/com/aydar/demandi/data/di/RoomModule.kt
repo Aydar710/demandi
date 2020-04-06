@@ -6,4 +6,6 @@ import org.koin.dsl.module
 
 val roomModule = module {
     single { AppDatabase(androidContext()) }
+    single { AppDatabase(androidContext()).questionDao() }
+    single { AppDatabase(androidContext()).roomDao() }
 }

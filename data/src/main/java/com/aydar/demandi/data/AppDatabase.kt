@@ -5,12 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.aydar.demandi.data.DAO.QuestionDao
-import com.aydar.demandi.data.model.Question
+import com.aydar.demandi.data.DAO.RoomDao
+import com.aydar.demandi.data.model.QuestionCache
 
-@Database(entities = [Question::class], version = 1)
+@Database(entities = [QuestionCache::class, com.aydar.demandi.data.model.Room::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun questionDao(): QuestionDao
+    abstract fun roomDao(): RoomDao
 
     companion object {
         @Volatile

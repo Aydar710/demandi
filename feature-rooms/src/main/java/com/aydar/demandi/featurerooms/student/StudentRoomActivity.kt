@@ -16,7 +16,6 @@ import com.aydar.demandi.common.base.MESSAGE_GOT_ROOM_INFO
 import com.aydar.demandi.common.base.MESSAGE_WRITE
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
-import com.aydar.demandi.data.AppDatabase
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurerooms.R
@@ -39,8 +38,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
     private lateinit var adapter: QuestionsAdapter
 
-    private lateinit var db: AppDatabase
-
     private val studentService1: StudentBluetoothService by inject()
     private val studentService2: StudentBluetoothService by inject()
 
@@ -48,7 +45,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_students_room)
 
-        db = AppDatabase(this)
         tv_send.visibility = View.INVISIBLE
         initToolbar()
 
@@ -63,8 +59,9 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         initObservers()
 
         GlobalScope.launch {
-            val questions = db.questionDao().getAllQuestions()
-            viewModel.addNewQuestions(questions)
+            //TODO: Добавить вопросы при переподключении
+            //val questions = db.questionDao().getAllQuestions()
+            //viewModel.addNewQuestions(questions)
         }
     }
 
@@ -112,9 +109,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                     val question =
                         Question(text = it.obj as String)
                     viewModel.addQuestion(question)
-                    GlobalScope.launch {
-                        db.questionDao().saveQuestion(question)
-                    }
                     true
                 }
                 MESSAGE_GOT_ROOM_INFO -> {

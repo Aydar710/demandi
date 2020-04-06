@@ -32,7 +32,8 @@ buildscript {
         ]
 
         coroutinesDeps = [
-                playServices: "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesPlayServicesVersion"
+                playServices: "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesPlayServicesVersion",
+                coroutineLifecycle : "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0-beta01"
         ]
 
         viewModelLifeCycleDeps = [

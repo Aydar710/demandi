@@ -4,18 +4,13 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Bundle
 import com.aydar.demandi.common.base.BaseBluetoothActivity
-import com.aydar.demandi.common.base.bluetooth.ServiceHolder
-import com.aydar.demandi.data.model.Room
-import com.aydar.demandi.featurecreateroom.CreateRoomRouter
 import com.aydar.demandi.featurecreateroom.R
 import com.aydar.demandi.featurecreateroom.ROOM_NAME_PREFIX
 import kotlinx.android.synthetic.main.activity_create_room.*
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class CreateRoomActivity : BaseBluetoothActivity() {
 
-    private val router: CreateRoomRouter by inject()
     private val viewModel: CreateRoomViewModel by viewModel()
     private lateinit var createRoomViewHolder: CreateRoomViewHolder
 
@@ -28,16 +23,9 @@ class CreateRoomActivity : BaseBluetoothActivity() {
 
         btn_create.setOnClickListener {
             val room = createRoomViewHolder.getRoom()
-            ServiceHolder.teacherService.startServer()
-            ServiceHolder.teacherService.room = room
             bluetoothAdapter?.name = "$ROOM_NAME_PREFIX${room.name}"
-            viewModel.createRoom(room)
-            startTeacherRoomActivity(room)
+            viewModel.onCreateBtnClicked(room, this)
         }
-    }
-
-    private fun startTeacherRoomActivity(room: Room) {
-        router.moveToTeacherRoomActivity(this, room)
     }
 
     private fun requestDiscoverable() {

@@ -5,7 +5,8 @@ import com.aydar.demandi.data.repository.RoomsRepository
 
 class CreateRoomUseCase(private val roomsRepository: RoomsRepository) {
 
-    fun invoke(room: Room) {
-        roomsRepository.addRoom(room)
+    fun invoke(room: Room): String {
+        val roomId = roomsRepository.addRoom(room)
+        return roomId
     }
 }
