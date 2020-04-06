@@ -6,6 +6,7 @@ import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
 import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothService
 import com.aydar.demandi.common.base.di.bluetoothServiceModule
 import com.aydar.demandi.data.di.repositoryModule
+import com.aydar.demandi.data.di.roomModule
 import com.aydar.demandi.di.routerModule
 import com.aydar.demandi.featurecreateroom.di.createRoomModule
 import com.aydar.demandi.featurerooms.di.studentsRoomModule
@@ -31,12 +32,12 @@ class App : Application() {
             modules(
                 routerModule,
                 repositoryModule,
-                teacherRoomsViewModelModule,
                 createRoomModule,
                 teacherRoomsViewModelModule,
                 teacherRoomsUseCaseModule,
                 studentsRoomModule,
-                bluetoothServiceModule
+                bluetoothServiceModule,
+                roomModule
             )
         }
     }

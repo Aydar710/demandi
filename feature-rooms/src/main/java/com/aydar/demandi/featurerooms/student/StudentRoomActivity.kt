@@ -12,10 +12,13 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.EXTRA_ROOM_NAME
+import com.aydar.demandi.common.base.MESSAGE_GOT_ROOM_INFO
 import com.aydar.demandi.common.base.MESSAGE_WRITE
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
+import com.aydar.demandi.data.AppDatabase
 import com.aydar.demandi.data.model.Question
+import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurerooms.R
 import com.aydar.demandi.featurerooms.common.QuestionsAdapter
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
@@ -23,6 +26,8 @@ import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListene
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_teachers_room.*
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -34,6 +39,8 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
     private lateinit var adapter: QuestionsAdapter
 
+    private lateinit var db: AppDatabase
+
     private val studentService1: StudentBluetoothService by inject()
     private val studentService2: StudentBluetoothService by inject()
 
@@ -41,6 +48,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_students_room)
 
+        db = AppDatabase(this)
         tv_send.visibility = View.INVISIBLE
         initToolbar()
 
@@ -53,6 +61,11 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         initHandler()
         initRecycler()
         initObservers()
+
+        GlobalScope.launch {
+            val questions = db.questionDao().getAllQuestions()
+            viewModel.addNewQuestions(questions)
+        }
     }
 
     private fun setBottomSheetCallback() {
@@ -97,10 +110,19 @@ class StudentRoomActivity : BaseBluetoothActivity() {
             when (it.what) {
                 MESSAGE_WRITE -> {
                     val question =
-                        Question(it.obj as String)
+                        Question(text = it.obj as String)
                     viewModel.addQuestion(question)
+                    GlobalScope.launch {
+                        db.questionDao().saveQuestion(question)
+                    }
                     true
                 }
+                MESSAGE_GOT_ROOM_INFO -> {
+                    val room = it.obj as Room
+                    viewModel.currentRoom = room
+                    true
+                }
+
                 else -> false
             }
         }
@@ -146,14 +168,10 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                 hideKeyboard {
                     toggleBottomSheet()
                 }
-                sendQuestion(questionText)
+                viewModel.sendQuestion(questionText)
                 et_question.text?.clear()
             }
         }
-    }
-
-    private fun sendQuestion(text: String) {
-        ServiceHolder.studentService.sendQuestion(text)
     }
 
     private fun toggleBottomSheet() {

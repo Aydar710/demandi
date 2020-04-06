@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -47,4 +45,5 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
 
     implementation koinDeps.values()
+    implementation roomDeps.values()
 }

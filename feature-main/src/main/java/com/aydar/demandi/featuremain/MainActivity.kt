@@ -12,7 +12,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //router.moveToFoo(this)
         btn_teacher.setOnClickListener {
             router.moveToTeacherRoomsActivity(this)
         }

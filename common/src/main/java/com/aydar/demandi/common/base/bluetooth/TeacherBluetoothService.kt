@@ -6,18 +6,20 @@ import android.bluetooth.BluetoothSocket
 import android.os.Handler
 import com.aydar.demandi.common.base.MESSAGE_READ
 import com.aydar.demandi.common.base.UUID_INSECURE
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
+import com.aydar.demandi.data.model.Question
+import com.aydar.demandi.data.model.Room
+import java.io.*
 import java.util.*
 
 class TeacherBluetoothService() {
 
     lateinit var handler: Handler
 
-    private var mConnectedThread: ConnectedThread? = null
+    private var connectedThread: ConnectedThread? = null
 
-    private var mInsecureAcceptThread: AcceptThread? = null
+    private var insecureAcceptThread: AcceptThread? = null
+
+    lateinit var room: Room
 
     private inner class AcceptThread : Thread() {
 
@@ -62,9 +64,10 @@ class TeacherBluetoothService() {
 
         private fun manageConnectedSocket(mmSocket: BluetoothSocket) {
             // Start the thread to manage the connection and perform transmissions
-            mConnectedThread = ConnectedThread(mmSocket)
+            connectedThread = ConnectedThread(mmSocket)
             try {
-                mConnectedThread!!.start()
+                connectedThread!!.start()
+                connectedThread!!.sendRoomToStudent(room)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -85,25 +88,40 @@ class TeacherBluetoothService() {
         private val inStream: InputStream = mmSocket.inputStream
         private val outStream: OutputStream = mmSocket.outputStream
         private val buffer: ByteArray = ByteArray(1024)
+        private lateinit var objInStream: ObjectInputStream
+        private lateinit var objOutStream: ObjectOutputStream
+
+        init {
+            objInStream = ObjectInputStream(inStream)
+            objOutStream = ObjectOutputStream(outStream)
+        }
 
         override fun run() {
             while (true) {
-                val numBytes = try {
-                    inStream.read(buffer)
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    cancel()
-                    break
+                try {
+                    val readObj = objInStream.readObject()
+                    when (readObj) {
+                        is Question -> {
+                            manageReadQuestion(readObj)
+                        }
+                    }
+
+                } catch (e: Exception) {
+                    print("")
                 }
-
-                val incomingMessage = String(buffer, 0, numBytes)
-
-                val readMsg = handler.obtainMessage(
-                    MESSAGE_READ, incomingMessage
-                )
-
-                handler.sendMessage(readMsg)
             }
+        }
+
+        fun sendRoomToStudent(room: Room) {
+            objOutStream.writeObject(room)
+        }
+
+        private fun manageReadQuestion(question: Question) {
+            val readMsg = handler.obtainMessage(
+                MESSAGE_READ, question.text
+            )
+
+            handler.sendMessage(readMsg)
         }
 
         // Call this method from the activity to shut down the connection.
@@ -115,12 +133,16 @@ class TeacherBluetoothService() {
         }
     }
 
+    fun sendRoomToStudent(room: Room) {
+        connectedThread?.sendRoomToStudent(room)
+    }
+
     @Synchronized
     fun startServer() {
-        if (mInsecureAcceptThread == null) {
-            mInsecureAcceptThread = AcceptThread()
+        if (insecureAcceptThread == null) {
+            insecureAcceptThread = AcceptThread()
             try {
-                mInsecureAcceptThread?.start()
+                insecureAcceptThread?.start()
 
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurecreateroom.CreateRoomRouter
 import com.aydar.demandi.featurecreateroom.R
 import com.aydar.demandi.featurecreateroom.ROOM_NAME_PREFIX
@@ -26,19 +27,17 @@ class CreateRoomActivity : BaseBluetoothActivity() {
         requestDiscoverable()
 
         btn_create.setOnClickListener {
-            val roomName = et_name.text.toString()
-            if (roomName.isNotEmpty()) {
-                ServiceHolder.teacherService.startServer()
-                bluetoothAdapter?.name = "$ROOM_NAME_PREFIX$roomName"
-                val room = createRoomViewHolder.getRoom()
-                viewModel.createRoom(room)
-                startTeacherRoomActivity(roomName)
-            }
+            val room = createRoomViewHolder.getRoom()
+            ServiceHolder.teacherService.startServer()
+            ServiceHolder.teacherService.room = room
+            bluetoothAdapter?.name = "$ROOM_NAME_PREFIX${room.name}"
+            viewModel.createRoom(room)
+            startTeacherRoomActivity(room)
         }
     }
 
-    private fun startTeacherRoomActivity(roomName: String) {
-        router.moveToTeacherRoomActivity(this, roomName)
+    private fun startTeacherRoomActivity(room: Room) {
+        router.moveToTeacherRoomActivity(this, room)
     }
 
     private fun requestDiscoverable() {

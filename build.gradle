@@ -39,6 +39,17 @@ buildscript {
                 lifeCycle   : 'androidx.lifecycle:lifecycle-extensions:2.2.0',
                 viewModelKtx: "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha01"
         ]
+
+        roomDeps = [
+                roomRuntime : "androidx.room:room-runtime:2.2.5",
+                support     : "androidx.legacy:legacy-support-v4:1.0.0",
+                lifecycleExt: 'androidx.lifecycle:lifecycle-extensions:2.0.0',
+                viewModelKtx: 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0',
+        ]
+
+        roomKapt = [
+                compiler: "androidx.room:room-compiler:2.2.5"
+        ]
     }
     ext.kotlin_version = '1.3.50'
     repositories {

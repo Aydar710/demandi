@@ -11,6 +11,7 @@ import com.aydar.demandi.common.base.EXTRA_ROOM_NAME
 import com.aydar.demandi.common.base.MESSAGE_READ
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.data.model.Question
+import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurerooms.R
 import com.aydar.demandi.featurerooms.common.QuestionsAdapter
 import kotlinx.android.synthetic.main.activity_teachers_room.*
@@ -19,6 +20,7 @@ class TeachersRoomActivity : AppCompatActivity() {
 
     private lateinit var teachersViewModel: TeachersViewModel
     private lateinit var adapter: QuestionsAdapter
+    private lateinit var room: Room
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +36,9 @@ class TeachersRoomActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         setSupportActionBar(inc_toolbar as Toolbar)
-        val roomName = intent.getStringExtra(EXTRA_ROOM_NAME)
-        supportActionBar?.title = roomName
+        val room = intent.getSerializableExtra(EXTRA_ROOM_NAME) as Room
+        supportActionBar?.title = room.name
+        this.room = room
     }
 
     private fun initObservers() {
@@ -54,7 +57,7 @@ class TeachersRoomActivity : AppCompatActivity() {
             when (it.what) {
                 MESSAGE_READ -> {
                     val question =
-                        Question(it.obj as String)
+                        Question(text = it.obj as String)
                     teachersViewModel.addQuestion(question)
                     true
                 }

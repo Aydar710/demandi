@@ -6,9 +6,9 @@ import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
 import com.aydar.demandi.common.base.*
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
+import com.aydar.demandi.data.model.Question
+import com.aydar.demandi.data.model.Room
+import java.io.*
 import java.util.*
 
 class StudentBluetoothService() {
@@ -93,23 +93,35 @@ class StudentBluetoothService() {
 
     inner class ConnectedThread(private val mmSocket: BluetoothSocket) : Thread() {
 
-        private val mmInStream: InputStream = mmSocket.inputStream
-        private val mmOutStream: OutputStream = mmSocket.outputStream
-        private val mmBuffer: ByteArray = ByteArray(1024)
+        private val inStream: InputStream = mmSocket.inputStream
+        private val outStream: OutputStream = mmSocket.outputStream
+        private val buffer: ByteArray = ByteArray(1024)
+        private var objOutStream: ObjectOutputStream
+        private var objInStream: ObjectInputStream
 
         init {
             progressHandler.sendEmptyMessage(MESSAGE_HIDE_DIALOG)
+            objOutStream = ObjectOutputStream(outStream)
+            objInStream = ObjectInputStream(inStream)
         }
 
         override fun run() {
-
+            while (true) {
+                val readObj = objInStream.readObject()
+                when (readObj) {
+                    is Room -> {
+                        //manageReadRoom(readObj)
+                    }
+                }
+            }
         }
 
-        // Call this from the main activity to send data to the remote device.
-        fun write(text: String) {
+        // Call this from the activity to send data to the remote device.
+        fun writeQuestion(text: String) {
             val bytes: ByteArray = text.toByteArray()
             try {
-                mmOutStream.write(bytes)
+                val question = Question(text = text)
+                objOutStream.writeObject(question)
             } catch (e: IOException) {
 
                 e.printStackTrace()
@@ -128,6 +140,11 @@ class StudentBluetoothService() {
             handler.sendMessage(writtenMsg)
         }
 
+        private fun manageReadRoom(room: Room) {
+            val roomMsg = handler.obtainMessage(MESSAGE_GOT_ROOM_INFO, room)
+            handler.sendMessage(roomMsg)
+        }
+
         // Call this method from the main activity to shut down the connection.
         fun cancel() {
             try {
@@ -138,6 +155,6 @@ class StudentBluetoothService() {
     }
 
     fun sendQuestion(text: String) {
-        mConnectedThread.write(text)
+        mConnectedThread.writeQuestion(text)
     }
 }
