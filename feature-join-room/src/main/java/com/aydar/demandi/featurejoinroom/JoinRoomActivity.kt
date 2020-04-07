@@ -58,7 +58,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         showPairedDevices()
     }
 
-    private fun showPairedDevices(){
+    private fun showPairedDevices() {
         val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
         pairedDevices?.forEach { device ->
             if (device.name.startsWith(ROOM_NAME_PREFIX)) {

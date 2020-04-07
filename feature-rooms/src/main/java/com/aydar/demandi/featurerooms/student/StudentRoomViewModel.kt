@@ -8,9 +8,13 @@ import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurerooms.domain.SaveQuestionToCacheUseCase
+import com.aydar.demandi.featurerooms.domain.SaveRoomToCacheUseCase
 import kotlinx.coroutines.launch
 
-class StudentRoomViewModel(private val saveQuestionToCacheUseCase: SaveQuestionToCacheUseCase) :
+class StudentRoomViewModel(
+    private val saveQuestionToCacheUseCase: SaveQuestionToCacheUseCase,
+    private val saveRoomToCacheUseCase: SaveRoomToCacheUseCase
+) :
     ViewModel() {
 
     lateinit var currentRoom: Room
@@ -37,6 +41,13 @@ class StudentRoomViewModel(private val saveQuestionToCacheUseCase: SaveQuestionT
 
     fun addNewQuestions(questions: List<Question>) {
         _questionsLiveData.postValue(questions)
+    }
+
+    fun saveRoomToCache(room: Room, activity: StudentRoomActivity) {
+        currentRoom = room
+        viewModelScope.launch {
+            saveRoomToCacheUseCase.invoke(room)
+        }
     }
 
     fun onItemSwipedLeft(question: Question, position: Int) {

@@ -10,6 +10,7 @@ buildscript {
         firestoreVersion = '21.4.1'
 
         coroutinesPlayServicesVersion = '1.1.1'
+        coroutinesVersion = "1.3.5"
 
         koinDeps = [
                 // Koin for Android
@@ -32,8 +33,10 @@ buildscript {
         ]
 
         coroutinesDeps = [
-                playServices: "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesPlayServicesVersion",
-                coroutineLifecycle : "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0-beta01"
+                playServices      : "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesPlayServicesVersion",
+                coroutineLifecycle: "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0-beta01",
+                coroutinesCore    : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion",
+                coroutinesRoom    : "androidx.room:room-coroutines:2.1.0-alpha04"
         ]
 
         viewModelLifeCycleDeps = [
@@ -46,10 +49,16 @@ buildscript {
                 support     : "androidx.legacy:legacy-support-v4:1.0.0",
                 lifecycleExt: 'androidx.lifecycle:lifecycle-extensions:2.0.0',
                 viewModelKtx: 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0',
+                debugRoom   : 'com.amitshekhar.android:debug-db:1.0.6'
         ]
 
         roomKapt = [
                 compiler: "androidx.room:room-compiler:2.2.5"
+        ]
+
+        firebaseCrashlyticsDeps = [
+                analytics  : 'com.google.firebase:firebase-analytics:17.3.0',
+                crashlytics: 'com.google.firebase:firebase-crashlytics:17.0.0-beta03'
         ]
     }
     ext.kotlin_version = '1.3.50'
@@ -64,6 +73,10 @@ buildscript {
         classpath 'com.google.gms:google-services:4.3.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+
+        classpath 'com.google.gms:google-services:4.3.3'
+
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.0.0-beta03'
     }
 }
 

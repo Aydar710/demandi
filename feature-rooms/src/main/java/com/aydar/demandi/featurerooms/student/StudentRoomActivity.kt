@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.amitshekhar.DebugDB
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.EXTRA_ROOM_NAME
 import com.aydar.demandi.common.base.MESSAGE_GOT_ROOM_INFO
@@ -58,6 +60,8 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         initRecycler()
         initObservers()
 
+        val addressLog = DebugDB.getAddressLog()
+        Log.d("address", addressLog)
         GlobalScope.launch {
             //TODO: Добавить вопросы при переподключении
             //val questions = db.questionDao().getAllQuestions()
@@ -113,7 +117,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                 }
                 MESSAGE_GOT_ROOM_INFO -> {
                     val room = it.obj as Room
-                    viewModel.currentRoom = room
+                    viewModel.saveRoomToCache(room, this)
                     true
                 }
 

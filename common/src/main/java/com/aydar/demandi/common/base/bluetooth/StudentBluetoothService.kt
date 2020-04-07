@@ -81,7 +81,11 @@ class StudentBluetoothService() {
         }
 
         private fun manageConnectedSocket(mmSocket: BluetoothSocket, mmDevice: BluetoothDevice?) {
-            mConnectedThread = ConnectedThread(mmSocket)
+            try {
+                mConnectedThread = ConnectedThread(mmSocket)
+            }catch (e : Exception){
+                e.printStackTrace()
+            }
             try {
                 mConnectedThread.start()
                 startStudentsRoomActivity.invoke()
@@ -110,7 +114,7 @@ class StudentBluetoothService() {
                 val readObj = objInStream.readObject()
                 when (readObj) {
                     is Room -> {
-                        //manageReadRoom(readObj)
+                        manageReadRoom(readObj)
                     }
                 }
             }
