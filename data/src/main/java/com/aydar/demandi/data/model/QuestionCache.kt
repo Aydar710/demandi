@@ -17,7 +17,7 @@ import java.io.Serializable
 )
 data class QuestionCache(
     @PrimaryKey(autoGenerate = true)
-    var id: Int = -1,
+    val id: Int = 0,
 
     @ColumnInfo(name = "text")
     val text: String,

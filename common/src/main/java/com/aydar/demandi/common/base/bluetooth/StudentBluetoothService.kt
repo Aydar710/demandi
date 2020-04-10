@@ -111,6 +111,7 @@ class StudentBluetoothService() {
 
         override fun run() {
             while (true) {
+                sleep(1000)
                 val readObj = objInStream.readObject()
                 when (readObj) {
                     is Room -> {
@@ -145,7 +146,7 @@ class StudentBluetoothService() {
         }
 
         private fun manageReadRoom(room: Room) {
-            val roomMsg = handler.obtainMessage(MESSAGE_GOT_ROOM_INFO, room)
+            val roomMsg = handler.obtainMessage(MESSAGE_RECEIVED_ROOM_INFO, room)
             handler.sendMessage(roomMsg)
         }
 

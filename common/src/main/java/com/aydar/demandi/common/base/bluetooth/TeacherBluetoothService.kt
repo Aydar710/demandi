@@ -15,7 +15,7 @@ class TeacherBluetoothService() {
 
     lateinit var handler: Handler
 
-    private var connectedThread: ConnectedThread? = null
+    private var connectedThreads: MutableList<ConnectedThread>? = mutableListOf()
 
     private var insecureAcceptThread: AcceptThread? = null
 
@@ -64,10 +64,11 @@ class TeacherBluetoothService() {
 
         private fun manageConnectedSocket(mmSocket: BluetoothSocket) {
             // Start the thread to manage the connection and perform transmissions
-            connectedThread = ConnectedThread(mmSocket)
+            val connectedThread = ConnectedThread(mmSocket)
             try {
                 connectedThread!!.start()
                 connectedThread!!.sendRoomToStudent(room)
+                connectedThreads?.add(connectedThread)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -113,6 +114,7 @@ class TeacherBluetoothService() {
         }
 
         fun sendRoomToStudent(room: Room) {
+            sleep(2000)
             objOutStream.writeObject(room)
         }
 
@@ -131,10 +133,6 @@ class TeacherBluetoothService() {
             } catch (e: IOException) {
             }
         }
-    }
-
-    fun sendRoomToStudent(room: Room) {
-        connectedThread?.sendRoomToStudent(room)
     }
 
     @Synchronized

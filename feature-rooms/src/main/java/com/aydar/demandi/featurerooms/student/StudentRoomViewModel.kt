@@ -7,13 +7,17 @@ import androidx.lifecycle.viewModelScope
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
+import com.aydar.demandi.featurerooms.domain.GetCachedQuestionsUseCase
+import com.aydar.demandi.featurerooms.domain.GetRoomFromCacheUseCase
 import com.aydar.demandi.featurerooms.domain.SaveQuestionToCacheUseCase
 import com.aydar.demandi.featurerooms.domain.SaveRoomToCacheUseCase
 import kotlinx.coroutines.launch
 
 class StudentRoomViewModel(
     private val saveQuestionToCacheUseCase: SaveQuestionToCacheUseCase,
-    private val saveRoomToCacheUseCase: SaveRoomToCacheUseCase
+    private val saveRoomToCacheUseCase: SaveRoomToCacheUseCase,
+    private val getRoomFromCacheUseCase: GetRoomFromCacheUseCase,
+    private val getCachedQuestionsUseCase: GetCachedQuestionsUseCase
 ) :
     ViewModel() {
 
@@ -39,14 +43,28 @@ class StudentRoomViewModel(
         saveQuestionToCache(question)
     }
 
-    fun addNewQuestions(questions: List<Question>) {
-        _questionsLiveData.postValue(questions)
+    fun handleReceivedRoom(room: Room) {
+        currentRoom = Room(room.id, room.name, room.subjectName)
+        viewModelScope.launch {
+            val roomFromDb = getRoomFromCacheUseCase.invoke(room.id)
+            if (roomFromDb == null) {
+                saveRoomToCache(room)
+            } else {
+                showRoomQuestions(room)
+            }
+        }
     }
 
-    fun saveRoomToCache(room: Room, activity: StudentRoomActivity) {
-        currentRoom = room
+    private fun saveRoomToCache(room: Room) {
         viewModelScope.launch {
             saveRoomToCacheUseCase.invoke(room)
+        }
+    }
+
+    private fun showRoomQuestions(room: Room) {
+        viewModelScope.launch {
+            val questionsCache = getCachedQuestionsUseCase.invoke(room.id)
+            _questionsLiveData.postValue(questionsCache)
         }
     }
 
@@ -56,7 +74,11 @@ class StudentRoomViewModel(
 
     private fun saveQuestionToCache(question: Question) {
         viewModelScope.launch {
-            saveQuestionToCacheUseCase.invoke(question, currentRoom)
+            try {
+                saveQuestionToCacheUseCase.invoke(question, currentRoom)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

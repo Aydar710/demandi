@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.amitshekhar.DebugDB
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.EXTRA_ROOM_NAME
-import com.aydar.demandi.common.base.MESSAGE_GOT_ROOM_INFO
+import com.aydar.demandi.common.base.MESSAGE_RECEIVED_ROOM_INFO
 import com.aydar.demandi.common.base.MESSAGE_WRITE
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
@@ -27,8 +27,6 @@ import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListene
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_teachers_room.*
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -62,11 +60,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
         val addressLog = DebugDB.getAddressLog()
         Log.d("address", addressLog)
-        GlobalScope.launch {
-            //TODO: Добавить вопросы при переподключении
-            //val questions = db.questionDao().getAllQuestions()
-            //viewModel.addNewQuestions(questions)
-        }
     }
 
     private fun setBottomSheetCallback() {
@@ -115,9 +108,9 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                     viewModel.addQuestion(question)
                     true
                 }
-                MESSAGE_GOT_ROOM_INFO -> {
+                MESSAGE_RECEIVED_ROOM_INFO -> {
                     val room = it.obj as Room
-                    viewModel.saveRoomToCache(room, this)
+                    viewModel.handleReceivedRoom(room)
                     true
                 }
 

@@ -13,8 +13,8 @@ class RoomCacheRepository(private val database: RoomDao) {
         }
     }
 
-    suspend fun getRoomById(roomId: String): Room {
-        val room = withContext(Dispatchers.IO) {
+    suspend fun getRoomById(roomId: String): Room? {
+        val room : Room? = withContext(Dispatchers.IO) {
             database.getRoomById(roomId)
         }
         return room
