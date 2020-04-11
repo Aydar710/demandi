@@ -9,6 +9,7 @@ import com.aydar.demandi.data.di.repositoryModule
 import com.aydar.demandi.data.di.roomModule
 import com.aydar.demandi.di.routerModule
 import com.aydar.demandi.featurecreateroom.di.createRoomModule
+import com.aydar.demandi.featurerooms.di.roomsViewModelModule
 import com.aydar.demandi.featurerooms.di.studentsRoomModule
 import com.aydar.demandi.teacherrooms.di.teacherRoomsUseCaseModule
 import com.aydar.demandi.teacherrooms.di.teacherRoomsViewModelModule
@@ -41,7 +42,8 @@ class App : Application() {
                 bluetoothServiceModule,
                 roomModule,
                 roomDetailsUseCaseModule,
-                roomDetailsViewModelModule
+                roomDetailsViewModelModule,
+                roomsViewModelModule
             )
         }
     }

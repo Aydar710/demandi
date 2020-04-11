@@ -5,8 +5,6 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import com.aydar.demandi.common.base.BaseViewModelFactory
 import com.aydar.demandi.common.base.EXTRA_ROOM
 import com.aydar.demandi.common.base.MESSAGE_READ
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
@@ -15,12 +13,12 @@ import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurerooms.R
 import com.aydar.demandi.featurerooms.common.QuestionsAdapter
 import kotlinx.android.synthetic.main.activity_teachers_room.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class TeachersRoomActivity : AppCompatActivity() {
 
-    private lateinit var teachersViewModel: TeachersViewModel
+    private val teachersViewModel: TeachersRoomViewModel by viewModel()
     private lateinit var adapter: QuestionsAdapter
-    private lateinit var room: Room
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +26,6 @@ class TeachersRoomActivity : AppCompatActivity() {
 
         initToolbar()
 
-        initViewModel()
         initRecycler()
         initObservers()
         initHandler()
@@ -38,7 +35,8 @@ class TeachersRoomActivity : AppCompatActivity() {
         setSupportActionBar(inc_toolbar as Toolbar)
         val room = intent.getSerializableExtra(EXTRA_ROOM) as Room
         supportActionBar?.title = room.name
-        this.room = room
+        teachersViewModel.room = room
+        teachersViewModel.saveSession()
     }
 
     private fun initObservers() {
@@ -64,12 +62,5 @@ class TeachersRoomActivity : AppCompatActivity() {
                 else -> false
             }
         }
-    }
-
-    private fun initViewModel() {
-        teachersViewModel = ViewModelProviders.of(this, BaseViewModelFactory {
-            TeachersViewModel()
-        })[TeachersViewModel::class.java]
-
     }
 }
