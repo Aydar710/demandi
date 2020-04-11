@@ -18,8 +18,6 @@ open class BaseBluetoothActivity : AppCompatActivity() {
     private val BluetoothAdapter.isDisabled: Boolean
         get() = !isEnabled
 
-    //protected lateinit var bluetoothConnectionService: BluetoothConnectionService
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,9 +27,14 @@ open class BaseBluetoothActivity : AppCompatActivity() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
         requestTurnOnBluetooth()
+    }
 
-        //bluetoothConnectionService = BluetoothConnectionService(this)
-
+    protected fun requestDiscoverable() {
+        val discoverableIntent: Intent =
+            Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
+                putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 1000)
+            }
+        startActivityForResult(discoverableIntent, 12345)
     }
 
     private fun requestTurnOnBluetooth() {

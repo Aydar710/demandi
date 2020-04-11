@@ -9,7 +9,7 @@ import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.teacherrooms.R
 import kotlinx.android.synthetic.main.item_room.view.*
 
-class TeacherRoomsAdapter :
+class TeacherRoomsAdapter(private val onRoomClicked: (Room) -> Unit) :
     ListAdapter<Room, TeacherRoomsAdapter.RoomViewHolder>(RoomDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RoomViewHolder {
@@ -29,6 +29,10 @@ class TeacherRoomsAdapter :
             with(view) {
                 tv_room_name.text = room.name
                 tv_subject_name.text = room.subjectName
+
+                setOnClickListener {
+                    onRoomClicked.invoke(room)
+                }
             }
         }
 

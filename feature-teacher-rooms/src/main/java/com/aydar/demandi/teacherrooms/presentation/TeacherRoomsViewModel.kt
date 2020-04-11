@@ -24,6 +24,10 @@ class TeacherRoomsViewModel(
         router.moveToCreateRoomActivity(activity)
     }
 
+    fun onRoomClicked(room: Room, activity: AppCompatActivity) {
+        router.moveToRoomDetailsActivity(room, activity)
+    }
+
     fun showRooms() {
         viewModelScope.launch(Dispatchers.IO) {
             val rooms = showRoomsUseCase.invoke()

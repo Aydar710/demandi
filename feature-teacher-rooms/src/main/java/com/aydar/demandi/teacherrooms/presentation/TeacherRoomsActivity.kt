@@ -10,7 +10,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class TeacherRoomsActivity : AppCompatActivity(R.layout.activity_teacher_rooms) {
 
     private val viewModel: TeacherRoomsViewModel by viewModel()
-    private val adapter = TeacherRoomsAdapter()
+    private lateinit var adapter: TeacherRoomsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +31,9 @@ class TeacherRoomsActivity : AppCompatActivity(R.layout.activity_teacher_rooms) 
     }
 
     private fun initRecycler() {
+        adapter = TeacherRoomsAdapter() {
+            viewModel.onRoomClicked(it, this)
+        }
         rv_rooms.adapter = adapter
     }
 }

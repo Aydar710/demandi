@@ -1,7 +1,5 @@
 package com.aydar.demandi.featurecreateroom.presentation
 
-import android.bluetooth.BluetoothAdapter
-import android.content.Intent
 import android.os.Bundle
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.featurecreateroom.R
@@ -26,13 +24,5 @@ class CreateRoomActivity : BaseBluetoothActivity() {
             bluetoothAdapter?.name = "$ROOM_NAME_PREFIX${room.name}"
             viewModel.onCreateBtnClicked(room, this)
         }
-    }
-
-    private fun requestDiscoverable() {
-        val discoverableIntent: Intent =
-            Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-                putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 1000)
-            }
-        startActivityForResult(discoverableIntent, 12345)
     }
 }

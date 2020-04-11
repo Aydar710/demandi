@@ -7,7 +7,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.aydar.demandi.common.base.BaseViewModelFactory
-import com.aydar.demandi.common.base.EXTRA_ROOM_NAME
+import com.aydar.demandi.common.base.EXTRA_ROOM
 import com.aydar.demandi.common.base.MESSAGE_READ
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.data.model.Question
@@ -36,7 +36,7 @@ class TeachersRoomActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         setSupportActionBar(inc_toolbar as Toolbar)
-        val room = intent.getSerializableExtra(EXTRA_ROOM_NAME) as Room
+        val room = intent.getSerializableExtra(EXTRA_ROOM) as Room
         supportActionBar?.title = room.name
         this.room = room
     }

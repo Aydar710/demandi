@@ -33,4 +33,16 @@ class RoomsRepository(private val db: FirebaseFirestore) {
         val rooms = roomsSnapshot.toObjects<Room>()
         return rooms
     }
+
+    suspend fun getRoomById(roomId: String, userId: String = "testUserId"): Room {
+        val roomSnapshot = db
+            .collection(USERS_COLLECTION)
+            .document(userId)
+            .collection(ROOMS_COLLECTION)
+            .get()
+            .await()
+
+        val room = roomSnapshot.toObjects<Room>()
+        return room[0]
+    }
 }

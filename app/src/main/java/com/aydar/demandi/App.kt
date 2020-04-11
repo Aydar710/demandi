@@ -12,6 +12,8 @@ import com.aydar.demandi.featurecreateroom.di.createRoomModule
 import com.aydar.demandi.featurerooms.di.studentsRoomModule
 import com.aydar.demandi.teacherrooms.di.teacherRoomsUseCaseModule
 import com.aydar.demandi.teacherrooms.di.teacherRoomsViewModelModule
+import com.aydar.feature_room_details.di.roomDetailsUseCaseModule
+import com.aydar.feature_room_details.di.roomDetailsViewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -37,7 +39,9 @@ class App : Application() {
                 teacherRoomsUseCaseModule,
                 studentsRoomModule,
                 bluetoothServiceModule,
-                roomModule
+                roomModule,
+                roomDetailsUseCaseModule,
+                roomDetailsViewModelModule
             )
         }
     }
