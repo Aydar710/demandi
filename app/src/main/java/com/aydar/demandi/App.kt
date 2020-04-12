@@ -13,8 +13,8 @@ import com.aydar.demandi.featurerooms.di.roomsViewModelModule
 import com.aydar.demandi.featurerooms.di.studentsRoomModule
 import com.aydar.demandi.teacherrooms.di.teacherRoomsUseCaseModule
 import com.aydar.demandi.teacherrooms.di.teacherRoomsViewModelModule
-import com.aydar.feature_room_details.di.roomDetailsUseCaseModule
-import com.aydar.feature_room_details.di.roomDetailsViewModelModule
+import com.aydar.featureroomdetails.di.roomDetailsUseCaseModule
+import com.aydar.featureroomdetails.di.roomDetailsViewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

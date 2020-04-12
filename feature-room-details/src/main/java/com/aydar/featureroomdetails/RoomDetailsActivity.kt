@@ -1,4 +1,4 @@
-package com.aydar.feature_room_details
+package com.aydar.featureroomdetails
 
 import android.os.Bundle
 import com.aydar.demandi.common.base.BaseBluetoothActivity

@@ -1,6 +1,6 @@
-package com.aydar.feature_room_details.di
+package com.aydar.featureroomdetails.di
 
-import com.aydar.feature_room_details.RoomDetailsViewModel
+import com.aydar.featureroomdetails.RoomDetailsViewModel
 import org.koin.dsl.module
 
 val roomDetailsViewModelModule = module {

@@ -1,4 +1,4 @@
-package com.aydar.feature_room_details
+package com.aydar.featureroomdetails
 
 import org.junit.Test
 

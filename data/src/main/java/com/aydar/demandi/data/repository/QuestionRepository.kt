@@ -1,10 +1,11 @@
 package com.aydar.demandi.data.repository
 
-import com.aydar.demandi.data.QUESTIONS_COLLECTION
+import com.aydar.demandi.data.QUESTIONS_ARRAY
 import com.aydar.demandi.data.ROOMS_COLLECTION
 import com.aydar.demandi.data.SESSIONS_COLLECTION
 import com.aydar.demandi.data.USERS_COLLECTION
 import com.aydar.demandi.data.model.Question
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -23,8 +24,6 @@ class QuestionRepository(private val db: FirebaseFirestore) {
             .document(roomId)
             .collection(SESSIONS_COLLECTION)
             .document(sessionId)
-            .collection(QUESTIONS_COLLECTION)
-            .document()
-            .set(question).await()
+            .update(QUESTIONS_ARRAY, FieldValue.arrayUnion(question)).await()
     }
 }

@@ -2,5 +2,5 @@ package com.aydar.demandi.data
 
 const val USERS_COLLECTION = "users"
 const val ROOMS_COLLECTION = "rooms"
-const val QUESTIONS_COLLECTION = "questions"
+const val QUESTIONS_ARRAY = "questions"
 const val SESSIONS_COLLECTION = "sessions"

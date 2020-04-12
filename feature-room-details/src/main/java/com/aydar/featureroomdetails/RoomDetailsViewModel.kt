@@ -1,4 +1,4 @@
-package com.aydar.feature_room_details
+package com.aydar.featureroomdetails
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel

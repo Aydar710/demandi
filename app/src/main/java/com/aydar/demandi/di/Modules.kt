@@ -6,7 +6,7 @@ import com.aydar.demandi.featuremain.MainRouter
 import com.aydar.demandi.router.AppRouter
 import com.aydar.demandi.router.AppRouterImpl
 import com.aydar.demandi.teacherrooms.TeacherRoomsRouter
-import com.aydar.feature_room_details.RoomDetailsRouter
+import com.aydar.featureroomdetails.RoomDetailsRouter
 import org.koin.dsl.module
 
 val routerModule = module {
