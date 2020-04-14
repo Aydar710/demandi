@@ -50,7 +50,6 @@ class RoomDetailsViewModel(
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
         }
     }
 }
