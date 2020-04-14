@@ -1,5 +1,7 @@
 package com.aydar.featureroomdetails.presentation.adapter
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +14,15 @@ import kotlinx.android.synthetic.main.item_sessions_question.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SessionsAdapter(private val onQuestionClickListener: (View, View) -> Unit) :
+class SessionsAdapter(
+    private val onQuestionClickListener: (View, View) -> Unit,
+    private val onSaveClickListener: (Session, Question, View, View) -> Unit
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val sessions = mutableListOf<Session>()
     private var rowTypes = mutableListOf<RowType>()
-    private var currentDayOfYear = 0
+    private lateinit var currentSession: Session
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         var view: View
@@ -58,6 +63,7 @@ class SessionsAdapter(private val onQuestionClickListener: (View, View) -> Unit)
         val session = rowTypes[position]
         return when (session) {
             is SessionRowType -> {
+                currentSession = session.session
                 VIEW_TYPE_DATE
             }
             else -> {
@@ -104,11 +110,44 @@ class SessionsAdapter(private val onQuestionClickListener: (View, View) -> Unit)
             with(view) {
                 tv_question.text = question.text
 
-                setOnClickListener {
+                constraint_question.setOnClickListener {
                     onQuestionClickListener.invoke(constraint_answer, constraint_question)
                 }
+
+                tv_save.setOnClickListener {
+                    val answer = et_answer.text.toString()
+                    question.answer = answer
+                    tv_save.visibility = View.GONE
+                    onSaveClickListener.invoke(currentSession, question, constraint_answer, constraint_question)
+                }
+
+                et_answer.addTextChangedListener(object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {}
+
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        s?.let {
+                            if (it.isNotBlank()) {
+                                tv_save.visibility = View.VISIBLE
+                            } else {
+                                tv_save.visibility = View.GONE
+                            }
+                        }
+                    }
+                })
             }
         }
-
     }
 }

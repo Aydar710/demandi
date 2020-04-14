@@ -6,15 +6,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.data.model.Session
 import com.aydar.featureroomdetails.RoomDetailsRouter
 import com.aydar.featureroomdetails.domain.GetSessionsUseCase
+import com.aydar.featureroomdetails.domain.SaveQuestionAnswerUseCase
 import kotlinx.coroutines.launch
 
 class RoomDetailsViewModel(
     private val router: RoomDetailsRouter,
-    private val getSessionsUseCase: GetSessionsUseCase
+    private val getSessionsUseCase: GetSessionsUseCase,
+    private val saveQuestionAnswerUseCase: SaveQuestionAnswerUseCase
 ) : ViewModel() {
 
     lateinit var currentRoom: Room
@@ -37,7 +40,17 @@ class RoomDetailsViewModel(
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            print("")
+        }
+    }
+
+    fun saveQuestionAnswer(room: Room, session: Session, question: Question) {
+        viewModelScope.launch {
+            try {
+                saveQuestionAnswerUseCase.invoke(room, session, question)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
         }
     }
 }

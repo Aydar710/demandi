@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.activity_room_details.*
 import kotlinx.android.synthetic.main.item_sessions_question.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-
 class RoomDetailsActivity : BaseBluetoothActivity() {
 
     private val viewModel: RoomDetailsViewModel by viewModel()
@@ -48,20 +47,48 @@ class RoomDetailsActivity : BaseBluetoothActivity() {
     }
 
     private fun initRecycler() {
-        sessionsAdapter = SessionsAdapter { constraintAnswer, constraintQuestion ->
-            if (constraintAnswer.visibility === View.GONE) {
-                TransitionManager.beginDelayedTransition(ll_question_answer, AutoTransition())
-                constraintAnswer.visibility = View.VISIBLE
-                constraintQuestion.background =
-                    getDrawable(R.drawable.rounded_rectangle_question_expanded)
-            } else {
-                TransitionManager.beginDelayedTransition(ll_question_answer, AutoTransition())
-                constraintAnswer.visibility = View.GONE
-                constraintQuestion.background = getDrawable(R.drawable.rounded_rectangle_question)
-            }
-        }
+        sessionsAdapter =
+            SessionsAdapter(
+                onQuestionClickListener = { constraintAnswer, constraintQuestion ->
+                    if (constraintAnswer.visibility === View.GONE) {
+                        expandQuestion(constraintAnswer, constraintQuestion)
+                    } else {
+                        collapseQuestion(constraintAnswer, constraintQuestion)
+                    }
+                },
+                onSaveClickListener = { session, question, constraintAnswer, constraintQuestion ->
+                    collapseQuestion(constraintAnswer, constraintQuestion)
+                    viewModel.saveQuestionAnswer(room, session, question)
+                }
+            )
         rv_sessions.adapter = sessionsAdapter
 
+    }
+
+    private fun collapseQuestion(
+        constraintAnswer: View,
+        constraintQuestion: View
+    ) {
+        TransitionManager.beginDelayedTransition(
+            ll_question_answer,
+            AutoTransition()
+        )
+        constraintAnswer.visibility = View.GONE
+        constraintQuestion.background =
+            getDrawable(R.drawable.rounded_rectangle_question)
+    }
+
+    private fun expandQuestion(
+        constraintAnswer: View,
+        constraintQuestion: View
+    ) {
+        TransitionManager.beginDelayedTransition(
+            ll_question_answer,
+            AutoTransition()
+        )
+        constraintAnswer.visibility = View.VISIBLE
+        constraintQuestion.background =
+            getDrawable(R.drawable.rounded_rectangle_question_expanded)
     }
 
     private fun getSessions() {

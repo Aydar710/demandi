@@ -5,8 +5,10 @@ import com.aydar.demandi.data.ROOMS_COLLECTION
 import com.aydar.demandi.data.SESSIONS_COLLECTION
 import com.aydar.demandi.data.USERS_COLLECTION
 import com.aydar.demandi.data.model.Question
+import com.aydar.demandi.data.model.Session
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
@@ -27,5 +29,55 @@ class QuestionRepository(private val db: FirebaseFirestore) {
             .collection(SESSIONS_COLLECTION)
             .document(sessionId)
             .update(QUESTIONS_ARRAY, FieldValue.arrayUnion(question)).await()
+    }
+
+    suspend fun saveQuestionAnswer(
+        userId: String = "testUserId",
+        roomId: String,
+        session: Session,
+        question: Question
+    ) {
+
+        val questions = getQuestions(userId, roomId, session.id, question)
+
+        questions?.forEach {
+            if (it.id == question.id) {
+                it.answer = question.answer
+            }
+        }
+
+        questions?.let {
+            session.questions = it
+        }
+
+        db
+            .collection(USERS_COLLECTION)
+            .document(userId)
+            .collection(ROOMS_COLLECTION)
+            .document(roomId)
+            .collection(SESSIONS_COLLECTION)
+            .document(session.id)
+            .set(session)
+            .await()
+
+    }
+
+    private suspend fun getQuestions(
+        userId: String = "testUserId",
+        roomId: String,
+        sessionId: String,
+        question: Question
+    ): List<Question>? {
+        val ref = db
+            .collection(USERS_COLLECTION)
+            .document(userId)
+            .collection(ROOMS_COLLECTION)
+            .document(roomId)
+            .collection(SESSIONS_COLLECTION)
+            .document(sessionId)
+
+        val sessionSnapshot = ref.get().await()
+        val session = sessionSnapshot.toObject<Session>()
+        return session?.questions
     }
 }
