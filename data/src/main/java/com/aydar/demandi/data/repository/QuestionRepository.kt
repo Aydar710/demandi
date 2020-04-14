@@ -8,6 +8,7 @@ import com.aydar.demandi.data.model.Question
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import java.util.*
 
 class QuestionRepository(private val db: FirebaseFirestore) {
 
@@ -17,6 +18,7 @@ class QuestionRepository(private val db: FirebaseFirestore) {
         sessionId: String,
         question: Question
     ) {
+        question.id = Date().time.toString()
         db
             .collection(USERS_COLLECTION)
             .document(userId)

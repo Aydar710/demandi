@@ -37,13 +37,7 @@ class RoomDetailsActivity : BaseBluetoothActivity() {
 
         initClickListeners()
 
-        val toolbar = inc_toolbar as Toolbar
-        toolbar.setBackgroundColor(Color.WHITE)
-        toolbar.title = room.name
-        toolbar.setTitleTextColor(Color.BLACK)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        initToolbar()
     }
 
     private fun initClickListeners() {
@@ -75,5 +69,15 @@ class RoomDetailsActivity : BaseBluetoothActivity() {
         viewModel.sessionLiveData.observe(this, Observer {
             sessionsAdapter.submitList(it)
         })
+    }
+
+    private fun initToolbar() {
+        val toolbar = inc_toolbar as Toolbar
+        toolbar.setBackgroundColor(Color.WHITE)
+        toolbar.title = room.name
+        toolbar.setTitleTextColor(Color.BLACK)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 }
