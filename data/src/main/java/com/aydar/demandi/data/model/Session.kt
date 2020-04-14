@@ -4,6 +4,6 @@ import java.util.*
 
 data class Session(
     var id: String = "",
-    val date: Date,
+    val date: Date = Date(),
     val questions: List<Question> = listOf()
 )

@@ -3,16 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginLeft="48dp">
 
     <TextView
         android:id="@+id/tv_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:alpha="0.6"
+        android:fontFamily="@font/montserrat_semi_bold"
+        android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:textSize="16sp"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="5 Апр" />
+        tools:text="15 Апр" />
 </androidx.constraintlayout.widget.ConstraintLayout>

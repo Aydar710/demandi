@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application>
-        <activity android:name="com.aydar.featureroomdetails.RoomDetailsActivity"></activity>
+        <activity android:name="com.aydar.featureroomdetails.presentation.RoomDetailsActivity"></activity>
     </application>
 
 </manifest>

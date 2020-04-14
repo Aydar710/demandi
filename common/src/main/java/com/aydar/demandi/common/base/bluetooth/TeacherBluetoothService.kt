@@ -108,7 +108,7 @@ class TeacherBluetoothService() {
                     }
 
                 } catch (e: Exception) {
-                    print("")
+                    cancel()
                 }
             }
         }

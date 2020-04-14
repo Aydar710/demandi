@@ -4,5 +4,5 @@ import java.io.Serializable
 
 data class Question(
     var id: String = "",
-    val text: String
+    val text: String = ""
 ) : Serializable

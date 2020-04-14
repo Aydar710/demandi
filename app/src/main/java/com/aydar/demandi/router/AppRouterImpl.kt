@@ -9,7 +9,7 @@ import com.aydar.demandi.featurecreateroom.presentation.CreateRoomActivity
 import com.aydar.demandi.featurerooms.student.StudentRoomActivity
 import com.aydar.demandi.featurerooms.teacher.TeachersRoomActivity
 import com.aydar.demandi.teacherrooms.presentation.TeacherRoomsActivity
-import com.aydar.featureroomdetails.RoomDetailsActivity
+import com.aydar.featureroomdetails.presentation.RoomDetailsActivity
 
 class AppRouterImpl : AppRouter {
 
