@@ -37,13 +37,13 @@ class QuestionRepository(private val db: FirebaseFirestore) {
         question: Question
     ) {
 
-        session.questions?.forEach {
+        session.questions.forEach {
             if (it.id == question.id) {
                 it.answer = question.answer
             }
         }
 
-        session.questions?.let {
+        session.questions.let {
             session.questions = it
         }
 
@@ -56,6 +56,5 @@ class QuestionRepository(private val db: FirebaseFirestore) {
             .document(session.id)
             .set(session)
             .await()
-
     }
 }

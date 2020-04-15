@@ -3,6 +3,7 @@ package com.aydar.featureroomdetails.presentation
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.transition.AutoTransition
@@ -59,6 +60,7 @@ class RoomDetailsActivity : BaseBluetoothActivity() {
                 onSaveClickListener = { session, question, constraintAnswer, constraintQuestion ->
                     collapseQuestion(constraintAnswer, constraintQuestion)
                     viewModel.saveQuestionAnswer(room, session, question)
+                    Toast.makeText(this, "Ответ сохранен", Toast.LENGTH_SHORT).show()
                 }
             )
         rv_sessions.adapter = sessionsAdapter

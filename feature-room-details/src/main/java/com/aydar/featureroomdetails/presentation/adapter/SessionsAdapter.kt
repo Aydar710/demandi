@@ -109,6 +109,7 @@ class SessionsAdapter(
         fun bind(question: Question) {
             with(view) {
                 tv_question.text = question.text
+                et_answer.setText(question.answer)
 
                 constraint_question.setOnClickListener {
                     onQuestionClickListener.invoke(constraint_answer, constraint_question)
@@ -118,7 +119,12 @@ class SessionsAdapter(
                     val answer = et_answer.text.toString()
                     question.answer = answer
                     tv_save.visibility = View.GONE
-                    onSaveClickListener.invoke(currentSession, question, constraint_answer, constraint_question)
+                    onSaveClickListener.invoke(
+                        currentSession,
+                        question,
+                        constraint_answer,
+                        constraint_question
+                    )
                 }
 
                 et_answer.addTextChangedListener(object : TextWatcher {
@@ -139,7 +145,7 @@ class SessionsAdapter(
                         count: Int
                     ) {
                         s?.let {
-                            if (it.isNotBlank()) {
+                            if (it.isNotBlank() && it.toString() != question.answer) {
                                 tv_save.visibility = View.VISIBLE
                             } else {
                                 tv_save.visibility = View.GONE
