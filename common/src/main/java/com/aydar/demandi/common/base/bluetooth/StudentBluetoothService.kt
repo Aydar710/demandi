@@ -58,6 +58,7 @@ class StudentBluetoothService() {
                 // This is a blocking call and will only return on a
                 // successful connection or an exception
                 mmSocket.connect()
+                manageConnectedSocket(mmSocket, mmDevice)
 
             } catch (e: IOException) {
                 // Close the socket
@@ -68,8 +69,6 @@ class StudentBluetoothService() {
                 }
 
             }
-
-            manageConnectedSocket(mmSocket, mmDevice)
         }
 
         fun cancel() {
@@ -83,7 +82,7 @@ class StudentBluetoothService() {
         private fun manageConnectedSocket(mmSocket: BluetoothSocket, mmDevice: BluetoothDevice?) {
             try {
                 mConnectedThread = ConnectedThread(mmSocket)
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
             try {
@@ -117,6 +116,9 @@ class StudentBluetoothService() {
                     is Room -> {
                         manageReadRoom(readObj)
                     }
+                    is Question -> {
+                        manageReadQuestion(readObj)
+                    }
                 }
             }
         }
@@ -148,6 +150,11 @@ class StudentBluetoothService() {
         private fun manageReadRoom(room: Room) {
             val roomMsg = handler.obtainMessage(MESSAGE_RECEIVED_ROOM_INFO, room)
             handler.sendMessage(roomMsg)
+        }
+
+        private fun manageReadQuestion(question: Question) {
+            val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_QUESTION, question)
+            handler.sendMessage(questionMsg)
         }
 
         // Call this method from the main activity to shut down the connection.

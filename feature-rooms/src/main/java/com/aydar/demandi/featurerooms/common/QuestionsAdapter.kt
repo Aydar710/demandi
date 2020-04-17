@@ -14,7 +14,7 @@ class QuestionsAdapter(dataSet: MutableList<Question> = mutableListOf()) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_question, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_question_student, parent, false)
         return QuestionViewHolder(view)
     }
 

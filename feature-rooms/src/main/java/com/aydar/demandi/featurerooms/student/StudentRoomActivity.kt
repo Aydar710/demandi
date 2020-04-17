@@ -12,12 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amitshekhar.DebugDB
-import com.aydar.demandi.common.base.BaseBluetoothActivity
-import com.aydar.demandi.common.base.EXTRA_ROOM_NAME
-import com.aydar.demandi.common.base.MESSAGE_RECEIVED_ROOM_INFO
-import com.aydar.demandi.common.base.MESSAGE_WRITE
+import com.aydar.demandi.common.base.*
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
-import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurerooms.R
@@ -27,7 +23,6 @@ import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListene
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_teachers_room.*
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class StudentRoomActivity : BaseBluetoothActivity() {
@@ -37,9 +32,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     private val viewModel: StudentRoomViewModel by viewModel()
 
     private lateinit var adapter: QuestionsAdapter
-
-    private val studentService1: StudentBluetoothService by inject()
-    private val studentService2: StudentBluetoothService by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +103,11 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                 MESSAGE_RECEIVED_ROOM_INFO -> {
                     val room = it.obj as Room
                     viewModel.handleReceivedRoom(room)
+                    true
+                }
+                MESSAGE_RECEIVED_QUESTION -> {
+                    val question = it.obj as Question
+                    viewModel.addQuestion(question)
                     true
                 }
 

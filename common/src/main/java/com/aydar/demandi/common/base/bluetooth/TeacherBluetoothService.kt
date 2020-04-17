@@ -113,6 +113,10 @@ class TeacherBluetoothService() {
             }
         }
 
+        fun sendQuestion(question: Question) {
+            objOutStream.writeObject(question)
+        }
+
         fun sendRoomToStudent(room: Room) {
             sleep(2000)
             objOutStream.writeObject(room)
@@ -123,6 +127,15 @@ class TeacherBluetoothService() {
                 MESSAGE_READ, question.text
             )
 
+            connectedThreads?.forEach {
+                try {
+                    if (it != this) {
+                        it.sendQuestion(question)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
             handler.sendMessage(readMsg)
         }
 
