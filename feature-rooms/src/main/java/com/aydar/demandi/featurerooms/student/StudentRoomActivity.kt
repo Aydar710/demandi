@@ -97,7 +97,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                 MESSAGE_WRITE -> {
                     val question =
                         Question(text = it.obj as String)
-                    viewModel.addQuestion(question)
+                    viewModel.addReceivedQuestion(question)
                     true
                 }
                 MESSAGE_RECEIVED_ROOM_INFO -> {
@@ -107,7 +107,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                 }
                 MESSAGE_RECEIVED_QUESTION -> {
                     val question = it.obj as Question
-                    viewModel.addQuestion(question)
+                    viewModel.onQuestionReceived(question)
                     true
                 }
 
@@ -123,7 +123,9 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun initRecycler() {
-        adapter = QuestionsAdapter()
+        adapter = QuestionsAdapter() {
+            viewModel.sendQuestion(it)
+        }
         val recycler = findViewById<DragDropSwipeRecyclerView>(R.id.rv_questions)
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
@@ -138,7 +140,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                 direction: OnItemSwipeListener.SwipeDirection,
                 item: Question
             ): Boolean {
-                viewModel.onItemSwipedLeft(item, position)
+                viewModel.onItemSwipedLeft(item)
                 return false
             }
         }
@@ -151,12 +153,12 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         }
 
         tv_send.setOnClickListener {
-            val questionText = et_question.text.toString()
-            if (questionText.isNotEmpty()) {
+            val question = Question(text = et_question.text.toString())
+            if (question.text.isNotEmpty()) {
                 hideKeyboard {
                     toggleBottomSheet()
                 }
-                viewModel.sendQuestion(questionText)
+                viewModel.sendQuestion(question)
                 et_question.text?.clear()
             }
         }

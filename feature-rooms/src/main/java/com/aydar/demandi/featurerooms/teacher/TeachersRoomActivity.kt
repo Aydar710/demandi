@@ -46,7 +46,9 @@ class TeachersRoomActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
-        adapter = QuestionsAdapter()
+        adapter = QuestionsAdapter(){
+
+        }
         rv_questions.adapter = adapter
     }
 

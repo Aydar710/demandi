@@ -5,7 +5,9 @@ import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.os.Handler
 import com.aydar.demandi.common.base.MESSAGE_READ
+import com.aydar.demandi.common.base.MESSAGE_RECEIVED_ANSWER
 import com.aydar.demandi.common.base.UUID_INSECURE
+import com.aydar.demandi.data.model.Answer
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import java.io.*
@@ -88,9 +90,8 @@ class TeacherBluetoothService() {
 
         private val inStream: InputStream = mmSocket.inputStream
         private val outStream: OutputStream = mmSocket.outputStream
-        private val buffer: ByteArray = ByteArray(1024)
-        private lateinit var objInStream: ObjectInputStream
-        private lateinit var objOutStream: ObjectOutputStream
+        private var objInStream: ObjectInputStream
+        private var objOutStream: ObjectOutputStream
 
         init {
             objInStream = ObjectInputStream(inStream)
@@ -105,6 +106,9 @@ class TeacherBluetoothService() {
                         is Question -> {
                             manageReadQuestion(readObj)
                         }
+                        is Answer -> {
+                            manageReadAnswer(readObj)
+                        }
                     }
 
                 } catch (e: Exception) {
@@ -113,13 +117,17 @@ class TeacherBluetoothService() {
             }
         }
 
-        fun sendQuestion(question: Question) {
-            objOutStream.writeObject(question)
-        }
-
         fun sendRoomToStudent(room: Room) {
             sleep(2000)
             objOutStream.writeObject(room)
+        }
+
+        private fun sendQuestion(question: Question) {
+            objOutStream.writeObject(question)
+        }
+
+        private fun sendAnswer(answer: Answer){
+            objOutStream.writeObject(answer)
         }
 
         private fun manageReadQuestion(question: Question) {
@@ -138,6 +146,22 @@ class TeacherBluetoothService() {
             }
             handler.sendMessage(readMsg)
         }
+
+        private fun manageReadAnswer(answer: Answer) {
+            val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_ANSWER, answer)
+            handler.sendMessage(questionMsg)
+
+            connectedThreads?.forEach {
+                try {
+                    if (it != this) {
+                        it.sendAnswer(answer)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
 
         // Call this method from the activity to shut down the connection.
         fun cancel() {

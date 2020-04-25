@@ -6,28 +6,34 @@ import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
 import com.aydar.demandi.common.base.*
+import com.aydar.demandi.data.model.Answer
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import java.io.*
 import java.util.*
 
-class StudentBluetoothService() {
+class StudentBluetoothService {
 
     lateinit var handler: Handler
-
     lateinit var progressHandler: Handler
-
-    private var mConnectThread: ConnectThread? = null
-
-    private lateinit var mConnectedThread: ConnectedThread
-
+    private var connectThread: ConnectThread? = null
+    private lateinit var connectedThread: ConnectedThread
     lateinit var startStudentsRoomActivity: () -> Unit
 
     fun startConnecting(device: BluetoothDevice) {
         progressHandler.sendEmptyMessage(MESSAGE_SHOW_DIALOG)
-        mConnectThread = ConnectThread(device)
-        mConnectThread!!.start()
+        connectThread = ConnectThread(device)
+        connectThread!!.start()
     }
+
+    fun sendQuestion(question: Question) {
+        connectedThread.writeQuestion(question)
+    }
+
+    fun sendAnswer(answer: Answer) {
+        connectedThread.writeAnswer(answer)
+    }
+
 
     private inner class ConnectThread(device: BluetoothDevice) : Thread() {
 
@@ -81,12 +87,12 @@ class StudentBluetoothService() {
 
         private fun manageConnectedSocket(mmSocket: BluetoothSocket, mmDevice: BluetoothDevice?) {
             try {
-                mConnectedThread = ConnectedThread(mmSocket)
+                connectedThread = ConnectedThread(mmSocket)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
             try {
-                mConnectedThread.start()
+                connectedThread.start()
                 startStudentsRoomActivity.invoke()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -124,10 +130,8 @@ class StudentBluetoothService() {
         }
 
         // Call this from the activity to send data to the remote device.
-        fun writeQuestion(text: String) {
-            val bytes: ByteArray = text.toByteArray()
+        fun writeQuestion(question: Question) {
             try {
-                val question = Question(text = text)
                 objOutStream.writeObject(question)
             } catch (e: IOException) {
 
@@ -142,9 +146,13 @@ class StudentBluetoothService() {
                 return
             }
 
-            val writtenMsg = handler.obtainMessage(MESSAGE_WRITE, text)
+            val writtenMsg = handler.obtainMessage(MESSAGE_WRITE, question.text)
 
             handler.sendMessage(writtenMsg)
+        }
+
+        fun writeAnswer(answer: Answer) {
+            objOutStream.writeObject(answer)
         }
 
         private fun manageReadRoom(room: Room) {
@@ -164,9 +172,5 @@ class StudentBluetoothService() {
             } catch (e: IOException) {
             }
         }
-    }
-
-    fun sendQuestion(text: String) {
-        mConnectedThread.writeQuestion(text)
     }
 }

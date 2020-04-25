@@ -39,7 +39,7 @@ class QuestionRepository(private val db: FirebaseFirestore) {
 
         session.questions.forEach {
             if (it.id == question.id) {
-                it.answer = question.answer
+                it.teacherAnswer = question.teacherAnswer
             }
         }
 

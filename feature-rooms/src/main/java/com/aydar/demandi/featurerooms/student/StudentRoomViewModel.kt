@@ -32,11 +32,20 @@ class StudentRoomViewModel(
         _questionsLiveData.value = listOf()
     }
 
-    fun sendQuestion(questionText: String) {
-        ServiceHolder.studentService.sendQuestion(questionText)
+    fun sendQuestion(question: Question) {
+        ServiceHolder.studentService.sendQuestion(question)
     }
 
-    fun addQuestion(question: Question) {
+    fun onQuestionReceived(question: Question) {
+        val hasQuestion = checkIfHasQuestion(question)
+        if (hasQuestion) {
+            //TODO update answers
+        } else {
+            addReceivedQuestion(question)
+        }
+    }
+
+    fun addReceivedQuestion(question: Question) {
         val questions = _questionsLiveData.value?.toMutableList()
         questions?.add(question)
         _questionsLiveData.value = questions
@@ -55,6 +64,10 @@ class StudentRoomViewModel(
         }
     }
 
+    fun onItemSwipedLeft(question: Question) {
+        deleteQuestion(question)
+    }
+
     private fun saveRoomToCache(room: Room) {
         viewModelScope.launch {
             saveRoomToCacheUseCase.invoke(room)
@@ -66,10 +79,6 @@ class StudentRoomViewModel(
             val questionsCache = getCachedQuestionsUseCase.invoke(room.id)
             _questionsLiveData.postValue(questionsCache)
         }
-    }
-
-    fun onItemSwipedLeft(question: Question, position: Int) {
-        deleteQuestion(question)
     }
 
     private fun saveQuestionToCache(question: Question) {
@@ -84,6 +93,15 @@ class StudentRoomViewModel(
 
     private fun deleteQuestion(question: Question) {
 
+    }
+
+    private fun checkIfHasQuestion(question: Question): Boolean {
+        _questionsLiveData.value?.forEach {
+            if (it.id == question.id) {
+                return true
+            }
+        }
+        return false
     }
 
 }
