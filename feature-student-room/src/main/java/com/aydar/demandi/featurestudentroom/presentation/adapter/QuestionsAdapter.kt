@@ -1,4 +1,4 @@
-package com.aydar.demandi.featurestudentroom.common
+package com.aydar.demandi.featurestudentroom.presentation.adapter
 
 import android.text.Editable
 import android.text.TextWatcher
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.aydar.demandi.data.model.Answer
+import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.featurestudentroom.R
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeAdapter
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.item_question_student.view.*
 
 class QuestionsAdapter(
     dataSet: MutableList<Question> = mutableListOf(),
+    private val userId: String = "testUserId",
     private val onAnswerClickListener: (Question) -> Unit,
     private val onLikeClicked: (Question) -> Unit
 ) :
@@ -65,7 +67,7 @@ class QuestionsAdapter(
 
                     tv_answer.visibility = View.GONE
                 }
-                tv_count.text = question.likeCount.toString()
+                tv_count.text = question.likes.size.toString()
 
                 answerAdapter = AnswersAdapter()
                 rv_answers.adapter = answerAdapter
@@ -100,6 +102,11 @@ class QuestionsAdapter(
                 })
 
                 ic_like.setOnClickListener {
+                    if (question.likes.contains(Like(question.id, userId))) {
+                        ic_like.setImageResource(R.drawable.ic_rocket_book)
+                    } else {
+                        ic_like.setImageResource(R.drawable.ic_rocket_book_filled)
+                    }
                     onLikeClicked.invoke(question)
                 }
             }

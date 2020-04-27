@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aydar.demandi.data.model.Answer
-import com.aydar.demandi.featurestudentroom.common.AnswerDiffCallback
+import com.aydar.demandi.featurestudentroom.presentation.adapter.AnswerDiffCallback
 import com.aydar.featureteacherroom.R
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_question_student.view.*

@@ -1,4 +1,4 @@
-package com.aydar.demandi.featurestudentroom.student
+package com.aydar.demandi.featurestudentroom.presentation
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -14,10 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.amitshekhar.DebugDB
 import com.aydar.demandi.common.base.*
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurestudentroom.R
-import com.aydar.demandi.featurestudentroom.common.QuestionsAdapter
+import com.aydar.demandi.featurestudentroom.presentation.adapter.QuestionsAdapter
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
 import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -126,7 +127,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         adapter = QuestionsAdapter(onAnswerClickListener = {
             viewModel.sendQuestion(it)
         }, onLikeClicked = {
-            viewModel.onLikeClicked(it)
+            viewModel.handleLike(Like(it.id, "testUserId"))
         })
         val recycler = findViewById<DragDropSwipeRecyclerView>(R.id.rv_questions)
         recycler.layoutManager = LinearLayoutManager(this)
@@ -174,15 +175,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
             sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             tv_send.visibility = View.INVISIBLE
         }
-    }
-
-    private fun hideKeyboard() {
-        val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        var view = currentFocus
-        if (view == null) {
-            view = View(this)
-        }
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun hideKeyboard(hidden: () -> Unit) {

@@ -6,7 +6,7 @@ import com.aydar.demandi.common.base.EXTRA_ROOM
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurecreateroom.EXTRA_ROOM_NAME
 import com.aydar.demandi.featurecreateroom.presentation.CreateRoomActivity
-import com.aydar.demandi.featurestudentroom.student.StudentRoomActivity
+import com.aydar.demandi.featurestudentroom.presentation.StudentRoomActivity
 import com.aydar.demandi.teacherrooms.presentation.TeacherRoomsActivity
 import com.aydar.featureroomdetails.presentation.RoomDetailsActivity
 import com.aydar.featureteacherroom.presentation.TeacherRoomActivity

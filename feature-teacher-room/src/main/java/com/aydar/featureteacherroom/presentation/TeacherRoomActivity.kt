@@ -66,7 +66,7 @@ class TeacherRoomActivity : AppCompatActivity() {
                 }
                 MESSAGE_RECEIVED_LIKE -> {
                     val like = it.obj as Like
-                    teachersViewModel.incrementLike(like)
+                    teachersViewModel.handleLike(like)
                     true
                 }
                 else -> false

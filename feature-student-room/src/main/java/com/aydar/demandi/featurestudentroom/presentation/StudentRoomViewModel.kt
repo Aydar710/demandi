@@ -1,10 +1,11 @@
-package com.aydar.demandi.featurestudentroom.student
+package com.aydar.demandi.featurestudentroom.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurestudentroom.domain.GetCachedQuestionsUseCase
@@ -75,15 +76,45 @@ class StudentRoomViewModel(
         deleteQuestion(question)
     }
 
-    fun onLikeClicked(question: Question) {
-        val currentQuestions = _questionsLiveData.value
-        currentQuestions?.forEach {
-            if (it.id == question.id) {
-                it.likeCount++
+    fun handleLike(like : Like) {
+        val isLikeExists = checkIfLikeExists(like)
+        if (isLikeExists) {
+            decrementLike(like)
+        } else {
+            incrementLike(like)
+        }
+        ServiceHolder.studentService.sendLike(like, "testUser")
+    }
+
+    private fun incrementLike(like: Like) {
+        val currentQuestions = _questionsLiveData.value as MutableList
+        currentQuestions.forEach {
+            if (it.id == like.questionId) {
+                it.likes.add(like)
             }
         }
         _questionsLiveData.value = currentQuestions
-        ServiceHolder.studentService.sendLike(question)
+    }
+
+    private fun decrementLike(like: Like) {
+        val currentQuestions = _questionsLiveData.value as MutableList
+        currentQuestions.forEach {
+            if (it.id == like.questionId) {
+                it.likes.remove(like)
+            }
+        }
+        _questionsLiveData.value = currentQuestions
+    }
+
+    private fun checkIfLikeExists(like: Like): Boolean {
+        _questionsLiveData.value?.forEach { question ->
+            question.likes.forEach { questionLike ->
+                if (questionLike.questionId == like.questionId && questionLike.userId == like.userId) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     private fun saveRoomToCache(room: Room) {

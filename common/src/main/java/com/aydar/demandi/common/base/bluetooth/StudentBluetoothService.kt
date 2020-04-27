@@ -31,10 +31,8 @@ class StudentBluetoothService {
         connectedThread.writeQuestion(question, hasQuestion)
     }
 
-    fun sendLike(question: Question) {
-        connectedThread.writeLike(
-            Like(question.id, question.likeCount)
-        )
+    fun sendLike(like: Like, userId: String) {
+        connectedThread.writeLike(like)
     }
 
     fun sendAnswer(answer: Answer) {

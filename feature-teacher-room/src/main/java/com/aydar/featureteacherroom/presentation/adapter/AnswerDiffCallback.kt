@@ -1,4 +1,4 @@
-package com.aydar.demandi.featurestudentroom.common
+package com.aydar.demandi.featurestudentroom.presentation.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.aydar.demandi.data.model.Answer

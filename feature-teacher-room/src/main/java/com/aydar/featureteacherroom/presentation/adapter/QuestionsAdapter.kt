@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.aydar.demandi.data.model.Answer
 import com.aydar.demandi.data.model.Question
-import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeAdapter
 import com.aydar.featureteacherroom.R
+import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeAdapter
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_question_student.view.*
 
@@ -65,7 +65,7 @@ class QuestionsAdapter(
 
                     tv_answer.visibility = View.GONE
                 }
-                tv_count.text = question.likeCount.toString()
+                tv_count.text = question.likes.size.toString()
 
                 answerAdapter = AnswersAdapter()
                 rv_answers.adapter = answerAdapter

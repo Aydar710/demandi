@@ -1,4 +1,4 @@
-package com.aydar.demandi.featurestudentroom.common
+package com.aydar.demandi.featurestudentroom.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.View

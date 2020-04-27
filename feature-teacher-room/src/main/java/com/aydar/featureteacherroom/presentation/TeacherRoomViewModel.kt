@@ -44,20 +44,50 @@ class TeacherRoomViewModel(
         }
     }
 
-    fun incrementLike(like: Like) {
-        val currentQuestions = _questionsLiveData.value as MutableList
-        for (i in currentQuestions.indices) {
-            if (currentQuestions[i].id == like.questionId) {
-                currentQuestions[i].likeCount = like.count
-            }
-        }
-        _questionsLiveData.value = currentQuestions
-    }
-
     fun saveSession() {
         session =
             Session(date = Date())
         val sessionId = saveSessionUseCase.invoke(session, room.id)
         session.id = sessionId
+    }
+
+    fun handleLike(like: Like) {
+        val isLikeExists = checkIfLikeExists(like)
+        if (isLikeExists) {
+            decrementLike(like)
+        } else {
+            incrementLike(like)
+        }
+    }
+
+    private fun incrementLike(like: Like) {
+        val currentQuestions = _questionsLiveData.value as MutableList
+        currentQuestions.forEach {
+            if (it.id == like.questionId) {
+                it.likes.add(like)
+            }
+        }
+        _questionsLiveData.value = currentQuestions
+    }
+
+    private fun decrementLike(like: Like) {
+        val currentQuestions = _questionsLiveData.value as MutableList
+        currentQuestions.forEach {
+            if (it.id == like.questionId) {
+                it.likes.remove(like)
+            }
+        }
+        _questionsLiveData.value = currentQuestions
+    }
+
+    private fun checkIfLikeExists(like: Like): Boolean {
+        _questionsLiveData.value?.forEach { question ->
+            question.likes.forEach { questionLike ->
+                if (questionLike.questionId == like.questionId && questionLike.userId == like.userId) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 }

@@ -4,5 +4,5 @@ import java.io.Serializable
 
 data class Like(
     val questionId: String,
-    val count: Long
+    val userId: String
 ) : Serializable
