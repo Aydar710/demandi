@@ -111,6 +111,11 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                     viewModel.onQuestionReceived(question)
                     true
                 }
+                MESSAGE_RECEIVED_LIKE -> {
+                    val like = it.obj as Like
+                    viewModel.handleReceivedLike(like)
+                    true
+                }
 
                 else -> false
             }

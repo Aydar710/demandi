@@ -135,6 +135,10 @@ class TeacherBluetoothService() {
             objOutStream.writeObject(answer)
         }
 
+        private fun sendLike(like: Like) {
+            objOutStream.writeObject(like)
+        }
+
         private fun manageReadQuestion(question: Question) {
             val readMsg = handler.obtainMessage(
                 MESSAGE_READ, question
@@ -170,6 +174,16 @@ class TeacherBluetoothService() {
         private fun manageReadLike(like: Like) {
             val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_LIKE, like)
             handler.sendMessage(questionMsg)
+
+            connectedThreads?.forEach {
+                try {
+                    if (it != this) {
+                        it.sendLike(like)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
         }
 
 

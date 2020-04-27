@@ -129,6 +129,9 @@ class StudentBluetoothService {
                     is Question -> {
                         manageReadQuestion(readObj)
                     }
+                    is Like -> {
+                        manageReadLike(readObj)
+                    }
                 }
             }
         }
@@ -174,6 +177,11 @@ class StudentBluetoothService {
 
         private fun manageReadQuestion(question: Question) {
             val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_QUESTION, question)
+            handler.sendMessage(questionMsg)
+        }
+
+        private fun manageReadLike(like: Like) {
+            val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_LIKE, like)
             handler.sendMessage(questionMsg)
         }
 

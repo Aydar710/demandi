@@ -76,6 +76,15 @@ class StudentRoomViewModel(
         deleteQuestion(question)
     }
 
+    fun handleReceivedLike(like : Like){
+        val isLikeExists = checkIfLikeExists(like)
+        if (isLikeExists) {
+            decrementLike(like)
+        } else {
+            incrementLike(like)
+        }
+    }
+
     fun handleLike(like : Like) {
         val isLikeExists = checkIfLikeExists(like)
         if (isLikeExists) {
