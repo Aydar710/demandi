@@ -1,0 +1,199 @@
+package com.aydar.demandi.featurestudentroom.student
+
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.os.Bundle
+import android.os.Handler
+import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.amitshekhar.DebugDB
+import com.aydar.demandi.common.base.*
+import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.data.model.Question
+import com.aydar.demandi.data.model.Room
+import com.aydar.demandi.featurestudentroom.R
+import com.aydar.demandi.featurestudentroom.common.QuestionsAdapter
+import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
+import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListener
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
+import kotlinx.android.synthetic.main.content_students_room.*
+import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
+
+class StudentRoomActivity : BaseBluetoothActivity() {
+
+    private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
+
+    private val viewModel: StudentRoomViewModel by viewModel()
+
+    private lateinit var adapter: QuestionsAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_student_room)
+
+        tv_send.visibility = View.INVISIBLE
+        initToolbar()
+
+        sheetBehavior = BottomSheetBehavior.from(bottom_sheet_ask)
+
+        setBottomSheetCallback()
+
+        initClickListeners()
+
+        initHandler()
+        initRecycler()
+        initObservers()
+
+        val addressLog = DebugDB.getAddressLog()
+        Log.d("address", addressLog)
+    }
+
+    private fun setBottomSheetCallback() {
+        sheetBehavior.setBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            var isDragging = false
+
+            @SuppressLint("SwitchIntDef")
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        tv_send.visibility = View.VISIBLE
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        if (isDragging) {
+                            tv_send.visibility = View.INVISIBLE
+                        }
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                        isDragging = true
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(inc_toolbar as Toolbar)
+        val roomName = intent.getStringExtra(EXTRA_ROOM_NAME)
+        supportActionBar?.title = roomName
+    }
+
+    private fun initHandler() {
+        ServiceHolder.studentService.handler = Handler {
+            when (it.what) {
+                MESSAGE_WRITE -> {
+                    val question = it.obj as Question
+                    viewModel.addReceivedQuestion(question)
+                    true
+                }
+                MESSAGE_RECEIVED_ROOM_INFO -> {
+                    val room = it.obj as Room
+                    viewModel.handleReceivedRoom(room)
+                    true
+                }
+                MESSAGE_RECEIVED_QUESTION -> {
+                    val question = it.obj as Question
+                    viewModel.onQuestionReceived(question)
+                    true
+                }
+
+                else -> false
+            }
+        }
+    }
+
+    private fun initObservers() {
+        viewModel.questionsLiveData.observe(this, Observer {
+            adapter.submitList(it)
+        })
+    }
+
+    private fun initRecycler() {
+        adapter = QuestionsAdapter(onAnswerClickListener = {
+            viewModel.sendQuestion(it)
+        }, onLikeClicked = {
+            viewModel.onLikeClicked(it)
+        })
+        val recycler = findViewById<DragDropSwipeRecyclerView>(R.id.rv_questions)
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.adapter = adapter
+        recycler.orientation =
+            DragDropSwipeRecyclerView.ListOrientation.VERTICAL_LIST_WITH_VERTICAL_DRAGGING
+
+        recycler.disableSwipeDirection(DragDropSwipeRecyclerView.ListOrientation.DirectionFlag.RIGHT)
+
+        val onItemSwipeListener = object : OnItemSwipeListener<Question> {
+            override fun onItemSwiped(
+                position: Int,
+                direction: OnItemSwipeListener.SwipeDirection,
+                item: Question
+            ): Boolean {
+                viewModel.onItemSwipedLeft(item)
+                return false
+            }
+        }
+        recycler.swipeListener = onItemSwipeListener
+    }
+
+    private fun initClickListeners() {
+        iv_bottom_sheet_header.setOnClickListener {
+            toggleBottomSheet()
+        }
+
+        tv_send.setOnClickListener {
+            val question = Question(id = Date().time.toString(), text = et_question.text.toString())
+            if (question.text.isNotEmpty()) {
+                hideKeyboard {
+                    toggleBottomSheet()
+                }
+                viewModel.sendQuestion(question)
+                et_question.text?.clear()
+            }
+        }
+    }
+
+    private fun toggleBottomSheet() {
+        if (sheetBehavior.state !== BottomSheetBehavior.STATE_EXPANDED) {
+            sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            tv_send.visibility = View.VISIBLE
+        } else {
+            sheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            tv_send.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        var view = currentFocus
+        if (view == null) {
+            view = View(this)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun hideKeyboard(hidden: () -> Unit) {
+        val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        var view = currentFocus
+        if (view == null) {
+            view = View(this)
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        Handler().postDelayed({
+            hidden.invoke()
+        }, 100)
+    }
+}

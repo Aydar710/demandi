@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import com.aydar.demandi.common.base.*
 import com.aydar.demandi.data.model.Answer
+import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import java.io.*
@@ -26,14 +27,19 @@ class StudentBluetoothService {
         connectThread!!.start()
     }
 
-    fun sendQuestion(question: Question) {
-        connectedThread.writeQuestion(question)
+    fun sendQuestion(question: Question, hasQuestion: Boolean = false) {
+        connectedThread.writeQuestion(question, hasQuestion)
+    }
+
+    fun sendLike(question: Question) {
+        connectedThread.writeLike(
+            Like(question.id, question.likeCount)
+        )
     }
 
     fun sendAnswer(answer: Answer) {
         connectedThread.writeAnswer(answer)
     }
-
 
     private inner class ConnectThread(device: BluetoothDevice) : Thread() {
 
@@ -129,8 +135,7 @@ class StudentBluetoothService {
             }
         }
 
-        // Call this from the activity to send data to the remote device.
-        fun writeQuestion(question: Question) {
+        fun writeQuestion(question: Question, hasQuestion: Boolean = false) {
             try {
                 objOutStream.writeObject(question)
             } catch (e: IOException) {
@@ -146,9 +151,18 @@ class StudentBluetoothService {
                 return
             }
 
-            val writtenMsg = handler.obtainMessage(MESSAGE_WRITE, question.text)
+            if (!hasQuestion) {
+                val writtenMsg = handler.obtainMessage(MESSAGE_WRITE, question)
+                handler.sendMessage(writtenMsg)
+            }
+        }
 
-            handler.sendMessage(writtenMsg)
+        fun writeLike(like: Like) {
+            try {
+                objOutStream.writeObject(like)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         fun writeAnswer(answer: Answer) {

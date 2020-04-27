@@ -5,5 +5,5 @@ import com.aydar.demandi.data.model.Room
 
 interface RoomDetailsRouter {
 
-    fun moveToTeachersRoomActivity(room: Room, activity: AppCompatActivity)
+    fun moveToTeacherRoomActivity(room: Room, activity: AppCompatActivity)
 }

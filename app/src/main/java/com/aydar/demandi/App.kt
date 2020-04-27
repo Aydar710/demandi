@@ -9,12 +9,13 @@ import com.aydar.demandi.data.di.repositoryModule
 import com.aydar.demandi.data.di.roomModule
 import com.aydar.demandi.di.routerModule
 import com.aydar.demandi.featurecreateroom.di.createRoomModule
-import com.aydar.demandi.featurerooms.di.roomsViewModelModule
-import com.aydar.demandi.featurerooms.di.studentsRoomModule
+import com.aydar.demandi.featurestudentroom.di.studentsRoomModule
 import com.aydar.demandi.teacherrooms.di.teacherRoomsUseCaseModule
 import com.aydar.demandi.teacherrooms.di.teacherRoomsViewModelModule
 import com.aydar.featureroomdetails.di.roomDetailsUseCaseModule
 import com.aydar.featureroomdetails.di.roomDetailsViewModelModule
+import com.aydar.featureteacherroom.di.roomsViewModelModule
+import com.aydar.featureteacherroom.di.teacherRoomModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -43,7 +44,8 @@ class App : Application() {
                 roomModule,
                 roomDetailsUseCaseModule,
                 roomDetailsViewModelModule,
-                roomsViewModelModule
+                roomsViewModelModule,
+                teacherRoomModule
             )
         }
     }

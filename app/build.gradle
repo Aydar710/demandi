@@ -29,7 +29,8 @@ dependencies {
     implementation project(':feature-create-room')
     implementation project(':feature-main')
     implementation project(':feature-join-room')
-    implementation project(':feature-rooms')
+    implementation project(':feature-student-room')
+    implementation project(':feature-teacher-room')
     implementation project(':feature-teacher-rooms')
     implementation project(':feature-room-details')
 

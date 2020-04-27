@@ -29,7 +29,7 @@ class RoomDetailsViewModel(
     fun openRoom(room: Room, activity: AppCompatActivity) {
         ServiceHolder.teacherService.startServer()
         ServiceHolder.teacherService.room = room
-        router.moveToTeachersRoomActivity(room, activity)
+        router.moveToTeacherRoomActivity(room, activity)
     }
 
     fun getSessions() {

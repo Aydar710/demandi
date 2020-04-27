@@ -6,8 +6,10 @@ import android.bluetooth.BluetoothSocket
 import android.os.Handler
 import com.aydar.demandi.common.base.MESSAGE_READ
 import com.aydar.demandi.common.base.MESSAGE_RECEIVED_ANSWER
+import com.aydar.demandi.common.base.MESSAGE_RECEIVED_LIKE
 import com.aydar.demandi.common.base.UUID_INSECURE
 import com.aydar.demandi.data.model.Answer
+import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import java.io.*
@@ -109,6 +111,9 @@ class TeacherBluetoothService() {
                         is Answer -> {
                             manageReadAnswer(readObj)
                         }
+                        is Like -> {
+                            manageReadLike(readObj)
+                        }
                     }
 
                 } catch (e: Exception) {
@@ -126,13 +131,13 @@ class TeacherBluetoothService() {
             objOutStream.writeObject(question)
         }
 
-        private fun sendAnswer(answer: Answer){
+        private fun sendAnswer(answer: Answer) {
             objOutStream.writeObject(answer)
         }
 
         private fun manageReadQuestion(question: Question) {
             val readMsg = handler.obtainMessage(
-                MESSAGE_READ, question.text
+                MESSAGE_READ, question
             )
 
             connectedThreads?.forEach {
@@ -160,6 +165,11 @@ class TeacherBluetoothService() {
                     e.printStackTrace()
                 }
             }
+        }
+
+        private fun manageReadLike(like: Like) {
+            val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_LIKE, like)
+            handler.sendMessage(questionMsg)
         }
 
 

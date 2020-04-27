@@ -6,15 +6,15 @@ import com.aydar.demandi.common.base.EXTRA_ROOM
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurecreateroom.EXTRA_ROOM_NAME
 import com.aydar.demandi.featurecreateroom.presentation.CreateRoomActivity
-import com.aydar.demandi.featurerooms.student.StudentRoomActivity
-import com.aydar.demandi.featurerooms.teacher.TeachersRoomActivity
+import com.aydar.demandi.featurestudentroom.student.StudentRoomActivity
 import com.aydar.demandi.teacherrooms.presentation.TeacherRoomsActivity
 import com.aydar.featureroomdetails.presentation.RoomDetailsActivity
+import com.aydar.featureteacherroom.presentation.TeacherRoomActivity
 
 class AppRouterImpl : AppRouter {
 
     override fun moveToTeacherRoomActivity(activity: AppCompatActivity, room: Room) {
-        val intent = Intent(activity, TeachersRoomActivity::class.java)
+        val intent = Intent(activity, TeacherRoomActivity::class.java)
         intent.putExtra(EXTRA_ROOM, room)
         activity.startActivity(intent)
     }
@@ -53,8 +53,8 @@ class AppRouterImpl : AppRouter {
         activity.startActivity(intent)
     }
 
-    override fun moveToTeachersRoomActivity(room: Room, activity: AppCompatActivity) {
-        val intent = Intent(activity, TeachersRoomActivity::class.java)
+    override fun moveToTeacherRoomActivity(room: Room, activity: AppCompatActivity) {
+        val intent = Intent(activity, TeacherRoomActivity::class.java)
         intent.putExtra(EXTRA_ROOM, room)
         activity.startActivity(intent)
     }
