@@ -8,6 +8,7 @@ import com.aydar.demandi.router.AppRouterImpl
 import com.aydar.demandi.teacherrooms.TeacherRoomsRouter
 import com.aydar.featureauth.AuthRouter
 import com.aydar.featureroomdetails.RoomDetailsRouter
+import com.google.firebase.auth.FirebaseAuth
 import org.koin.dsl.module
 
 val routerModule = module {
@@ -18,4 +19,8 @@ val routerModule = module {
     single<TeacherRoomsRouter> { AppRouterImpl() }
     single<RoomDetailsRouter> { AppRouterImpl() }
     single<AuthRouter> { AppRouterImpl() }
+}
+
+val firebaseModule = module {
+    factory { FirebaseAuth.getInstance().currentUser }
 }

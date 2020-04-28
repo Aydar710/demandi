@@ -13,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 
 class SessionRepository(private val db: FirebaseFirestore) {
 
-    fun saveSession(session: Session, roomId: String, userId: String = "testUserId"): String {
+    fun saveSession(session: Session, roomId: String, userId: String): String {
         val ref = db
             .collection(USERS_COLLECTION)
             .document(userId)
@@ -30,7 +30,7 @@ class SessionRepository(private val db: FirebaseFirestore) {
         return sessionId
     }
 
-    suspend fun getRoomSessions(userId: String = "testUserId", roomId: String): List<Session> {
+    suspend fun getRoomSessions(userId: String, roomId: String): List<Session> {
         val sessionsSnapshot = db
             .collection(USERS_COLLECTION)
             .document(userId)

@@ -11,7 +11,7 @@ import kotlinx.coroutines.tasks.await
 
 class RoomsRepository(private val db: FirebaseFirestore) {
 
-    fun addRoom(room: Room, userId: String = "testUserId"): String {
+    fun addRoom(room: Room, userId: String): String {
         val ref =
             db.collection(USERS_COLLECTION).document(userId).collection(ROOMS_COLLECTION).document()
         val id = ref.id
@@ -23,7 +23,7 @@ class RoomsRepository(private val db: FirebaseFirestore) {
         return id
     }
 
-    suspend fun getUserRooms(userId: String = "testUserId"): List<Room>? {
+    suspend fun getUserRooms(userId: String): List<Room>? {
         val roomsSnapshot = db
             .collection(USERS_COLLECTION)
             .document(userId)
@@ -34,7 +34,7 @@ class RoomsRepository(private val db: FirebaseFirestore) {
         return rooms
     }
 
-    suspend fun getRoomById(roomId: String, userId: String = "testUserId"): Room {
+    suspend fun getRoomById(roomId: String, userId: String): Room {
         val roomSnapshot = db
             .collection(USERS_COLLECTION)
             .document(userId)

@@ -6,7 +6,7 @@ import org.koin.dsl.module
 
 val createRoomModule = module {
 
-    factory { CreateRoomUseCase(get()) }
+    factory { CreateRoomUseCase(get(), get()) }
 
     factory { CreateRoomViewModel(get(), get()) }
 }

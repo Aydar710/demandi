@@ -13,5 +13,5 @@ val teacherRoomsViewModelModule = module {
 
 val teacherRoomsUseCaseModule = module {
 
-    factory { ShowRoomsUseCase(get()) }
+    factory { ShowRoomsUseCase(get(), get()) }
 }

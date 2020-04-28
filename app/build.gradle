@@ -51,4 +51,5 @@ dependencies {
     implementation koinDeps.values()
     implementation roomDeps.values()
     implementation firebaseCrashlyticsDeps.values()
+    implementation firebaseDeps.values()
 }

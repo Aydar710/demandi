@@ -8,8 +8,8 @@ import org.koin.dsl.module
 
 val teacherRoomModule = module {
 
-    factory { SaveQuestionToFirestoreUseCase(get()) }
-    factory { SaveSessionUseCase(get()) }
+    factory { SaveQuestionToFirestoreUseCase(get(), get()) }
+    factory { SaveSessionUseCase(get(), get()) }
 }
 
 val roomsViewModelModule = module {

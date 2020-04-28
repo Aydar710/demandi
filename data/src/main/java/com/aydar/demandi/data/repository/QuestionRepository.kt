@@ -13,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 class QuestionRepository(private val db: FirebaseFirestore) {
 
     suspend fun saveQuestion(
-        userId: String = "testUserId",
+        userId: String,
         roomId: String,
         sessionId: String,
         question: Question
@@ -29,7 +29,7 @@ class QuestionRepository(private val db: FirebaseFirestore) {
     }
 
     suspend fun saveQuestionAnswer(
-        userId: String = "testUserId",
+        userId: String,
         roomId: String,
         session: Session,
         question: Question

@@ -11,6 +11,6 @@ val roomDetailsViewModelModule = module {
 }
 
 val roomDetailsUseCaseModule = module {
-    factory { GetSessionsUseCase(get()) }
-    factory { SaveQuestionAnswerUseCase(get()) }
+    factory { GetSessionsUseCase(get(), get()) }
+    factory { SaveQuestionAnswerUseCase(get(), get()) }
 }
