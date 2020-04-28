@@ -9,6 +9,7 @@ import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.data.model.Session
+import com.aydar.featureteacherroom.domain.QuestionLikeCountComparator
 import com.aydar.featureteacherroom.domain.SaveQuestionToFirestoreUseCase
 import com.aydar.featureteacherroom.domain.SaveSessionUseCase
 import kotlinx.coroutines.launch
@@ -67,6 +68,7 @@ class TeacherRoomViewModel(
                 it.likes.add(like)
             }
         }
+        Collections.sort(currentQuestions, QuestionLikeCountComparator())
         _questionsLiveData.value = currentQuestions
     }
 
@@ -77,6 +79,7 @@ class TeacherRoomViewModel(
                 it.likes.remove(like)
             }
         }
+        Collections.sort(currentQuestions, QuestionLikeCountComparator())
         _questionsLiveData.value = currentQuestions
     }
 

@@ -28,6 +28,9 @@
             android:label="@string/choose_auditorium" />
         <activity android:name="com.aydar.demandi.featurecreateroom.presentation.CreateRoomActivity" />
         <activity android:name=".featuremain.MainActivity">
+
+        </activity>
+        <activity android:name="com.aydar.featureauth.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -29,7 +29,8 @@ buildscript {
         ]
 
         firebaseDeps = [
-                firestore: "com.google.firebase:firebase-firestore-ktx:$firestoreVersion"
+                firestore: "com.google.firebase:firebase-firestore-ktx:$firestoreVersion",
+                auth: "com.google.firebase:firebase-auth:19.3.1"
         ]
 
         coroutinesDeps = [

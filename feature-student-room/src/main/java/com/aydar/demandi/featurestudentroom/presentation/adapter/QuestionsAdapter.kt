@@ -69,6 +69,22 @@ class QuestionsAdapter(
                 }
                 tv_count.text = question.likes.size.toString()
 
+                if (question.likes.contains(Like(question.id, userId))) {
+                    ic_like.setImageResource(R.drawable.ic_rocket_book_filled)
+                } else {
+                    ic_like.setImageResource(R.drawable.ic_rocket_book)
+                }
+
+                ic_like.setOnClickListener {
+                    onLikeClicked.invoke(question)
+                }
+
+                //setUpAnswersAdapter(this, question)
+            }
+        }
+
+        private fun setUpAnswersAdapter(containerView: View, question: Question) {
+            with(containerView) {
                 answerAdapter = AnswersAdapter()
                 rv_answers.adapter = answerAdapter
                 answerAdapter.submitList(listOf(Answer("123"), Answer("123"), Answer("123")))
@@ -100,15 +116,6 @@ class QuestionsAdapter(
                     }
 
                 })
-
-                ic_like.setOnClickListener {
-                    if (question.likes.contains(Like(question.id, userId))) {
-                        ic_like.setImageResource(R.drawable.ic_rocket_book)
-                    } else {
-                        ic_like.setImageResource(R.drawable.ic_rocket_book_filled)
-                    }
-                    onLikeClicked.invoke(question)
-                }
             }
         }
     }

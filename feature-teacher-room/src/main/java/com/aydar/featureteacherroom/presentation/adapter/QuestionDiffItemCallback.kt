@@ -3,7 +3,7 @@ package com.aydar.demandi.featurestudentroom.presentation.adapter
 import androidx.recyclerview.widget.DiffUtil
 import com.aydar.demandi.data.model.Question
 
-class QuestionDiffCallback : DiffUtil.ItemCallback<Question>() {
+class QuestionDiffItemCallback : DiffUtil.ItemCallback<Question>() {
 
     override fun areItemsTheSame(oldItem: Question, newItem: Question): Boolean =
         oldItem.id == newItem.id

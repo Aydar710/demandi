@@ -8,11 +8,9 @@ import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
-import com.aydar.demandi.featurestudentroom.domain.GetCachedQuestionsUseCase
-import com.aydar.demandi.featurestudentroom.domain.GetRoomFromCacheUseCase
-import com.aydar.demandi.featurestudentroom.domain.SaveQuestionToCacheUseCase
-import com.aydar.demandi.featurestudentroom.domain.SaveRoomToCacheUseCase
+import com.aydar.demandi.featurestudentroom.domain.*
 import kotlinx.coroutines.launch
+import java.util.*
 
 class StudentRoomViewModel(
     private val saveQuestionToCacheUseCase: SaveQuestionToCacheUseCase,
@@ -102,6 +100,7 @@ class StudentRoomViewModel(
                 it.likes.add(like)
             }
         }
+        Collections.sort(currentQuestions, QuestionLikeCountComparator())
         _questionsLiveData.value = currentQuestions
     }
 
@@ -112,6 +111,7 @@ class StudentRoomViewModel(
                 it.likes.remove(like)
             }
         }
+        Collections.sort(currentQuestions, QuestionLikeCountComparator())
         _questionsLiveData.value = currentQuestions
     }
 
