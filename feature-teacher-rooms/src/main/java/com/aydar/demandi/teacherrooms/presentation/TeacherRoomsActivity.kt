@@ -21,7 +21,6 @@ class TeacherRoomsActivity : AppCompatActivity(R.layout.activity_teacher_rooms) 
 
         initRecycler()
         showRooms()
-        print("")
     }
 
     private fun showRooms() {

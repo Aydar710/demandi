@@ -6,4 +6,8 @@
 
     <color name="colorQuestionBg">#4643D3</color>
     <color name="colorAnswerBg">#FFE0A3</color>
+    <color name="swipeBehindBackground">#d0184c</color>
+    <color name="swipeBehindBackgroundSecondary">#17af98</color>
+    <color name="swipeBehindTextColor">#ffffff</color>
+    <color name="divider">#e1e1e1</color>
 </resources>

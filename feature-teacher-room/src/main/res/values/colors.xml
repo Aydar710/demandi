@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="swipeBehindBackground">#d0184c</color>
-    <color name="swipeBehindBackgroundSecondary">#17af98</color>
-    <color name="swipeBehindTextColor">#ffffff</color>
-    <color name="divider">#e1e1e1</color>
+
 </resources>

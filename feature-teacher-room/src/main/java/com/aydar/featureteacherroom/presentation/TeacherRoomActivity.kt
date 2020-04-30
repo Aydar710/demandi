@@ -14,6 +14,8 @@ import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.featureteacherroom.R
 import com.aydar.featureteacherroom.presentation.adapter.QuestionsAdapter
+import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
+import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListener
 import kotlinx.android.synthetic.main.activity_teacher_room.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -21,6 +23,19 @@ class TeacherRoomActivity : AppCompatActivity() {
 
     private val teachersViewModel: TeacherRoomViewModel by viewModel()
     private lateinit var adapter: QuestionsAdapter
+
+    private val onItemSwipeListener = object : OnItemSwipeListener<Question> {
+        override fun onItemSwiped(
+            position: Int,
+            direction: OnItemSwipeListener.SwipeDirection,
+            item: Question
+        ): Boolean {
+            if (direction == OnItemSwipeListener.SwipeDirection.RIGHT_TO_LEFT) {
+                return false
+            }
+            return true
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +69,8 @@ class TeacherRoomActivity : AppCompatActivity() {
                 },
                 onLikeClicked = {})
         rv_questions.adapter = adapter
+        rv_questions.swipeListener = onItemSwipeListener
+        rv_questions.disableSwipeDirection(DragDropSwipeRecyclerView.ListOrientation.DirectionFlag.RIGHT)
     }
 
     private fun initHandler() {
