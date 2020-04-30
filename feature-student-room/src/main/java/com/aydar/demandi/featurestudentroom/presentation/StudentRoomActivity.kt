@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.amitshekhar.DebugDB
 import com.aydar.demandi.common.base.*
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
 import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
@@ -116,7 +117,11 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                     viewModel.handleReceivedLike(like)
                     true
                 }
-
+                MESSAGE_COMMAND_DELETE_QUESTION -> {
+                    val command = it.obj as CommandDeleteQuestion
+                    viewModel.handleReceivedCommandDeleteQuestion(command.question)
+                    true
+                }
                 else -> false
             }
         }

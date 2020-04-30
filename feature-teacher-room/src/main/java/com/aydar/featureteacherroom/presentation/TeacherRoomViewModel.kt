@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
@@ -59,6 +60,11 @@ class TeacherRoomViewModel(
         } else {
             incrementLike(like)
         }
+    }
+
+    fun deleteQuestion(question: Question) {
+        (_questionsLiveData.value as MutableList).remove(question)
+        ServiceHolder.teacherService.deleteQuestion(question)
     }
 
     private fun incrementLike(like: Like) {

@@ -8,6 +8,7 @@ import com.aydar.demandi.common.base.MESSAGE_READ
 import com.aydar.demandi.common.base.MESSAGE_RECEIVED_ANSWER
 import com.aydar.demandi.common.base.MESSAGE_RECEIVED_LIKE
 import com.aydar.demandi.common.base.UUID_INSECURE
+import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
 import com.aydar.demandi.data.model.Answer
 import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
@@ -24,6 +25,30 @@ class TeacherBluetoothService() {
     private var insecureAcceptThread: AcceptThread? = null
 
     lateinit var room: Room
+
+    @Synchronized
+    fun startServer() {
+        if (insecureAcceptThread == null) {
+            insecureAcceptThread = AcceptThread()
+            try {
+                insecureAcceptThread?.start()
+
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                print("")
+            }
+        }
+    }
+
+    fun deleteQuestion(question: Question) {
+        connectedThreads?.forEach {
+            try {
+                it.deleteQuestion(question)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     private inner class AcceptThread : Thread() {
 
@@ -127,6 +152,11 @@ class TeacherBluetoothService() {
             objOutStream.writeObject(room)
         }
 
+        fun deleteQuestion(question: Question) {
+            val deleteCommand = CommandDeleteQuestion(question)
+            objOutStream.writeObject(deleteCommand)
+        }
+
         private fun sendQuestion(question: Question) {
             objOutStream.writeObject(question)
         }
@@ -192,20 +222,6 @@ class TeacherBluetoothService() {
             try {
                 mmSocket.close()
             } catch (e: IOException) {
-            }
-        }
-    }
-
-    @Synchronized
-    fun startServer() {
-        if (insecureAcceptThread == null) {
-            insecureAcceptThread = AcceptThread()
-            try {
-                insecureAcceptThread?.start()
-
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-                print("")
             }
         }
     }

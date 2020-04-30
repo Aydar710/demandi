@@ -9,6 +9,7 @@ import com.aydar.demandi.data.model.Answer
 import com.aydar.demandi.data.model.Question
 import com.aydar.featureteacherroom.R
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeAdapter
+import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListener
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_question_student.view.*
 
@@ -18,6 +19,19 @@ class QuestionsAdapter(
     private val onLikeClicked: (Question) -> Unit
 ) :
     DragDropSwipeAdapter<Question, QuestionsAdapter.QuestionViewHolder>(dataSet) {
+
+    private val onItemSwipeListener = object : OnItemSwipeListener<Question> {
+        override fun onItemSwiped(
+            position: Int,
+            direction: OnItemSwipeListener.SwipeDirection,
+            item: Question
+        ): Boolean {
+            if (direction == OnItemSwipeListener.SwipeDirection.RIGHT_TO_LEFT) {
+                return false
+            }
+            return true
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionViewHolder {
         val view =

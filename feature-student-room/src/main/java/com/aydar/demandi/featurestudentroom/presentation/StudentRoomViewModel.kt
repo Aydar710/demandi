@@ -74,7 +74,7 @@ class StudentRoomViewModel(
         deleteQuestion(question)
     }
 
-    fun handleReceivedLike(like : Like){
+    fun handleReceivedLike(like: Like) {
         val isLikeExists = checkIfLikeExists(like)
         if (isLikeExists) {
             decrementLike(like)
@@ -83,7 +83,7 @@ class StudentRoomViewModel(
         }
     }
 
-    fun handleLike(like : Like) {
+    fun handleLike(like: Like) {
         val isLikeExists = checkIfLikeExists(like)
         if (isLikeExists) {
             decrementLike(like)
@@ -91,6 +91,10 @@ class StudentRoomViewModel(
             incrementLike(like)
         }
         ServiceHolder.studentService.sendLike(like, "testUser")
+    }
+
+    fun handleReceivedCommandDeleteQuestion(question: Question) {
+        deleteQuestion(question)
     }
 
     private fun incrementLike(like: Like) {
@@ -150,7 +154,9 @@ class StudentRoomViewModel(
     }
 
     private fun deleteQuestion(question: Question) {
-
+        val currentQuestions = _questionsLiveData.value as MutableList
+        currentQuestions.remove(question)
+        _questionsLiveData.value = currentQuestions
     }
 
     private fun checkIfHasQuestion(question: Question): Boolean {

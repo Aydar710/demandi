@@ -21,7 +21,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class TeacherRoomActivity : AppCompatActivity() {
 
-    private val teachersViewModel: TeacherRoomViewModel by viewModel()
+    private val viewModel: TeacherRoomViewModel by viewModel()
     private lateinit var adapter: QuestionsAdapter
 
     private val onItemSwipeListener = object : OnItemSwipeListener<Question> {
@@ -31,6 +31,7 @@ class TeacherRoomActivity : AppCompatActivity() {
             item: Question
         ): Boolean {
             if (direction == OnItemSwipeListener.SwipeDirection.RIGHT_TO_LEFT) {
+                viewModel.deleteQuestion(item)
                 return false
             }
             return true
@@ -52,12 +53,12 @@ class TeacherRoomActivity : AppCompatActivity() {
         setSupportActionBar(inc_toolbar as Toolbar)
         val room = intent.getSerializableExtra(EXTRA_ROOM) as Room
         supportActionBar?.title = room.name
-        teachersViewModel.room = room
-        teachersViewModel.saveSession()
+        viewModel.room = room
+        viewModel.saveSession()
     }
 
     private fun initObservers() {
-        teachersViewModel.questionsLiveData.observe(this, Observer {
+        viewModel.questionsLiveData.observe(this, Observer {
             adapter.submitList(it)
         })
     }
@@ -78,12 +79,12 @@ class TeacherRoomActivity : AppCompatActivity() {
             when (it.what) {
                 MESSAGE_READ -> {
                     val question = it.obj as Question
-                    teachersViewModel.addQuestion(question)
+                    viewModel.addQuestion(question)
                     true
                 }
                 MESSAGE_RECEIVED_LIKE -> {
                     val like = it.obj as Like
-                    teachersViewModel.handleLike(like)
+                    viewModel.handleLike(like)
                     true
                 }
                 else -> false

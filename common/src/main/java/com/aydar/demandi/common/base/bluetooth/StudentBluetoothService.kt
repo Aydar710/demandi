@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
 import com.aydar.demandi.common.base.*
+import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
 import com.aydar.demandi.data.model.Answer
 import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
@@ -132,6 +133,9 @@ class StudentBluetoothService {
                     is Like -> {
                         manageReadLike(readObj)
                     }
+                    is CommandDeleteQuestion -> {
+                        manageReadCommandDeleteQuestion(readObj)
+                    }
                 }
             }
         }
@@ -182,6 +186,12 @@ class StudentBluetoothService {
 
         private fun manageReadLike(like: Like) {
             val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_LIKE, like)
+            handler.sendMessage(questionMsg)
+        }
+
+        private fun manageReadCommandDeleteQuestion(commandDeleteQuestion: CommandDeleteQuestion) {
+            val questionMsg =
+                handler.obtainMessage(MESSAGE_COMMAND_DELETE_QUESTION, commandDeleteQuestion)
             handler.sendMessage(questionMsg)
         }
 
