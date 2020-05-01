@@ -23,8 +23,10 @@ import com.aydar.demandi.featurestudentroom.presentation.adapter.QuestionsAdapte
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
 import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
 import kotlinx.android.synthetic.main.content_students_room.*
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -35,6 +37,8 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     private val viewModel: StudentRoomViewModel by viewModel()
 
     private lateinit var adapter: QuestionsAdapter
+
+    private val user : FirebaseUser by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,8 +141,8 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         adapter = QuestionsAdapter(onAnswerClickListener = {
             viewModel.sendQuestion(it)
         }, onLikeClicked = {
-            viewModel.handleLike(Like(it.id, "testUserId"))
-        })
+            viewModel.handleLike(it.id)
+        }, userId = user.uid)
         val recycler = findViewById<DragDropSwipeRecyclerView>(R.id.rv_questions)
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter

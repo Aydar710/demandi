@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_question_student.view.*
 
 class QuestionsAdapter(
     dataSet: MutableList<Question> = mutableListOf(),
-    private val userId: String = "testUserId",
+    private val userId: String,
     private val onAnswerClickListener: (Question) -> Unit,
     private val onLikeClicked: (Question) -> Unit
 ) :

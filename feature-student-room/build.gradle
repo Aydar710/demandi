@@ -41,6 +41,7 @@ dependencies {
     implementation koinDeps.values()
     implementation coroutinesDeps.values()
     implementation roomDeps.values()
+    implementation firebaseDeps.values()
 
     implementation 'com.ernestoyaquello.dragdropswiperecyclerview:drag-drop-swipe-recyclerview:0.6.0'
 }

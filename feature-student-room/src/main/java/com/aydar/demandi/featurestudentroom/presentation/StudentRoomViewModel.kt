@@ -9,6 +9,7 @@ import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurestudentroom.domain.*
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -16,7 +17,8 @@ class StudentRoomViewModel(
     private val saveQuestionToCacheUseCase: SaveQuestionToCacheUseCase,
     private val saveRoomToCacheUseCase: SaveRoomToCacheUseCase,
     private val getRoomFromCacheUseCase: GetRoomFromCacheUseCase,
-    private val getCachedQuestionsUseCase: GetCachedQuestionsUseCase
+    private val getCachedQuestionsUseCase: GetCachedQuestionsUseCase,
+    private val user: FirebaseUser
 ) :
     ViewModel() {
 
@@ -83,14 +85,15 @@ class StudentRoomViewModel(
         }
     }
 
-    fun handleLike(like: Like) {
+    fun handleLike(questionId: String) {
+        val like = Like(questionId, user.uid)
         val isLikeExists = checkIfLikeExists(like)
         if (isLikeExists) {
             decrementLike(like)
         } else {
             incrementLike(like)
         }
-        ServiceHolder.studentService.sendLike(like, "testUser")
+        ServiceHolder.studentService.sendLike(like, user.uid)
     }
 
     fun handleReceivedCommandDeleteQuestion(question: Question) {
