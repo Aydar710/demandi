@@ -174,13 +174,15 @@ class TeacherBluetoothService() {
                 MESSAGE_READ, question
             )
 
-            connectedThreads?.forEach {
-                try {
-                    if (it != this) {
-                        it.sendQuestion(question)
+            if (question.visibleToOthers) {
+                connectedThreads?.forEach {
+                    try {
+                        if (it != this) {
+                            it.sendQuestion(question)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
             }
             handler.sendMessage(readMsg)

@@ -7,5 +7,6 @@ data class Question(
     val text: String = "",
     var teacherAnswer: String = "",
     var studentAnswers: MutableList<Answer> = mutableListOf(),
-    var likes: MutableList<Like> = mutableListOf()
+    var likes: MutableList<Like> = mutableListOf(),
+    var visibleToOthers: Boolean = false
 ) : Serializable

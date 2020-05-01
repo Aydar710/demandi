@@ -166,7 +166,11 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         }
 
         tv_send.setOnClickListener {
-            val question = Question(id = Date().time.toString(), text = et_question.text.toString())
+            val question = Question(
+                id = Date().time.toString(),
+                text = et_question.text.toString(),
+                visibleToOthers = cb_visible_to_others.isChecked
+            )
             if (question.text.isNotEmpty()) {
                 hideKeyboard {
                     toggleBottomSheet()

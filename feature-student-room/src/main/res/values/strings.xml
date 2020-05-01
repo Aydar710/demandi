@@ -2,4 +2,5 @@
 <resources>
     <string name="write_answer">Напишите ответ</string>
     <string name="to_answer">Ответить</string>
+    <string name="visible_to_others">виден для остальных</string>
 </resources>
