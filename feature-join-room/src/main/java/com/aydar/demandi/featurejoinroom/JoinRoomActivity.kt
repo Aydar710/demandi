@@ -1,6 +1,7 @@
 package com.aydar.demandi.featurejoinroom
 
 import android.app.ProgressDialog
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,6 +9,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.MESSAGE_HIDE_DIALOG
@@ -30,8 +32,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    // Discovery has found a device. Get the BluetoothDevice
-                    // object and its info from the Intent.
+                    Log.d("Bl", "Device found")
                     val device: BluetoothDevice? =
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
                     val deviceName = device?.name
@@ -40,6 +41,12 @@ class JoinRoomActivity : BaseBluetoothActivity() {
                             adapter.addDevice(device)
                         }
                     }
+                }
+                BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
+                    Log.d("Bl", "Discovery started")
+                }
+                BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                    Log.d("Bl", "Discovery finished")
                 }
             }
         }
@@ -54,12 +61,12 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         initProgressHandler()
         registerFoundReceiver()
         registerBondStateReceiver()
-        bluetoothAdapter!!.startDiscovery()
-        showPairedDevices()
+        bluetoothAdapter.startDiscovery()
+        //showPairedDevices()
     }
 
     private fun showPairedDevices() {
-        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
+        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter.bondedDevices
         pairedDevices?.forEach { device ->
             if (device.name.startsWith(ROOM_NAME_PREFIX)) {
                 adapter.addDevice(device)
@@ -96,6 +103,8 @@ class JoinRoomActivity : BaseBluetoothActivity() {
 
     private fun registerFoundReceiver() {
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(receiver, filter)
     }
 
@@ -112,7 +121,6 @@ class JoinRoomActivity : BaseBluetoothActivity() {
                             connectToDevice(device)
                         }
                         BluetoothDevice.BOND_BONDING -> {
-                            print("")
                         }
                     }
                 }
@@ -142,10 +150,6 @@ class JoinRoomActivity : BaseBluetoothActivity() {
             }
         }
         rv_rooms.adapter = adapter
-    }
-
-    private fun openStudentsRoomActivity() {
-        router.moveToStudentsRoomActivity(this)
     }
 
     override fun onDestroy() {
