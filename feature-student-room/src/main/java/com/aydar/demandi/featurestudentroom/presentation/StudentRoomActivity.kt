@@ -2,6 +2,7 @@ package com.aydar.demandi.featurestudentroom.presentation
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -38,7 +39,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
     private lateinit var adapter: QuestionsAdapter
 
-    private val user : FirebaseUser by inject()
+    private val user: FirebaseUser by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,9 +94,15 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun initToolbar() {
-        setSupportActionBar(inc_toolbar as Toolbar)
-        val roomName = intent.getStringExtra(EXTRA_ROOM_NAME)
-        supportActionBar?.title = roomName
+        val roomNameFull = intent.getStringExtra(EXTRA_ROOM_NAME)
+        val roomName = getRoomNameFromFullRoomName(roomNameFull)
+        val toolbar = inc_toolbar as Toolbar
+        toolbar.setBackgroundColor(Color.WHITE)
+        toolbar.setTitleTextColor(Color.BLACK)
+        toolbar.title = roomName
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     private fun initHandler() {

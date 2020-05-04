@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".featurejoinroom.JoinRoomActivity">
+    tools:context=".JoinRoomActivity">
 
     <include
         android:id="@+id/inc_toolbar"
         layout="@layout/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,6 +28,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/inc_toolbar"
         tools:itemCount="5"
-        tools:listitem="@layout/item__joining_room" />
+        tools:listitem="@layout/item_join_room" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

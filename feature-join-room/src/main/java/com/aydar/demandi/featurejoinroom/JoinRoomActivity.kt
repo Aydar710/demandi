@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -56,7 +57,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_join_room)
 
-        setSupportActionBar(inc_toolbar as Toolbar)
+        initToolbar()
         initRecycler()
         initProgressHandler()
         registerFoundReceiver()
@@ -150,6 +151,16 @@ class JoinRoomActivity : BaseBluetoothActivity() {
             }
         }
         rv_rooms.adapter = adapter
+    }
+
+    private fun initToolbar() {
+        val toolbar = inc_toolbar as Toolbar
+        toolbar.setBackgroundColor(Color.WHITE)
+        toolbar.title = getString(R.string.choose_room)
+        toolbar.setTitleTextColor(Color.BLACK)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     override fun onDestroy() {

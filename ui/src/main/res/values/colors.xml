@@ -10,4 +10,5 @@
     <color name="swipeBehindBackgroundSecondary">#17af98</color>
     <color name="swipeBehindTextColor">#ffffff</color>
     <color name="divider">#e1e1e1</color>
+    <color name="roomBg">#F96060</color>
 </resources>

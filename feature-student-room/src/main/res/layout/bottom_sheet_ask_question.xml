@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text="@string/send"
+        android:fontFamily="@font/abril_fatface_regular"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:visibility="visible"

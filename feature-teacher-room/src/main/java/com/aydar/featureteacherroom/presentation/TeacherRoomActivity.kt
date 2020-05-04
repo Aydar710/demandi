@@ -1,5 +1,6 @@
 package com.aydar.featureteacherroom.presentation
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import com.aydar.demandi.common.base.EXTRA_ROOM
 import com.aydar.demandi.common.base.MESSAGE_READ
 import com.aydar.demandi.common.base.MESSAGE_RECEIVED_LIKE
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.common.base.getRoomNameFromFullRoomName
 import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
@@ -47,14 +49,20 @@ class TeacherRoomActivity : AppCompatActivity() {
         initRecycler()
         initObservers()
         initHandler()
+        viewModel.saveSession()
     }
 
     private fun initToolbar() {
-        setSupportActionBar(inc_toolbar as Toolbar)
         val room = intent.getSerializableExtra(EXTRA_ROOM) as Room
-        supportActionBar?.title = room.name
+        val toolbar = inc_toolbar as Toolbar
+        toolbar.setBackgroundColor(Color.WHITE)
+        toolbar.title = getRoomNameFromFullRoomName(room.name)
+        toolbar.setTitleTextColor(Color.BLACK)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         viewModel.room = room
-        viewModel.saveSession()
     }
 
     private fun initObservers() {

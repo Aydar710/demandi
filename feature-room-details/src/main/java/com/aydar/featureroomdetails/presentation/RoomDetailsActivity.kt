@@ -42,7 +42,7 @@ class RoomDetailsActivity : BaseBluetoothActivity() {
 
     private fun initClickListeners() {
         fab_door.setOnClickListener {
-            bluetoothAdapter?.name = "$ROOM_NAME_PREFIX${room.name}"
+            bluetoothAdapter?.name = "$ROOM_NAME_PREFIX${room.name}/${room.subjectName}/"
             viewModel.openRoom(room, this)
         }
     }
