@@ -18,10 +18,7 @@ import com.amitshekhar.DebugDB
 import com.aydar.demandi.common.base.*
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
-import com.aydar.demandi.data.model.Answer
-import com.aydar.demandi.data.model.Like
-import com.aydar.demandi.data.model.Question
-import com.aydar.demandi.data.model.Room
+import com.aydar.demandi.data.model.*
 import com.aydar.demandi.featurestudentroom.R
 import com.aydar.demandi.featurestudentroom.presentation.adapter.QuestionsAdapter
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
@@ -127,9 +124,9 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                     viewModel.onQuestionReceived(question)
                     true
                 }
-                MESSAGE_RECEIVED_LIKE -> {
-                    val like = it.obj as Like
-                    viewModel.handleReceivedLike(like)
+                MESSAGE_RECEIVED_QUESTION_LIKE -> {
+                    val like = it.obj as QuestionLike
+                    viewModel.handleReceivedQuestionLike(like)
                     true
                 }
                 MESSAGE_COMMAND_DELETE_QUESTION -> {
@@ -140,6 +137,11 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                 MESSAGE_ANSWER -> {
                     val answer = it.obj as Answer
                     adapter.addAnswer(answer)
+                    true
+                }
+                MESSAGE_RECEIVED_ANSWER_LIKE -> {
+                    val answerLike = it.obj as AnswerLike
+                    viewModel.handleReceivedAnswerLike(answerLike)
                     true
                 }
                 else -> false
@@ -156,8 +158,8 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     private fun initRecycler() {
         adapter = QuestionsAdapter(onAnswerClickListener = {
             viewModel.sendAnswer(it)
-        }, onLikeClicked = {
-            viewModel.handleLike(it.id)
+        }, onQuestionLikeClickListener = {
+            viewModel.handleQuestionLike(it.id)
         }, userId = user.uid,
             onQuestionClickListener = { constraintAnswer, constraintQuestion ->
                 if (constraintAnswer.visibility === View.GONE) {
@@ -165,6 +167,8 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                 } else {
                     collapseAnswers(constraintAnswer, constraintQuestion)
                 }
+            }, onAnswerLikeClickListener = {
+                viewModel.handleAnswerLike(AnswerLike(it.id, user.uid))
             })
         val recycler = findViewById<DragDropSwipeRecyclerView>(R.id.rv_questions)
         recycler.layoutManager = LinearLayoutManager(this)

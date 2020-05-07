@@ -8,10 +8,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import com.aydar.demandi.common.base.EXTRA_ROOM
 import com.aydar.demandi.common.base.MESSAGE_READ
-import com.aydar.demandi.common.base.MESSAGE_RECEIVED_LIKE
+import com.aydar.demandi.common.base.MESSAGE_RECEIVED_QUESTION_LIKE
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.common.base.getRoomNameFromFullRoomName
-import com.aydar.demandi.data.model.Like
+import com.aydar.demandi.data.model.QuestionLike
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.featureteacherroom.R
@@ -90,8 +90,8 @@ class TeacherRoomActivity : AppCompatActivity() {
                     viewModel.addQuestion(question)
                     true
                 }
-                MESSAGE_RECEIVED_LIKE -> {
-                    val like = it.obj as Like
+                MESSAGE_RECEIVED_QUESTION_LIKE -> {
+                    val like = it.obj as QuestionLike
                     viewModel.handleLike(like)
                     true
                 }

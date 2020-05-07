@@ -2,7 +2,7 @@ package com.aydar.demandi.data.model
 
 import java.io.Serializable
 
-data class Like(
-    val questionId: String,
+data class AnswerLike(
+    val answerId: String,
     val userId: String
 ) : Serializable

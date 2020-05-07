@@ -1,4 +1,4 @@
-package com.aydar.demandi.featurestudentroom.domain
+package com.aydar.demandi.featurestudentroom.domain.usecase
 
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.repository.QuestionCacheRepository

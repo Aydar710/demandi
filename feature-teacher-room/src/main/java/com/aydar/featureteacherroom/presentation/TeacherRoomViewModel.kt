@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
-import com.aydar.demandi.data.model.Like
+import com.aydar.demandi.data.model.QuestionLike
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.data.model.Session
@@ -53,7 +53,7 @@ class TeacherRoomViewModel(
         session.id = sessionId
     }
 
-    fun handleLike(like: Like) {
+    fun handleLike(like: QuestionLike) {
         val isLikeExists = checkIfLikeExists(like)
         if (isLikeExists) {
             decrementLike(like)
@@ -67,7 +67,7 @@ class TeacherRoomViewModel(
         ServiceHolder.teacherService.deleteQuestion(question)
     }
 
-    private fun incrementLike(like: Like) {
+    private fun incrementLike(like: QuestionLike) {
         val currentQuestions = _questionsLiveData.value as MutableList
         currentQuestions.forEach {
             if (it.id == like.questionId) {
@@ -78,7 +78,7 @@ class TeacherRoomViewModel(
         _questionsLiveData.value = currentQuestions
     }
 
-    private fun decrementLike(like: Like) {
+    private fun decrementLike(like: QuestionLike) {
         val currentQuestions = _questionsLiveData.value as MutableList
         currentQuestions.forEach {
             if (it.id == like.questionId) {
@@ -89,7 +89,7 @@ class TeacherRoomViewModel(
         _questionsLiveData.value = currentQuestions
     }
 
-    private fun checkIfLikeExists(like: Like): Boolean {
+    private fun checkIfLikeExists(like: QuestionLike): Boolean {
         _questionsLiveData.value?.forEach { question ->
             question.likes.forEach { questionLike ->
                 if (questionLike.questionId == like.questionId && questionLike.userId == like.userId) {

@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.aydar.demandi.data.model.Answer
-import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
+import com.aydar.demandi.data.model.QuestionLike
 import com.aydar.demandi.featurestudentroom.R
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeAdapter
 import kotlinx.android.extensions.LayoutContainer
@@ -15,8 +15,9 @@ class QuestionsAdapter(
     dataSet: MutableList<Question> = mutableListOf(),
     private val userId: String,
     private val onAnswerClickListener: (Answer) -> Unit,
-    private val onLikeClicked: (Question) -> Unit,
-    private val onQuestionClickListener: (View, View) -> Unit
+    private val onQuestionLikeClickListener: (Question) -> Unit,
+    private val onQuestionClickListener: (View, View) -> Unit,
+    private val onAnswerLikeClickListener: (Answer) -> Unit
 ) :
     DragDropSwipeAdapter<Question, QuestionsAdapter.QuestionViewHolder>(dataSet) {
 
@@ -79,14 +80,14 @@ class QuestionsAdapter(
                 }
                 tv_count.text = question.likes.size.toString()
 
-                if (question.likes.contains(Like(question.id, userId))) {
+                if (question.likes.contains(QuestionLike(question.id, userId))) {
                     ic_like.setImageResource(R.drawable.ic_rocket_book_filled)
                 } else {
                     ic_like.setImageResource(R.drawable.ic_rocket_book)
                 }
 
                 ic_like.setOnClickListener {
-                    onLikeClicked.invoke(question)
+                    onQuestionLikeClickListener.invoke(question)
                 }
 
                 constraint_question.setOnClickListener {
@@ -99,7 +100,9 @@ class QuestionsAdapter(
 
         private fun setUpAnswersAdapter(containerView: View, question: Question) {
             with(containerView) {
-                answerAdapter = AnswersAdapter()
+                answerAdapter = AnswersAdapter({
+                    onAnswerLikeClickListener.invoke(it)
+                }, userId)
                 rv_answers.adapter = answerAdapter
                 answerAdapter.submitList(question.studentAnswers.toMutableList())
             }

@@ -5,13 +5,10 @@ import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.os.Handler
 import com.aydar.demandi.common.base.MESSAGE_READ
-import com.aydar.demandi.common.base.MESSAGE_RECEIVED_LIKE
+import com.aydar.demandi.common.base.MESSAGE_RECEIVED_QUESTION_LIKE
 import com.aydar.demandi.common.base.UUID_INSECURE
 import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
-import com.aydar.demandi.data.model.Answer
-import com.aydar.demandi.data.model.Like
-import com.aydar.demandi.data.model.Question
-import com.aydar.demandi.data.model.Room
+import com.aydar.demandi.data.model.*
 import java.io.*
 import java.util.*
 
@@ -135,8 +132,11 @@ class TeacherBluetoothService() {
                         is Answer -> {
                             manageReadAnswer(readObj)
                         }
-                        is Like -> {
-                            manageReadLike(readObj)
+                        is QuestionLike -> {
+                            manageReadQuestionLike(readObj)
+                        }
+                        is AnswerLike -> {
+                            manageReadAnswerLike(readObj)
                         }
                     }
 
@@ -164,7 +164,11 @@ class TeacherBluetoothService() {
             objOutStream.writeObject(answer)
         }
 
-        private fun sendLike(like: Like) {
+        private fun sendQuestionLike(like: QuestionLike) {
+            objOutStream.writeObject(like)
+        }
+
+        private fun sendAnswerLike(like: AnswerLike) {
             objOutStream.writeObject(like)
         }
 
@@ -203,14 +207,26 @@ class TeacherBluetoothService() {
             }
         }
 
-        private fun manageReadLike(like: Like) {
-            val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_LIKE, like)
+        private fun manageReadQuestionLike(like: QuestionLike) {
+            val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_QUESTION_LIKE, like)
             handler.sendMessage(questionMsg)
 
             connectedThreads?.forEach {
                 try {
                     if (it != this) {
-                        it.sendLike(like)
+                        it.sendQuestionLike(like)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        private fun manageReadAnswerLike(like: AnswerLike) {
+            connectedThreads?.forEach {
+                try {
+                    if (it != this) {
+                        it.sendAnswerLike(like)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()

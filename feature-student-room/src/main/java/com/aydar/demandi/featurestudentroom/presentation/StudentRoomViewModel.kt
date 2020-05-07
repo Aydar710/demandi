@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
-import com.aydar.demandi.data.model.Answer
-import com.aydar.demandi.data.model.Like
-import com.aydar.demandi.data.model.Question
-import com.aydar.demandi.data.model.Room
-import com.aydar.demandi.featurestudentroom.domain.*
+import com.aydar.demandi.data.model.*
+import com.aydar.demandi.featurestudentroom.domain.AnswerLikeCountComparator
+import com.aydar.demandi.featurestudentroom.domain.QuestionLikeCountComparator
+import com.aydar.demandi.featurestudentroom.domain.usecase.GetCachedQuestionsUseCase
+import com.aydar.demandi.featurestudentroom.domain.usecase.GetRoomFromCacheUseCase
+import com.aydar.demandi.featurestudentroom.domain.usecase.SaveQuestionToCacheUseCase
+import com.aydar.demandi.featurestudentroom.domain.usecase.SaveRoomToCacheUseCase
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 import java.util.*
@@ -77,24 +79,23 @@ class StudentRoomViewModel(
         deleteQuestion(question)
     }
 
-    fun handleReceivedLike(like: Like) {
-        val isLikeExists = checkIfLikeExists(like)
-        if (isLikeExists) {
-            decrementLike(like)
-        } else {
-            incrementLike(like)
-        }
+    fun handleReceivedQuestionLike(like: QuestionLike) {
+        makeQuestionLikeAction(like)
     }
 
-    fun handleLike(questionId: String) {
-        val like = Like(questionId, user.uid)
-        val isLikeExists = checkIfLikeExists(like)
+    fun handleQuestionLike(questionId: String) {
+        val like = QuestionLike(questionId, user.uid)
+        makeQuestionLikeAction(like)
+        ServiceHolder.studentService.sendQuestionLike(like, user.uid)
+    }
+
+    private fun makeQuestionLikeAction(like: QuestionLike) {
+        val isLikeExists = checkIfQuestionLikeExists(like)
         if (isLikeExists) {
-            decrementLike(like)
+            decrementQuestionLike(like)
         } else {
-            incrementLike(like)
+            incrementQuestionLike(like)
         }
-        ServiceHolder.studentService.sendLike(like, user.uid)
     }
 
     fun handleReceivedCommandDeleteQuestion(question: Question) {
@@ -105,11 +106,67 @@ class StudentRoomViewModel(
         ServiceHolder.studentService.sendAnswer(answer)
     }
 
-    fun handleReceivedAnswer(answer: Answer) {
-
+    fun handleAnswerLike(answerLike: AnswerLike) {
+        makeAnswerLikeAction(answerLike)
+        ServiceHolder.studentService.sendAnswerLike(answerLike)
     }
 
-    private fun incrementLike(like: Like) {
+    fun handleReceivedAnswerLike(answerLike: AnswerLike) {
+        makeAnswerLikeAction(answerLike)
+    }
+
+    private fun makeAnswerLikeAction(answerLike: AnswerLike) {
+        val isLikeExists = checkIfAnswerLikeExists(answerLike)
+        if (isLikeExists) {
+            decrementAnswerLike(answerLike)
+        } else {
+            incrementAnswerLike(answerLike)
+        }
+    }
+
+    private fun incrementAnswerLike(like: AnswerLike) {
+        val currentQuestions = _questionsLiveData.value as MutableList
+        var questionIndex: Int = 0
+        var answerIndex: Int = 0
+        currentQuestions.forEach { question ->
+            question.studentAnswers.forEach { answer ->
+                if (answer.id == like.answerId) {
+                    answer.likes.add(like)
+                    questionIndex = currentQuestions.indexOf(question)
+                    answerIndex = currentQuestions[questionIndex].studentAnswers.indexOf(answer)
+                    return@forEach
+                }
+            }
+        }
+        Collections.sort(
+            currentQuestions[questionIndex].studentAnswers,
+            AnswerLikeCountComparator()
+        )
+        _questionsLiveData.value = currentQuestions
+    }
+
+    private fun decrementAnswerLike(like: AnswerLike) {
+        val currentQuestions = _questionsLiveData.value as MutableList
+        var questionIndex: Int = 0
+        var answerIndex: Int = 0
+        currentQuestions.forEach { question ->
+            question.studentAnswers.forEach { answer ->
+                if (answer.id == like.answerId) {
+                    answer.likes.remove(like)
+                    questionIndex = currentQuestions.indexOf(question)
+                    answerIndex = currentQuestions[questionIndex].studentAnswers.indexOf(answer)
+                    return@forEach
+                }
+            }
+        }
+        Collections.sort(
+            currentQuestions[questionIndex].studentAnswers,
+            AnswerLikeCountComparator()
+        )
+        _questionsLiveData.value = currentQuestions
+    }
+
+    private fun incrementQuestionLike(like: QuestionLike) {
         val currentQuestions = _questionsLiveData.value as MutableList
         currentQuestions.forEach {
             if (it.id == like.questionId) {
@@ -120,7 +177,7 @@ class StudentRoomViewModel(
         _questionsLiveData.value = currentQuestions
     }
 
-    private fun decrementLike(like: Like) {
+    private fun decrementQuestionLike(like: QuestionLike) {
         val currentQuestions = _questionsLiveData.value as MutableList
         currentQuestions.forEach {
             if (it.id == like.questionId) {
@@ -131,10 +188,21 @@ class StudentRoomViewModel(
         _questionsLiveData.value = currentQuestions
     }
 
-    private fun checkIfLikeExists(like: Like): Boolean {
+    private fun checkIfQuestionLikeExists(like: QuestionLike): Boolean {
         _questionsLiveData.value?.forEach { question ->
             question.likes.forEach { questionLike ->
                 if (questionLike.questionId == like.questionId && questionLike.userId == like.userId) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun checkIfAnswerLikeExists(like: AnswerLike): Boolean {
+        _questionsLiveData.value?.forEach { question ->
+            question.studentAnswers.forEach { answer ->
+                if (answer.likes.contains(like)) {
                     return true
                 }
             }
@@ -179,5 +247,4 @@ class StudentRoomViewModel(
         }
         return false
     }
-
 }

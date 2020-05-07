@@ -7,10 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import com.aydar.demandi.common.base.*
 import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
-import com.aydar.demandi.data.model.Answer
-import com.aydar.demandi.data.model.Like
-import com.aydar.demandi.data.model.Question
-import com.aydar.demandi.data.model.Room
+import com.aydar.demandi.data.model.*
 import java.io.*
 import java.util.*
 
@@ -32,12 +29,16 @@ class StudentBluetoothService {
         connectedThread.writeQuestion(question, hasQuestion)
     }
 
-    fun sendLike(like: Like, userId: String) {
-        connectedThread.writeLike(like)
+    fun sendQuestionLike(like: QuestionLike, userId: String) {
+        connectedThread.writeQuestionLike(like)
     }
 
     fun sendAnswer(answer: Answer) {
         connectedThread.writeAnswer(answer)
+    }
+
+    fun sendAnswerLike(answerLike: AnswerLike) {
+        connectedThread.writeAnswerLike(answerLike)
     }
 
     private inner class ConnectThread(device: BluetoothDevice) : Thread() {
@@ -130,14 +131,17 @@ class StudentBluetoothService {
                     is Question -> {
                         manageReadQuestion(readObj)
                     }
-                    is Like -> {
-                        manageReadLike(readObj)
+                    is QuestionLike -> {
+                        manageReadQuestionLike(readObj)
                     }
                     is CommandDeleteQuestion -> {
                         manageReadCommandDeleteQuestion(readObj)
                     }
                     is Answer -> {
                         manageReadAnswer(readObj)
+                    }
+                    is AnswerLike -> {
+                        manageReadAnswerLike(readObj)
                     }
                 }
             }
@@ -165,7 +169,15 @@ class StudentBluetoothService {
             }
         }
 
-        fun writeLike(like: Like) {
+        fun writeQuestionLike(like: QuestionLike) {
+            try {
+                objOutStream.writeObject(like)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        fun writeAnswerLike(like: AnswerLike) {
             try {
                 objOutStream.writeObject(like)
             } catch (e: Exception) {
@@ -187,9 +199,14 @@ class StudentBluetoothService {
             handler.sendMessage(questionMsg)
         }
 
-        private fun manageReadLike(like: Like) {
-            val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_LIKE, like)
+        private fun manageReadQuestionLike(like: QuestionLike) {
+            val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_QUESTION_LIKE, like)
             handler.sendMessage(questionMsg)
+        }
+
+        private fun manageReadAnswerLike(like: AnswerLike) {
+            val likeMsg = handler.obtainMessage(MESSAGE_RECEIVED_ANSWER_LIKE, like)
+            handler.sendMessage(likeMsg)
         }
 
         private fun manageReadCommandDeleteQuestion(commandDeleteQuestion: CommandDeleteQuestion) {
