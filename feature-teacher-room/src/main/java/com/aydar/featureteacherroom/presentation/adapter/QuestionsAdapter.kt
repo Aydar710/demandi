@@ -1,11 +1,8 @@
 package com.aydar.featureteacherroom.presentation.adapter
 
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.aydar.demandi.data.model.Answer
 import com.aydar.demandi.data.model.Question
 import com.aydar.featureteacherroom.R
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeAdapter
@@ -72,47 +69,17 @@ class QuestionsAdapter(
             with(containerView) {
                 tv_question.text = question.text
                 tv_answer.setOnClickListener {
-                    val answer = Answer(et_answer.text.toString(), question.id)
+                    /*val answer = Answer(et_answer.text.toString(), question.id)
                     question.studentAnswers.add(answer)
                     answerAdapter.addItem(answer)
                     onAnswerClickListener.invoke(question)
 
-                    tv_answer.visibility = View.GONE
+                    tv_answer.visibility = View.GONE*/
                 }
                 tv_count.text = question.likes.size.toString()
 
                 answerAdapter = AnswersAdapter()
                 rv_answers.adapter = answerAdapter
-                answerAdapter.submitList(listOf(Answer("123"), Answer("123"), Answer("123")))
-                et_answer.addTextChangedListener(object : TextWatcher {
-
-                    override fun afterTextChanged(s: Editable?) {}
-
-                    override fun beforeTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        count: Int,
-                        after: Int
-                    ) {
-                    }
-
-                    override fun onTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        before: Int,
-                        count: Int
-                    ) {
-                        s?.let {
-                            if (it.isNotBlank() && it.toString() != question.teacherAnswer) {
-                                tv_answer.visibility = View.VISIBLE
-                            } else {
-                                tv_answer.visibility = View.GONE
-                            }
-                        }
-                    }
-
-                })
-
                 ic_like.setOnClickListener {
                     onLikeClicked.invoke(question)
                 }

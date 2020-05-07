@@ -136,6 +136,9 @@ class StudentBluetoothService {
                     is CommandDeleteQuestion -> {
                         manageReadCommandDeleteQuestion(readObj)
                     }
+                    is Answer -> {
+                        manageReadAnswer(readObj)
+                    }
                 }
             }
         }
@@ -193,6 +196,12 @@ class StudentBluetoothService {
             val questionMsg =
                 handler.obtainMessage(MESSAGE_COMMAND_DELETE_QUESTION, commandDeleteQuestion)
             handler.sendMessage(questionMsg)
+        }
+
+        private fun manageReadAnswer(answer: Answer) {
+            val answerMsg =
+                handler.obtainMessage(MESSAGE_ANSWER, answer)
+            handler.sendMessage(answerMsg)
         }
 
         // Call this method from the main activity to shut down the connection.

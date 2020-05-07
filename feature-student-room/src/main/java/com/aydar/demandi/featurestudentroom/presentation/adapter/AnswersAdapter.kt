@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aydar.demandi.data.model.Answer
 import com.aydar.demandi.featurestudentroom.R
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_question_student.view.*
+import kotlinx.android.synthetic.main.item_answer.view.*
 
 class AnswersAdapter :
     ListAdapter<Answer, AnswersAdapter.AnswerViewHolder>(AnswerDiffCallback()) {
@@ -36,7 +36,7 @@ class AnswersAdapter :
 
         fun bind(answer: Answer) {
             with(containerView) {
-                tv_answer.text = answer.text
+                tv_student_answer.text = answer.text
             }
         }
     }

@@ -1,7 +1,5 @@
 package com.aydar.demandi.featurestudentroom.presentation.adapter
 
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +14,9 @@ import kotlinx.android.synthetic.main.item_question_student.view.*
 class QuestionsAdapter(
     dataSet: MutableList<Question> = mutableListOf(),
     private val userId: String,
-    private val onAnswerClickListener: (Question) -> Unit,
-    private val onLikeClicked: (Question) -> Unit
+    private val onAnswerClickListener: (Answer) -> Unit,
+    private val onLikeClicked: (Question) -> Unit,
+    private val onQuestionClickListener: (View, View) -> Unit
 ) :
     DragDropSwipeAdapter<Question, QuestionsAdapter.QuestionViewHolder>(dataSet) {
 
@@ -50,6 +49,16 @@ class QuestionsAdapter(
         dataSet = questions
     }
 
+    fun addAnswer(answer: Answer) {
+        for (i in dataSet.indices) {
+            if (dataSet[i].id == answer.questionId) {
+                dataSet[i].studentAnswers.add(answer)
+                notifyItemChanged(i)
+                return
+            }
+        }
+    }
+
     inner class QuestionViewHolder(override val containerView: View) :
         DragDropSwipeAdapter.ViewHolder(containerView),
         LayoutContainer {
@@ -60,12 +69,13 @@ class QuestionsAdapter(
             with(containerView) {
                 tv_question.text = question.text
                 tv_answer.setOnClickListener {
-                    val answer = Answer(et_answer.text.toString(), question.id)
-                    question.studentAnswers.add(answer)
-                    answerAdapter.addItem(answer)
-                    onAnswerClickListener.invoke(question)
-
-                    tv_answer.visibility = View.GONE
+                    if (et_answer.text.isNotEmpty()) {
+                        val answer = Answer(et_answer.text.toString(), question.id, userId)
+                        onAnswerClickListener.invoke(answer)
+                        answerAdapter.addItem(answer)
+                        question.studentAnswers.add(answer)
+                        et_answer.setText("")
+                    }
                 }
                 tv_count.text = question.likes.size.toString()
 
@@ -79,7 +89,11 @@ class QuestionsAdapter(
                     onLikeClicked.invoke(question)
                 }
 
-                //setUpAnswersAdapter(this, question)
+                constraint_question.setOnClickListener {
+                    onQuestionClickListener.invoke(constraint_answers, constraint_question)
+                }
+
+                setUpAnswersAdapter(this, question)
             }
         }
 
@@ -87,35 +101,7 @@ class QuestionsAdapter(
             with(containerView) {
                 answerAdapter = AnswersAdapter()
                 rv_answers.adapter = answerAdapter
-                answerAdapter.submitList(listOf(Answer("123"), Answer("123"), Answer("123")))
-                et_answer.addTextChangedListener(object : TextWatcher {
-
-                    override fun afterTextChanged(s: Editable?) {}
-
-                    override fun beforeTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        count: Int,
-                        after: Int
-                    ) {
-                    }
-
-                    override fun onTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        before: Int,
-                        count: Int
-                    ) {
-                        s?.let {
-                            if (it.isNotBlank() && it.toString() != question.teacherAnswer) {
-                                tv_answer.visibility = View.VISIBLE
-                            } else {
-                                tv_answer.visibility = View.GONE
-                            }
-                        }
-                    }
-
-                })
+                answerAdapter.submitList(question.studentAnswers.toMutableList())
             }
         }
     }

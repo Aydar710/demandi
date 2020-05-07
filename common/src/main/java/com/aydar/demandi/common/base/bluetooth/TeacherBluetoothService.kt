@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.os.Handler
 import com.aydar.demandi.common.base.MESSAGE_READ
-import com.aydar.demandi.common.base.MESSAGE_RECEIVED_ANSWER
 import com.aydar.demandi.common.base.MESSAGE_RECEIVED_LIKE
 import com.aydar.demandi.common.base.UUID_INSECURE
 import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
@@ -189,8 +188,9 @@ class TeacherBluetoothService() {
         }
 
         private fun manageReadAnswer(answer: Answer) {
-            val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_ANSWER, answer)
-            handler.sendMessage(questionMsg)
+            //TODO: Show answer to teacher
+            /*val answerMsg = handler.obtainMessage(MESSAGE_RECEIVED_ANSWER, answer)
+            handler.sendMessage(answerMsg)*/
 
             connectedThreads?.forEach {
                 try {

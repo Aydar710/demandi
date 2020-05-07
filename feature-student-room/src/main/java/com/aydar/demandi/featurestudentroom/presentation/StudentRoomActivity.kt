@@ -12,10 +12,13 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import com.amitshekhar.DebugDB
 import com.aydar.demandi.common.base.*
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
+import com.aydar.demandi.data.model.Answer
 import com.aydar.demandi.data.model.Like
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
@@ -27,6 +30,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
 import kotlinx.android.synthetic.main.content_students_room.*
+import kotlinx.android.synthetic.main.item_question_student.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
@@ -133,6 +137,11 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                     viewModel.handleReceivedCommandDeleteQuestion(command.question)
                     true
                 }
+                MESSAGE_ANSWER -> {
+                    val answer = it.obj as Answer
+                    adapter.addAnswer(answer)
+                    true
+                }
                 else -> false
             }
         }
@@ -146,10 +155,17 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
     private fun initRecycler() {
         adapter = QuestionsAdapter(onAnswerClickListener = {
-            viewModel.sendQuestion(it)
+            viewModel.sendAnswer(it)
         }, onLikeClicked = {
             viewModel.handleLike(it.id)
-        }, userId = user.uid)
+        }, userId = user.uid,
+            onQuestionClickListener = { constraintAnswer, constraintQuestion ->
+                if (constraintAnswer.visibility === View.GONE) {
+                    expandAnswers(constraintAnswer, constraintQuestion)
+                } else {
+                    collapseAnswers(constraintAnswer, constraintQuestion)
+                }
+            })
         val recycler = findViewById<DragDropSwipeRecyclerView>(R.id.rv_questions)
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
@@ -169,6 +185,32 @@ class StudentRoomActivity : BaseBluetoothActivity() {
             }
         }
         recycler.swipeListener = onItemSwipeListener
+    }
+
+    private fun collapseAnswers(
+        constraintAnswer: View,
+        constraintQuestion: View
+    ) {
+        constraintAnswer.visibility = View.GONE
+        TransitionManager.beginDelayedTransition(
+            ll_question_answer,
+            AutoTransition()
+        )
+        constraintQuestion.background =
+            getDrawable(R.drawable.rounded_rectangle_question)
+    }
+
+    private fun expandAnswers(
+        constraintAnswer: View,
+        constraintQuestion: View
+    ) {
+        constraintAnswer.visibility = View.VISIBLE
+        TransitionManager.beginDelayedTransition(
+            ll_question_answer,
+            AutoTransition()
+        )
+        constraintQuestion.background =
+            getDrawable(R.drawable.rounded_rectangle_question_expanded)
     }
 
     private fun initClickListeners() {
