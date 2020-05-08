@@ -11,6 +11,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.widget.Toolbar
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.MESSAGE_HIDE_DIALOG
@@ -45,8 +48,14 @@ class JoinRoomActivity : BaseBluetoothActivity() {
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
                     Log.d("Bl", "Discovery started")
+                    tv_no_devices.visibility = View.GONE
+                    supportActionBar?.title = getString(R.string.searching)
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                    supportActionBar?.title = getString(R.string.choose_room)
+                    if (adapter.checkIfListIsEmpty()) {
+                        tv_no_devices.visibility = View.VISIBLE
+                    }
                     Log.d("Bl", "Discovery finished")
                 }
             }
@@ -64,6 +73,22 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         registerBondStateReceiver()
         bluetoothAdapter.startDiscovery()
         //showPairedDevices()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_join_room, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_search -> {
+                bluetoothAdapter.startDiscovery()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun showPairedDevices() {

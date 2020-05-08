@@ -30,6 +30,8 @@ class JoinAdapter(private val onDeviceClicked: (BluetoothDevice) -> Unit) :
         submitList(newDevices)
     }
 
+    fun checkIfListIsEmpty(): Boolean = itemCount == 0
+
     private fun getAllDevices(): MutableList<BluetoothDevice> {
         val allDevices = mutableListOf<BluetoothDevice>()
         for (i in 0 until itemCount) {

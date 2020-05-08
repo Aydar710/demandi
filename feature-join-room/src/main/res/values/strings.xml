@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="choose_room">Выберите аудиторию</string>
+    <string name="searching_devices">Поиск устройств</string>
+    <string name="searching">Поиск...</string>
 </resources>
