@@ -41,10 +41,14 @@ open class BaseBluetoothActivity : AppCompatActivity() {
     }
 
     private fun requestTurnOnBluetooth() {
-        //TODO: Проверить в onActivityResult подвердил ли пользователь включение
+        //TODO: Проверить в onActivityResult потдвердил ли пользователь включение
         bluetoothAdapter.takeIf { it.isDisabled }?.apply {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, 123)
+            startActivityForResult(enableBtIntent, REQUST_TURN_ON_BLUETOOTH)
         }
+    }
+
+    companion object{
+        const val REQUST_TURN_ON_BLUETOOTH = 123
     }
 }

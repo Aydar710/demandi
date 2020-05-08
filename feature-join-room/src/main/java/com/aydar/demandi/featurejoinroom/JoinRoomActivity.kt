@@ -1,5 +1,6 @@
 package com.aydar.demandi.featurejoinroom
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -81,7 +82,6 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         initProgressHandler()
         registerFoundReceiver()
         registerBondStateReceiver()
-        bluetoothAdapter.startDiscovery()
         btn_repeat.setOnClickListener {
             bluetoothAdapter.startDiscovery()
         }
@@ -98,17 +98,17 @@ class JoinRoomActivity : BaseBluetoothActivity() {
             animateBluetoothIcon?.composition = it
             animateBluetoothIcon?.repeatCount = LottieDrawable.INFINITE
             animateBluetoothIcon?.scale = 0.07f
-            animateBluetoothIcon?.playAnimation()
             animateBluetoothIcon?.speed = 0.8f
+            animateBluetoothIcon?.playAnimation()
             val bluetoothItem = menu?.findItem(R.id.action_search)
-            bluetoothItem?.icon = animateBluetoothIcon
             bluetoothMenuItem = bluetoothItem
+            bluetoothAdapter.startDiscovery()
         }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.action_search -> {
                 bluetoothAdapter.startDiscovery()
             }
@@ -120,6 +120,22 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         finish()
         onBackPressed()
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUST_TURN_ON_BLUETOOTH) {
+            if (resultCode == Activity.RESULT_OK) {
+                bluetoothAdapter.startDiscovery()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Невозможно продолжить без включения bluetooth",
+                    Toast.LENGTH_LONG
+                ).show()
+                finish()
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun initProgressHandler() {
@@ -222,7 +238,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
     private fun initToolbar() {
         val toolbar = inc_toolbar as Toolbar
         toolbar.setBackgroundColor(Color.WHITE)
-        toolbar.title = getString(R.string.searching)
+        toolbar.title = getString(R.string.choose_room)
         toolbar.setTitleTextColor(Color.BLACK)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
