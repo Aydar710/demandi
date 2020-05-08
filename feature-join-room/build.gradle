@@ -38,4 +38,6 @@ dependencies {
 
     implementation androidDeps.values()
     implementation koinDeps.values()
+    implementation lottieDeps.values()
+    //implementation "com.airbnb.android:lottie:$lottieVersion"
 }

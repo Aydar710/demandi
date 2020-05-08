@@ -73,6 +73,7 @@ class StudentBluetoothService {
                 manageConnectedSocket(mmSocket, mmDevice)
 
             } catch (e: IOException) {
+                progressHandler.sendEmptyMessage(MESSAGE_ERROR_WHILE_CONNECT)
                 // Close the socket
                 try {
                     mmSocket.close()

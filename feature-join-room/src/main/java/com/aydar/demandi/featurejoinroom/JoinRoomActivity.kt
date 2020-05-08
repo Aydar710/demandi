@@ -14,14 +14,17 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import com.aydar.demandi.common.base.BaseBluetoothActivity
-import com.aydar.demandi.common.base.MESSAGE_HIDE_DIALOG
-import com.aydar.demandi.common.base.MESSAGE_SHOW_DIALOG
-import com.aydar.demandi.common.base.ROOM_NAME_PREFIX
+import com.airbnb.lottie.LottieComposition
+import com.airbnb.lottie.LottieCompositionFactory
+import com.airbnb.lottie.LottieDrawable
+import com.airbnb.lottie.LottieTask
+import com.aydar.demandi.common.base.*
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import kotlinx.android.synthetic.main.activity_join_room.*
 import org.koin.android.ext.android.inject
+
 
 class JoinRoomActivity : BaseBluetoothActivity() {
 
@@ -30,6 +33,9 @@ class JoinRoomActivity : BaseBluetoothActivity() {
     private lateinit var progressDialog: ProgressDialog
 
     private val router: JoinRoomRouter by inject()
+
+    private var animateBluetoothIcon: LottieDrawable? = null
+    private var bluetoothMenuItem: MenuItem? = null
 
     private val receiver = object : BroadcastReceiver() {
 
@@ -47,14 +53,18 @@ class JoinRoomActivity : BaseBluetoothActivity() {
                     }
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
+                    bluetoothMenuItem?.icon = animateBluetoothIcon
+                    animateBluetoothIcon?.playAnimation()
                     Log.d("Bl", "Discovery started")
-                    tv_no_devices.visibility = View.GONE
+                    makeViewsGone()
                     supportActionBar?.title = getString(R.string.searching)
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                    animateBluetoothIcon?.endAnimation()
+                    bluetoothMenuItem?.setIcon(R.drawable.ic_bluetooth_search)
                     supportActionBar?.title = getString(R.string.choose_room)
                     if (adapter.checkIfListIsEmpty()) {
-                        tv_no_devices.visibility = View.VISIBLE
+                        makeViewsVisible()
                     }
                     Log.d("Bl", "Discovery finished")
                 }
@@ -72,32 +82,44 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         registerFoundReceiver()
         registerBondStateReceiver()
         bluetoothAdapter.startDiscovery()
-        //showPairedDevices()
+        btn_repeat.setOnClickListener {
+            bluetoothAdapter.startDiscovery()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_join_room, menu)
+        val lottieTask: LottieTask<LottieComposition> =
+            LottieCompositionFactory.fromAsset(this, "bluetooth_search_animation.json")
+
+        lottieTask.addListener {
+            animateBluetoothIcon = LottieDrawable()
+            animateBluetoothIcon?.composition = it
+            animateBluetoothIcon?.repeatCount = LottieDrawable.INFINITE
+            animateBluetoothIcon?.scale = 0.07f
+            animateBluetoothIcon?.playAnimation()
+            animateBluetoothIcon?.speed = 0.8f
+            val bluetoothItem = menu?.findItem(R.id.action_search)
+            bluetoothItem?.icon = animateBluetoothIcon
+            bluetoothMenuItem = bluetoothItem
+        }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        when(item.itemId){
             R.id.action_search -> {
                 bluetoothAdapter.startDiscovery()
-                return true
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showPairedDevices() {
-        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter.bondedDevices
-        pairedDevices?.forEach { device ->
-            if (device.name.startsWith(ROOM_NAME_PREFIX)) {
-                adapter.addDevice(device)
-            }
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        onBackPressed()
+        return true
     }
 
     private fun initProgressHandler() {
@@ -111,6 +133,15 @@ class JoinRoomActivity : BaseBluetoothActivity() {
                     hideProgress()
                     true
                 }
+                MESSAGE_ERROR_WHILE_CONNECT -> {
+                    hideProgress()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.connection_not_established),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    true
+                }
                 else -> false
             }
         }
@@ -121,6 +152,16 @@ class JoinRoomActivity : BaseBluetoothActivity() {
             this, "Соединение"
             , "Пожалуйста, подождите...", true
         )
+    }
+
+    private fun makeViewsGone() {
+        tv_no_devices.visibility = View.GONE
+        btn_repeat.visibility = View.GONE
+    }
+
+    private fun makeViewsVisible() {
+        tv_no_devices.visibility = View.VISIBLE
+        btn_repeat.visibility = View.VISIBLE
     }
 
     private fun hideProgress() {
@@ -181,7 +222,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
     private fun initToolbar() {
         val toolbar = inc_toolbar as Toolbar
         toolbar.setBackgroundColor(Color.WHITE)
-        toolbar.title = getString(R.string.choose_room)
+        toolbar.title = getString(R.string.searching)
         toolbar.setTitleTextColor(Color.BLACK)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

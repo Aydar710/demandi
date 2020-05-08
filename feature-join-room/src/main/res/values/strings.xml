@@ -3,4 +3,6 @@
     <string name="choose_room">Выберите аудиторию</string>
     <string name="searching_devices">Поиск устройств</string>
     <string name="searching">Поиск...</string>
+    <string name="repeat">Повторить</string>
+    <string name="connection_not_established">Соединение не установлено</string>
 </resources>
