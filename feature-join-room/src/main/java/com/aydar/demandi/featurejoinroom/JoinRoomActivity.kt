@@ -84,7 +84,6 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         btn_repeat.setOnClickListener {
             bluetoothAdapter.startDiscovery()
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -115,10 +114,14 @@ class JoinRoomActivity : BaseBluetoothActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        bluetoothAdapter.cancelDiscovery()
         finish()
         onBackPressed()
         return true
+    }
+
+    override fun onBackPressed() {
+        finish()
+        super.onBackPressed()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -248,5 +251,6 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         super.onDestroy()
 
         unregisterReceiver(receiver)
+        bluetoothAdapter.cancelDiscovery()
     }
 }
