@@ -26,7 +26,6 @@ import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import kotlinx.android.synthetic.main.activity_join_room.*
 import org.koin.android.ext.android.inject
 
-
 class JoinRoomActivity : BaseBluetoothActivity() {
 
     private lateinit var adapter: JoinAdapter
@@ -99,7 +98,6 @@ class JoinRoomActivity : BaseBluetoothActivity() {
             animateBluetoothIcon?.repeatCount = LottieDrawable.INFINITE
             animateBluetoothIcon?.scale = 0.07f
             animateBluetoothIcon?.speed = 0.8f
-            animateBluetoothIcon?.playAnimation()
             val bluetoothItem = menu?.findItem(R.id.action_search)
             bluetoothMenuItem = bluetoothItem
             bluetoothAdapter.startDiscovery()
@@ -117,6 +115,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        bluetoothAdapter.cancelDiscovery()
         finish()
         onBackPressed()
         return true
