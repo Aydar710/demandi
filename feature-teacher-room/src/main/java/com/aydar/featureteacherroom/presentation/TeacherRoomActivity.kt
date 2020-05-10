@@ -1,6 +1,10 @@
 package com.aydar.featureteacherroom.presentation
 
+import android.bluetooth.BluetoothAdapter
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -22,6 +26,7 @@ import com.aydar.featureteacherroom.R
 import com.aydar.featureteacherroom.presentation.adapter.QuestionsAdapter
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
 import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListener
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_teacher_room.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -37,6 +42,8 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
     private var bluetoothMenuItem: MenuItem? = null
     private lateinit var tvCountDownTimer: TextView
     private lateinit var timerDiscovering: CountDownTimer
+    private lateinit var snackbarBluetoothOff: Snackbar
+    private lateinit var receiver: BroadcastReceiver
 
     private val onItemSwipeListener = object : OnItemSwipeListener<Question> {
         override fun onItemSwiped(
@@ -61,6 +68,8 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
         initRecycler()
         initObservers()
         initHandler()
+        initBluetoothTurnedOffSnackbar()
+        initBroadcastReceiver()
         viewModel.saveSession()
     }
 
@@ -101,7 +110,12 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_DISCOVERABLE) {
             if (resultCode == DISCOVERABLE_DURATION_SEC) {
+                animateBluetoothIcon?.playAnimation()
                 timerDiscovering.start()
+            } else {
+                if (!bluetoothAdapter.isEnabled) {
+                    snackbarBluetoothOff.show()
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -158,16 +172,65 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
     private fun initCountDownTimer() {
         timerDiscovering = object : CountDownTimer(DISCOVERABLE_DURATION_MILLIS.toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                //TODO check If Bluetooth is enable
                 val mTimeFormat = SimpleDateFormat("mm:ss")
                 tvCountDownTimer.text = mTimeFormat.format(Date(millisUntilFinished))
             }
 
             override fun onFinish() {
-                tvCountDownTimer.text = ""
-                animateBluetoothIcon?.endAnimation()
-                animateBluetoothIcon?.progress = 0f
+                cancelTimer()
             }
         }
+    }
+
+    private fun cancelTimer() {
+        timerDiscovering.cancel()
+        tvCountDownTimer.text = ""
+        animateBluetoothIcon?.endAnimation()
+        animateBluetoothIcon?.progress = 0f
+    }
+
+    private fun initBluetoothTurnedOffSnackbar() {
+        snackbarBluetoothOff =
+            Snackbar.make(
+                activity_teacher_room,
+                getString(R.string.bluetooth_turned_off),
+                Snackbar.LENGTH_INDEFINITE
+            ).setAction(getString(R.string.turn_on)) {
+                requestDiscoverable()
+            }
+    }
+
+    private fun initBroadcastReceiver() {
+
+        receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action == BluetoothAdapter.ACTION_STATE_CHANGED) {
+                    val state = intent.getIntExtra(
+                        BluetoothAdapter.EXTRA_STATE,
+                        BluetoothAdapter.ERROR
+                    )
+
+                    when (state) {
+                        BluetoothAdapter.STATE_OFF -> {
+                            snackbarBluetoothOff.show()
+                            cancelTimer()
+
+                        }
+                        BluetoothAdapter.STATE_ON -> {
+                            snackbarBluetoothOff.dismiss()
+                        }
+                    }
+                }
+            }
+
+        }
+
+        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+        registerReceiver(receiver, filter)
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(receiver)
+        super.onDestroy()
     }
 }
