@@ -84,6 +84,8 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         btn_repeat.setOnClickListener {
             bluetoothAdapter.startDiscovery()
         }
+
+        requestTurnOnBluetooth()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -125,13 +127,13 @@ class JoinRoomActivity : BaseBluetoothActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUST_TURN_ON_BLUETOOTH) {
+        if (requestCode == REQUEST_TURN_ON_BLUETOOTH) {
             if (resultCode == Activity.RESULT_OK) {
                 bluetoothAdapter.startDiscovery()
             } else {
                 Toast.makeText(
                     this,
-                    "Невозможно продолжить без включения bluetooth",
+                    getString(R.string.can_not_continue_without_bluetooth),
                     Toast.LENGTH_LONG
                 ).show()
                 finish()

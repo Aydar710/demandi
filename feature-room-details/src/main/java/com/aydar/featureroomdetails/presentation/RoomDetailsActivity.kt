@@ -1,5 +1,7 @@
 package com.aydar.featureroomdetails.presentation
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -31,7 +33,6 @@ class RoomDetailsActivity : BaseBluetoothActivity() {
         room = intent.getSerializableExtra(EXTRA_ROOM) as Room
         viewModel.currentRoom = room
 
-        requestDiscoverable()
         initRecycler()
         getSessions()
 
@@ -40,10 +41,25 @@ class RoomDetailsActivity : BaseBluetoothActivity() {
         initToolbar()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_DISCOVERABLE) {
+            if (resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.can_not_continue_without_bluetooth),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                bluetoothAdapter?.name = "$ROOM_NAME_PREFIX${room.name}/${room.subjectName}/"
+                viewModel.openRoom(room, this)
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
     private fun initClickListeners() {
         fab_door.setOnClickListener {
-            bluetoothAdapter?.name = "$ROOM_NAME_PREFIX${room.name}/${room.subjectName}/"
-            viewModel.openRoom(room, this)
+            requestDiscoverable()
         }
     }
 

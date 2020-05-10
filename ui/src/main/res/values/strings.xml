@@ -8,4 +8,5 @@
     <string name="question">Вопрос</string>
     <string name="send">Отправить</string>
     <string name="choose_auditorium">Выберите аудиторию</string>
+    <string name="can_not_continue_without_bluetooth">Невозможно продолжить без включения bluetooth</string>
 </resources>

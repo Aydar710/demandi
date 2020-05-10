@@ -42,6 +42,7 @@ dependencies {
     implementation coroutinesDeps.values()
     implementation roomDeps.values()
     implementation firebaseDeps.values()
+    implementation lottieDeps.values()
 
     implementation 'com.ernestoyaquello.dragdropswiperecyclerview:drag-drop-swipe-recyclerview:0.6.0'
 }

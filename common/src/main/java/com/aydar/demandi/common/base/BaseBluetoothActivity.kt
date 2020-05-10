@@ -29,26 +29,29 @@ open class BaseBluetoothActivity : AppCompatActivity() {
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         }
 
-        requestTurnOnBluetooth()
     }
+
+    fun requestTurnOnBluetooth() {
+        //TODO: Проверить в onActivityResult потдвердил ли пользователь включение
+        bluetoothAdapter.takeIf { it.isDisabled }?.apply {
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBtIntent, REQUEST_TURN_ON_BLUETOOTH)
+        }
+    }
+
 
     protected fun requestDiscoverable() {
         val discoverableIntent: Intent =
             Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-                putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 1000)
+                putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, DISCOVERABLE_DURATION_SEC)
             }
-        startActivityForResult(discoverableIntent, 12345)
+        startActivityForResult(discoverableIntent, REQUEST_DISCOVERABLE)
     }
 
-    private fun requestTurnOnBluetooth() {
-        //TODO: Проверить в onActivityResult потдвердил ли пользователь включение
-        bluetoothAdapter.takeIf { it.isDisabled }?.apply {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUST_TURN_ON_BLUETOOTH)
-        }
-    }
-
-    companion object{
-        const val REQUST_TURN_ON_BLUETOOTH = 123
+    companion object {
+        const val REQUEST_TURN_ON_BLUETOOTH = 123
+        const val REQUEST_DISCOVERABLE = 1234
+        const val DISCOVERABLE_DURATION_SEC = 5 * 60
+        const val DISCOVERABLE_DURATION_MILLIS = DISCOVERABLE_DURATION_SEC * 1000
     }
 }
