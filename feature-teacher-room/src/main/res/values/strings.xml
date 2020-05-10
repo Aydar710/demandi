@@ -2,4 +2,5 @@
 <resources>
     <string name="bluetooth_turned_off">Bluetooth выключен</string>
     <string name="turn_on">Включить</string>
+    <string name="press_back_again_to_close_room">Нажмите еще раз, чтобы закрыть аудиторию</string>
 </resources>

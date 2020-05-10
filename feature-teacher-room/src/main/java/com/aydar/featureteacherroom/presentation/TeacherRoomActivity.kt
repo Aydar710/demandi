@@ -12,6 +12,7 @@ import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.LottieCompositionFactory
@@ -44,6 +45,7 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
     private lateinit var timerDiscovering: CountDownTimer
     private lateinit var snackbarBluetoothOff: Snackbar
     private lateinit var receiver: BroadcastReceiver
+    private var doubleBackToExitPressedOnce = false
 
     private val onItemSwipeListener = object : OnItemSwipeListener<Question> {
         override fun onItemSwiped(
@@ -119,6 +121,27 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed()
+        } else {
+            doubleBackToExitPressedOnce = true
+            Toast.makeText(
+                this,
+                getString(R.string.press_back_again_to_close_room),
+                Toast.LENGTH_SHORT
+            ).show()
+
+            Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+        }
+
     }
 
     private fun initToolbar() {
