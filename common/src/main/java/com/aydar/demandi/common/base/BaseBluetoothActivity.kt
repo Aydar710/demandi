@@ -7,10 +7,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.aydar.demandi.data.model.Room
 import com.livinglifetechway.quickpermissions_kotlin.runWithPermissions
 
+
 @SuppressLint("Registered")
-open class BaseBluetoothActivity : AppCompatActivity() {
+open class BaseBluetoothActivity : AppCompatActivity(){
 
     protected lateinit var bluetoothAdapter: BluetoothAdapter
 
@@ -32,11 +34,14 @@ open class BaseBluetoothActivity : AppCompatActivity() {
     }
 
     fun requestTurnOnBluetooth() {
-        //TODO: Проверить в onActivityResult потдвердил ли пользователь включение
         bluetoothAdapter.takeIf { it.isDisabled }?.apply {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBtIntent, REQUEST_TURN_ON_BLUETOOTH)
         }
+    }
+
+    fun changeDeviceName(room: Room) {
+        bluetoothAdapter.name = "$ROOM_NAME_PREFIX${room.name}/${room.subjectName}/"
     }
 
 
@@ -53,5 +58,7 @@ open class BaseBluetoothActivity : AppCompatActivity() {
         const val REQUEST_DISCOVERABLE = 1234
         const val DISCOVERABLE_DURATION_SEC = 5 * 60
         const val DISCOVERABLE_DURATION_MILLIS = DISCOVERABLE_DURATION_SEC * 1000
+
+        const val BLUETOOTH_ADDRESS = "bluetoothAddress"
     }
 }

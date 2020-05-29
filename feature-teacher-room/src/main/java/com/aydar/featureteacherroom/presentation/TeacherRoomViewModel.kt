@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
-import com.aydar.demandi.data.model.QuestionLike
 import com.aydar.demandi.data.model.Question
+import com.aydar.demandi.data.model.QuestionLike
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.data.model.Session
 import com.aydar.featureteacherroom.domain.QuestionLikeCountComparator
@@ -65,6 +65,10 @@ class TeacherRoomViewModel(
     fun deleteQuestion(question: Question) {
         (_questionsLiveData.value as MutableList).remove(question)
         ServiceHolder.teacherService.deleteQuestion(question)
+    }
+
+    fun openRoomConnection() {
+        ServiceHolder.teacherService.startRoomServer(room)
     }
 
     private fun incrementLike(like: QuestionLike) {

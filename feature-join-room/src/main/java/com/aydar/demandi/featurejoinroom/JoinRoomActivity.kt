@@ -36,6 +36,8 @@ class JoinRoomActivity : BaseBluetoothActivity() {
 
     private var animateBluetoothIcon: LottieDrawable? = null
     private var bluetoothMenuItem: MenuItem? = null
+    private lateinit var connectedDevice: BluetoothDevice
+    private val sharedPref : SharedPrefWrapper by inject()
 
     private val receiver = object : BroadcastReceiver() {
 
@@ -143,7 +145,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun initProgressHandler() {
-        ServiceHolder.studentService.progressHandler = Handler {
+        ServiceHolder.studentService.handlerJoinRoom = Handler {
             when (it.what) {
                 MESSAGE_SHOW_DIALOG -> {
                     showProgress();
@@ -160,6 +162,10 @@ class JoinRoomActivity : BaseBluetoothActivity() {
                         getString(R.string.connection_not_established),
                         Toast.LENGTH_SHORT
                     ).show()
+                    true
+                }
+                MESSAGE_CONNECTED_TO_ROOM -> {
+                    startStudentsRoomActivity(connectedDevice.name.drop(ROOM_NAME_PREFIX.length))
                     true
                 }
                 else -> false
@@ -218,18 +224,18 @@ class JoinRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun connectToDevice(device: BluetoothDevice) {
-        ServiceHolder.studentService.startStudentsRoomActivity = {
-            startStudentsRoomActivity(device.name.drop(ROOM_NAME_PREFIX.length))
-        }
-        ServiceHolder.studentService.startConnecting(device)
+        connectedDevice = device
+        ServiceHolder.studentService.startConnecting(connectedDevice)
     }
 
     private fun startStudentsRoomActivity(roomName: String) {
         router.moveToStudentsRoomActivityWithName(this, roomName)
+        ServiceHolder.studentService.handlerJoinRoom = null
     }
 
     private fun initRecycler() {
         adapter = JoinAdapter {
+            sharedPref.saveLastConnectedTeacherAddress(it.address)
             if (it.bondState == BluetoothDevice.BOND_BONDED) {
                 connectToDevice(it)
             } else {

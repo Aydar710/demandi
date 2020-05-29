@@ -27,8 +27,7 @@ class RoomDetailsViewModel(
         get() = _sessionLiveData
 
     fun openRoom(room: Room, activity: AppCompatActivity) {
-        ServiceHolder.teacherService.startServer()
-        ServiceHolder.teacherService.room = room
+        ServiceHolder.teacherService.startRoomServer(room)
         router.moveToTeacherRoomActivity(room, activity)
     }
 

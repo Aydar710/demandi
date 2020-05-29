@@ -38,6 +38,7 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
 
     private val viewModel: TeacherRoomViewModel by viewModel()
     private lateinit var adapter: QuestionsAdapter
+    private lateinit var room: Room
 
     private var animateBluetoothIcon: LottieDrawable? = null
     private var bluetoothMenuItem: MenuItem? = null
@@ -114,6 +115,8 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
             if (resultCode == DISCOVERABLE_DURATION_SEC) {
                 animateBluetoothIcon?.playAnimation()
                 timerDiscovering.start()
+                changeDeviceName(room)
+                viewModel.openRoomConnection()
             } else {
                 if (!bluetoothAdapter.isEnabled) {
                     snackbarBluetoothOff.show()
@@ -154,6 +157,7 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        this.room = room
         viewModel.room = room
     }
 

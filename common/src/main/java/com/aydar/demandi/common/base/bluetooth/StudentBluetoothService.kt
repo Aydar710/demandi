@@ -13,14 +13,15 @@ import java.util.*
 
 class StudentBluetoothService {
 
-    lateinit var handler: Handler
-    lateinit var progressHandler: Handler
+    var handler: Handler? = null
+    var handlerJoinRoom: Handler? = null
     private var connectThread: ConnectThread? = null
     private lateinit var connectedThread: ConnectedThread
-    lateinit var startStudentsRoomActivity: () -> Unit
+    lateinit var connectedDevice: BluetoothDevice
 
     fun startConnecting(device: BluetoothDevice) {
-        progressHandler.sendEmptyMessage(MESSAGE_SHOW_DIALOG)
+        handlerJoinRoom?.sendEmptyMessage(MESSAGE_SHOW_DIALOG)
+        handler?.sendEmptyMessage(MESSAGE_SHOW_DIALOG)
         connectThread = ConnectThread(device)
         connectThread!!.start()
     }
@@ -73,7 +74,7 @@ class StudentBluetoothService {
                 manageConnectedSocket(mmSocket, mmDevice)
 
             } catch (e: IOException) {
-                progressHandler.sendEmptyMessage(MESSAGE_ERROR_WHILE_CONNECT)
+                handlerJoinRoom!!.sendEmptyMessage(MESSAGE_ERROR_WHILE_CONNECT)
                 // Close the socket
                 try {
                     mmSocket.close()
@@ -94,13 +95,17 @@ class StudentBluetoothService {
 
         private fun manageConnectedSocket(mmSocket: BluetoothSocket, mmDevice: BluetoothDevice?) {
             try {
-                connectedThread = ConnectedThread(mmSocket)
+                if (mmSocket != null) {
+                    connectedThread = ConnectedThread(mmSocket)
+                    connectedDevice = mmDevice!!
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
             try {
                 connectedThread.start()
-                startStudentsRoomActivity.invoke()
+                handlerJoinRoom?.sendEmptyMessage(MESSAGE_CONNECTED_TO_ROOM)
+                handler?.sendEmptyMessage(MESSAGE_CONNECTED_TO_ROOM)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -116,34 +121,42 @@ class StudentBluetoothService {
         private var objInStream: ObjectInputStream
 
         init {
-            progressHandler.sendEmptyMessage(MESSAGE_HIDE_DIALOG)
+            handlerJoinRoom?.sendEmptyMessage(MESSAGE_HIDE_DIALOG)
             objOutStream = ObjectOutputStream(outStream)
             objInStream = ObjectInputStream(inStream)
         }
 
         override fun run() {
             while (true) {
-                sleep(1000)
-                val readObj = objInStream.readObject()
-                when (readObj) {
-                    is Room -> {
-                        manageReadRoom(readObj)
-                    }
-                    is Question -> {
-                        manageReadQuestion(readObj)
-                    }
-                    is QuestionLike -> {
-                        manageReadQuestionLike(readObj)
-                    }
-                    is CommandDeleteQuestion -> {
-                        manageReadCommandDeleteQuestion(readObj)
-                    }
-                    is Answer -> {
-                        manageReadAnswer(readObj)
-                    }
-                    is AnswerLike -> {
-                        manageReadAnswerLike(readObj)
-                    }
+                try {
+                    readObject()
+                } catch (e: IOException) {
+                    sendDisconnectedMsg()
+                    break
+                }
+            }
+        }
+
+        private fun readObject() {
+            val readObj = objInStream.readObject()
+            when (readObj) {
+                is Room -> {
+                    manageReadRoom(readObj)
+                }
+                is Question -> {
+                    manageReadQuestion(readObj)
+                }
+                is QuestionLike -> {
+                    manageReadQuestionLike(readObj)
+                }
+                is CommandDeleteQuestion -> {
+                    manageReadCommandDeleteQuestion(readObj)
+                }
+                is Answer -> {
+                    manageReadAnswer(readObj)
+                }
+                is AnswerLike -> {
+                    manageReadAnswerLike(readObj)
                 }
             }
         }
@@ -155,18 +168,18 @@ class StudentBluetoothService {
 
                 e.printStackTrace()
                 // Send a failure message back to the activity.
-                val writeErrorMsg = handler.obtainMessage(MESSAGE_TOAST)
+                val writeErrorMsg = handler?.obtainMessage(MESSAGE_TOAST)
                 val bundle = Bundle().apply {
                     putString("toast", "Couldn't send data to the other device")
                 }
-                writeErrorMsg.data = bundle
-                handler.sendMessage(writeErrorMsg)
+                writeErrorMsg?.data = bundle
+                handler?.sendMessage(writeErrorMsg)
                 return
             }
 
             if (!hasQuestion) {
-                val writtenMsg = handler.obtainMessage(MESSAGE_WRITE, question)
-                handler.sendMessage(writtenMsg)
+                val writtenMsg = handler?.obtainMessage(MESSAGE_WRITE, question)
+                handler?.sendMessage(writtenMsg)
             }
         }
 
@@ -191,35 +204,39 @@ class StudentBluetoothService {
         }
 
         private fun manageReadRoom(room: Room) {
-            val roomMsg = handler.obtainMessage(MESSAGE_RECEIVED_ROOM_INFO, room)
-            handler.sendMessage(roomMsg)
+            val roomMsg = handler?.obtainMessage(MESSAGE_RECEIVED_ROOM_INFO, room)
+            handler?.sendMessage(roomMsg)
         }
 
         private fun manageReadQuestion(question: Question) {
-            val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_QUESTION, question)
-            handler.sendMessage(questionMsg)
+            val questionMsg = handler?.obtainMessage(MESSAGE_RECEIVED_QUESTION, question)
+            handler?.sendMessage(questionMsg)
         }
 
         private fun manageReadQuestionLike(like: QuestionLike) {
-            val questionMsg = handler.obtainMessage(MESSAGE_RECEIVED_QUESTION_LIKE, like)
-            handler.sendMessage(questionMsg)
+            val questionMsg = handler?.obtainMessage(MESSAGE_RECEIVED_QUESTION_LIKE, like)
+            handler?.sendMessage(questionMsg)
         }
 
         private fun manageReadAnswerLike(like: AnswerLike) {
-            val likeMsg = handler.obtainMessage(MESSAGE_RECEIVED_ANSWER_LIKE, like)
-            handler.sendMessage(likeMsg)
+            val likeMsg = handler?.obtainMessage(MESSAGE_RECEIVED_ANSWER_LIKE, like)
+            handler?.sendMessage(likeMsg)
         }
 
         private fun manageReadCommandDeleteQuestion(commandDeleteQuestion: CommandDeleteQuestion) {
             val questionMsg =
-                handler.obtainMessage(MESSAGE_COMMAND_DELETE_QUESTION, commandDeleteQuestion)
-            handler.sendMessage(questionMsg)
+                handler?.obtainMessage(MESSAGE_COMMAND_DELETE_QUESTION, commandDeleteQuestion)
+            handler?.sendMessage(questionMsg)
         }
 
         private fun manageReadAnswer(answer: Answer) {
             val answerMsg =
-                handler.obtainMessage(MESSAGE_ANSWER, answer)
-            handler.sendMessage(answerMsg)
+                handler?.obtainMessage(MESSAGE_ANSWER, answer)
+            handler?.sendMessage(answerMsg)
+        }
+
+        private fun sendDisconnectedMsg() {
+            handler?.sendEmptyMessage(MESSAGE_SOCKET_DISCONNECTED)
         }
 
         // Call this method from the main activity to shut down the connection.

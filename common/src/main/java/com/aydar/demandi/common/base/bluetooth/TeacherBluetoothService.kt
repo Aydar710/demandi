@@ -22,18 +22,21 @@ class TeacherBluetoothService() {
 
     lateinit var room: Room
 
+    fun startRoomServer(room: Room) {
+        ServiceHolder.teacherService.startServer()
+        ServiceHolder.teacherService.room = room
+    }
+
     @Synchronized
     fun startServer() {
-        if (insecureAcceptThread == null) {
-            insecureAcceptThread = AcceptThread()
-            try {
-                insecureAcceptThread?.start()
+        insecureAcceptThread = AcceptThread()
+        try {
+            insecureAcceptThread?.start()
 
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-                print("")
-            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
         }
+
     }
 
     fun deleteQuestion(question: Question) {
@@ -89,8 +92,8 @@ class TeacherBluetoothService() {
 
         private fun manageConnectedSocket(mmSocket: BluetoothSocket) {
             // Start the thread to manage the connection and perform transmissions
-            val connectedThread = ConnectedThread(mmSocket)
             try {
+                val connectedThread = ConnectedThread(mmSocket)
                 connectedThread!!.start()
                 connectedThread!!.sendRoomToStudent(room)
                 connectedThreads?.add(connectedThread)

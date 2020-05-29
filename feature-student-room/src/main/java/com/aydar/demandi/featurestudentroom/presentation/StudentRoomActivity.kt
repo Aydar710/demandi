@@ -2,6 +2,13 @@ package com.aydar.demandi.featurestudentroom.presentation
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ProgressDialog
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -17,6 +24,7 @@ import androidx.transition.TransitionManager
 import com.amitshekhar.DebugDB
 import com.aydar.demandi.common.base.*
 import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
 import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
 import com.aydar.demandi.data.model.*
 import com.aydar.demandi.featurestudentroom.R
@@ -24,7 +32,9 @@ import com.aydar.demandi.featurestudentroom.presentation.adapter.QuestionsAdapte
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
 import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.activity_student_room.*
 import kotlinx.android.synthetic.main.bottom_sheet_ask_question.*
 import kotlinx.android.synthetic.main.content_students_room.*
 import kotlinx.android.synthetic.main.item_question_student.*
@@ -35,12 +45,35 @@ import java.util.*
 class StudentRoomActivity : BaseBluetoothActivity() {
 
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
-
     private val viewModel: StudentRoomViewModel by viewModel()
-
     private lateinit var adapter: QuestionsAdapter
-
     private val user: FirebaseUser by inject()
+    private lateinit var snackbarLostConnection: Snackbar
+    private val sharedPref: SharedPrefWrapper by inject()
+    private lateinit var progressDialog : ProgressDialog
+
+    private val receiver = object : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                BluetoothDevice.ACTION_FOUND -> {
+                    Log.d("Bl", "Device found")
+                    val device: BluetoothDevice? =
+                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                    val teacherAddress = sharedPref.getLastConnectedTeacherAddress()
+                    if (device?.address == teacherAddress) {
+                        connectToDevice(device!!)
+                    }
+                }
+                BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
+
+                }
+                BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +94,30 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
         val addressLog = DebugDB.getAddressLog()
         Log.d("address", addressLog)
+        initLostConnectionSnackbar()
+
+        initProgress()
+
+    }
+
+    private fun initProgress() {
+        progressDialog = ProgressDialog(this)
+        progressDialog.setTitle("Переподключение")
+        progressDialog.setMessage("Пожалуйста, подождите")
+        progressDialog.isIndeterminate = true
+    }
+
+    private fun registerFoundReceiver() {
+        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        registerReceiver(receiver, filter)
+    }
+
+    private fun connectToDevice(device: BluetoothDevice) {
+        ServiceHolder.studentService = StudentBluetoothService()
+        initHandler()
+        ServiceHolder.studentService.startConnecting(device)
     }
 
     private fun setBottomSheetCallback() {
@@ -144,6 +201,18 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                     viewModel.handleReceivedAnswerLike(answerLike)
                     true
                 }
+                MESSAGE_SOCKET_DISCONNECTED -> {
+                    snackbarLostConnection.show()
+                    true
+                }
+                MESSAGE_SHOW_DIALOG -> {
+                    showProgress()
+                    true
+                }
+                MESSAGE_CONNECTED_TO_ROOM -> {
+                    hideProgress()
+                    true
+                }
                 else -> false
             }
         }
@@ -189,6 +258,19 @@ class StudentRoomActivity : BaseBluetoothActivity() {
             }
         }
         recycler.swipeListener = onItemSwipeListener
+    }
+
+    private fun initLostConnectionSnackbar() {
+        snackbarLostConnection = Snackbar.make(
+            cl_student_room,
+            getString(R.string.lost_connection),
+            Snackbar.LENGTH_INDEFINITE
+        ).setAction(getString(R.string.reconnect)) {
+            //viewModel.reconnect()
+            registerFoundReceiver()
+            bluetoothAdapter.startDiscovery()
+            showProgress()
+        }
     }
 
     private fun collapseAnswers(
@@ -259,4 +341,13 @@ class StudentRoomActivity : BaseBluetoothActivity() {
             hidden.invoke()
         }, 100)
     }
+
+    private fun showProgress() {
+        progressDialog.show()
+    }
+
+    private fun hideProgress() {
+        progressDialog.dismiss()
+    }
+
 }

@@ -12,7 +12,6 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.EXTRA_ROOM
-import com.aydar.demandi.common.base.ROOM_NAME_PREFIX
 import com.aydar.demandi.data.model.Room
 import com.aydar.featureroomdetails.R
 import com.aydar.featureroomdetails.presentation.adapter.SessionsAdapter
@@ -50,7 +49,7 @@ class RoomDetailsActivity : BaseBluetoothActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                bluetoothAdapter?.name = "$ROOM_NAME_PREFIX${room.name}/${room.subjectName}/"
+                changeDeviceName(room)
                 viewModel.openRoom(room, this)
             }
         }

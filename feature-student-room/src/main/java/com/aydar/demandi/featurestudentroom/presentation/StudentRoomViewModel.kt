@@ -70,7 +70,7 @@ class StudentRoomViewModel(
             if (roomFromDb == null) {
                 saveRoomToCache(room)
             } else {
-                showRoomQuestions(room)
+                //showRoomQuestions(room)
             }
         }
     }
