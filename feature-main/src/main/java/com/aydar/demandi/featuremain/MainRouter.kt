@@ -7,5 +7,5 @@ interface MainRouter {
     fun moveToCreateRoomActivity(activity: AppCompatActivity)
     fun moveToJoinRoomActivity(activity: AppCompatActivity)
     fun moveToTeacherRoomsActivity(activity: AppCompatActivity)
-    fun moveToFoo(activity : AppCompatActivity)
+    fun moveToLoginActivity(activity: AppCompatActivity)
 }

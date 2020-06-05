@@ -9,6 +9,7 @@ import com.aydar.demandi.featurecreateroom.presentation.CreateRoomActivity
 import com.aydar.demandi.featuremain.MainActivity
 import com.aydar.demandi.featurestudentroom.presentation.StudentRoomActivity
 import com.aydar.demandi.teacherrooms.presentation.TeacherRoomsActivity
+import com.aydar.featureauth.LoginActivity
 import com.aydar.featureroomdetails.presentation.RoomDetailsActivity
 import com.aydar.featureteacherroom.presentation.TeacherRoomActivity
 
@@ -60,12 +61,13 @@ class AppRouterImpl : AppRouter {
         activity.startActivity(intent)
     }
 
-    override fun moveToFoo(activity: AppCompatActivity) {
-        activity.startActivity(Intent(activity, TeacherRoomsActivity::class.java))
-    }
-
     override fun moveToMainActivity(activity: AppCompatActivity) {
         activity.startActivity(Intent(activity, MainActivity::class.java))
+        activity.finish()
+    }
+
+    override fun moveToLoginActivity(activity: AppCompatActivity) {
+        activity.startActivity(Intent(activity, LoginActivity::class.java))
         activity.finish()
     }
 }

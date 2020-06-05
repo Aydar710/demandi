@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="exit_account">Выход из аккаунта</string>
+    <string name="accept_exit">Подтвердить выход?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+</resources>

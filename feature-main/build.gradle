@@ -40,4 +40,5 @@ dependencies {
     implementation androidDeps.values()
     implementation coroutinesDeps.values()
     implementation roomDeps.values()
+    implementation firebaseDeps.values()
 }
