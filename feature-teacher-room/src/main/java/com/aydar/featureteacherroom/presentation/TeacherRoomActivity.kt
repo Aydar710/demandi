@@ -258,6 +258,8 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
 
     override fun onDestroy() {
         unregisterReceiver(receiver)
+        bluetoothAdapter.name = sharedPrefWrapperDeviceName.getDeviceName()
+        sharedPrefWrapperDeviceName.deleteDeviceName()
         super.onDestroy()
     }
 }

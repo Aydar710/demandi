@@ -9,10 +9,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.aydar.demandi.data.model.Room
 import com.livinglifetechway.quickpermissions_kotlin.runWithPermissions
-
+import org.koin.android.ext.android.inject
 
 @SuppressLint("Registered")
-open class BaseBluetoothActivity : AppCompatActivity(){
+open class BaseBluetoothActivity : AppCompatActivity() {
 
     protected lateinit var bluetoothAdapter: BluetoothAdapter
 
@@ -20,6 +20,8 @@ open class BaseBluetoothActivity : AppCompatActivity(){
 
     private val BluetoothAdapter.isDisabled: Boolean
         get() = !isEnabled
+
+    protected val sharedPrefWrapperDeviceName: SharedPrefWrapperDeviceName by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +43,12 @@ open class BaseBluetoothActivity : AppCompatActivity(){
     }
 
     fun changeDeviceName(room: Room) {
-        bluetoothAdapter.name = "$ROOM_NAME_PREFIX${room.name}/${room.subjectName}/"
+        val newDeviceName = "$ROOM_NAME_PREFIX${room.name}/${room.subjectName}/"
+        val oldDeviceName = sharedPrefWrapperDeviceName.getDeviceName()
+        if (oldDeviceName == null) {
+            sharedPrefWrapperDeviceName.saveDeviceName(bluetoothAdapter.name)
+        }
+        bluetoothAdapter.name = newDeviceName
     }
 
 

@@ -21,7 +21,8 @@ class CreateRoomActivity : BaseBluetoothActivity() {
 
         btn_create.setOnClickListener {
             val room = createRoomViewHolder.getRoom()
-            bluetoothAdapter?.name = createDeviceName(room)
+            sharedPrefWrapperDeviceName.saveDeviceName(bluetoothAdapter.name)
+            bluetoothAdapter.name = createDeviceName(room)
             viewModel.onCreateBtnClicked(room, this)
         }
     }
