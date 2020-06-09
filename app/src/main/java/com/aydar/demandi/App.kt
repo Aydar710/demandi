@@ -1,9 +1,6 @@
 package com.aydar.demandi
 
 import android.app.Application
-import com.aydar.demandi.common.base.bluetooth.ServiceHolder
-import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
-import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothService
 import com.aydar.demandi.common.base.di.bluetoothServiceModule
 import com.aydar.demandi.data.di.repositoryModule
 import com.aydar.demandi.data.di.roomModule
@@ -25,11 +22,6 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        ServiceHolder.studentService =
-            StudentBluetoothService()
-        ServiceHolder.teacherService =
-            TeacherBluetoothService()
 
         startKoin {
             androidLogger()

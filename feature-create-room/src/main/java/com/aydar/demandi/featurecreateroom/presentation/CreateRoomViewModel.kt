@@ -2,19 +2,20 @@ package com.aydar.demandi.featurecreateroom.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
-import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothService
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurecreateroom.CreateRoomRouter
 import com.aydar.demandi.featurecreateroom.domain.CreateRoomUseCase
 
 class CreateRoomViewModel(
     private val router: CreateRoomRouter,
-    private val createRoomUseCase: CreateRoomUseCase
+    private val createRoomUseCase: CreateRoomUseCase,
+    private val teacherService: TeacherBluetoothService
 ) : ViewModel() {
 
     fun onCreateBtnClicked(room: Room, activity: AppCompatActivity) {
-        ServiceHolder.teacherService.startServer()
-        ServiceHolder.teacherService.room = room
+        teacherService.startServer()
+        teacherService.room = room
         createRoom(room, activity)
     }
 

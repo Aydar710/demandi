@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothService
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.QuestionLike
 import com.aydar.demandi.data.model.Room
@@ -18,7 +18,8 @@ import java.util.*
 
 class TeacherRoomViewModel(
     private val saveQuestionToFirestoreUseCase: SaveQuestionToFirestoreUseCase,
-    private val saveSessionUseCase: SaveSessionUseCase
+    private val saveSessionUseCase: SaveSessionUseCase,
+    private val teacherService: TeacherBluetoothService
 ) :
     ViewModel() {
 
@@ -64,11 +65,11 @@ class TeacherRoomViewModel(
 
     fun deleteQuestion(question: Question) {
         (_questionsLiveData.value as MutableList).remove(question)
-        ServiceHolder.teacherService.deleteQuestion(question)
+        teacherService.deleteQuestion(question)
     }
 
     fun openRoomConnection() {
-        ServiceHolder.teacherService.startRoomServer(room)
+        teacherService.startRoomServer(room)
     }
 
     private fun incrementLike(like: QuestionLike) {

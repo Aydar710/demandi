@@ -19,7 +19,7 @@ import com.airbnb.lottie.LottieCompositionFactory
 import com.airbnb.lottie.LottieDrawable
 import com.airbnb.lottie.LottieTask
 import com.aydar.demandi.common.base.*
-import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothService
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.QuestionLike
 import com.aydar.demandi.data.model.Room
@@ -29,6 +29,7 @@ import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
 import com.ernestoyaquello.dragdropswiperecyclerview.listener.OnItemSwipeListener
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_teacher_room.*
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -36,6 +37,7 @@ import java.util.*
 
 class TeacherRoomActivity : BaseBluetoothActivity() {
 
+    private val teacherService: TeacherBluetoothService by inject()
     private val viewModel: TeacherRoomViewModel by viewModel()
     private lateinit var adapter: QuestionsAdapter
     private lateinit var room: Room
@@ -179,7 +181,7 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun initHandler() {
-        ServiceHolder.teacherService.handler = Handler {
+        teacherService.handler = Handler {
             when (it.what) {
                 MESSAGE_READ -> {
                     val question = it.obj as Question

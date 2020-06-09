@@ -1,35 +1,37 @@
 package com.aydar.demandi.common.base.bluetooth
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.os.Handler
 import com.aydar.demandi.common.base.MESSAGE_READ
 import com.aydar.demandi.common.base.MESSAGE_RECEIVED_QUESTION_LIKE
-import com.aydar.demandi.common.base.UUID_INSECURE
 import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
 import com.aydar.demandi.data.model.*
 import java.io.*
-import java.util.*
 
-class TeacherBluetoothService() {
+class TeacherBluetoothService {
 
     lateinit var handler: Handler
 
     private var connectedThreads: MutableList<ConnectedThread>? = mutableListOf()
 
-    private var insecureAcceptThread: AcceptThread? = null
+    private var insecureAcceptThread: TeacherAcceptThread? = null
 
     lateinit var room: Room
 
     fun startRoomServer(room: Room) {
-        ServiceHolder.teacherService.startServer()
-        ServiceHolder.teacherService.room = room
+        startServer()
+        this.room = room
     }
 
     @Synchronized
     fun startServer() {
-        insecureAcceptThread = AcceptThread()
+        insecureAcceptThread =
+            TeacherAcceptThread {
+                val connectedThread = ConnectedThread(it)
+                connectedThread.start()
+                connectedThread.sendRoomToStudent(room)
+                connectedThreads?.add(connectedThread)
+            }
         try {
             insecureAcceptThread?.start()
 
@@ -48,69 +50,6 @@ class TeacherBluetoothService() {
             }
         }
     }
-
-    private inner class AcceptThread : Thread() {
-
-        // The local server socket
-        private val mmServerSocket: BluetoothServerSocket?
-
-        private val mBluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-
-        init {
-
-            var tmp: BluetoothServerSocket? = null
-
-            // Create a new listening server socket
-            try {
-                tmp = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(
-                    "Demandi",
-                    UUID.fromString(UUID_INSECURE)
-                )
-            } catch (e: IOException) {
-            }
-
-            mmServerSocket = tmp
-        }
-
-        override fun run() {
-
-            var socket: BluetoothSocket? = null
-
-            while (true) {
-                try {
-                    socket = mmServerSocket?.accept()
-
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-
-                if (socket != null) {
-                    manageConnectedSocket(socket)
-                }
-            }
-        }
-
-        private fun manageConnectedSocket(mmSocket: BluetoothSocket) {
-            // Start the thread to manage the connection and perform transmissions
-            try {
-                val connectedThread = ConnectedThread(mmSocket)
-                connectedThread!!.start()
-                connectedThread!!.sendRoomToStudent(room)
-                connectedThreads?.add(connectedThread)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        fun cancel() {
-            try {
-                mmServerSocket!!.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
 
     inner class ConnectedThread(private val mmSocket: BluetoothSocket) : Thread() {
 

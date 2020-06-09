@@ -8,5 +8,5 @@ val createRoomModule = module {
 
     factory { CreateRoomUseCase(get(), get()) }
 
-    factory { CreateRoomViewModel(get(), get()) }
+    factory { CreateRoomViewModel(get(), get(), get()) }
 }

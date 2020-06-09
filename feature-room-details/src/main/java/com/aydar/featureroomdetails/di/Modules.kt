@@ -7,7 +7,7 @@ import org.koin.dsl.module
 
 val roomDetailsViewModelModule = module {
 
-    factory { RoomDetailsViewModel(get(), get(), get()) }
+    factory { RoomDetailsViewModel(get(), get(), get(), get()) }
 }
 
 val roomDetailsUseCaseModule = module {

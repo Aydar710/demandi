@@ -23,7 +23,6 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.amitshekhar.DebugDB
 import com.aydar.demandi.common.base.*
-import com.aydar.demandi.common.base.bluetooth.ServiceHolder
 import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
 import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
 import com.aydar.demandi.data.model.*
@@ -44,6 +43,7 @@ import java.util.*
 
 class StudentRoomActivity : BaseBluetoothActivity() {
 
+    private val studentService : StudentBluetoothService by inject()
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private val viewModel: StudentRoomViewModel by viewModel()
     private lateinit var adapter: QuestionsAdapter
@@ -115,9 +115,9 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun connectToDevice(device: BluetoothDevice) {
-        ServiceHolder.studentService = StudentBluetoothService()
+        //ServiceHolder.studentService = StudentBluetoothService()
         initHandler()
-        ServiceHolder.studentService.startConnecting(device)
+        studentService.startConnecting(device)
     }
 
     private fun setBottomSheetCallback() {
@@ -164,7 +164,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun initHandler() {
-        ServiceHolder.studentService.handler = Handler {
+        studentService.handler = Handler {
             when (it.what) {
                 MESSAGE_WRITE -> {
                     val question = it.obj as Question

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aydar.demandi.common.base.bluetooth.ServiceHolder
+import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
 import com.aydar.demandi.data.model.*
 import com.aydar.demandi.featurestudentroom.domain.AnswerLikeCountComparator
 import com.aydar.demandi.featurestudentroom.domain.QuestionLikeCountComparator
@@ -21,7 +21,8 @@ class StudentRoomViewModel(
     private val saveRoomToCacheUseCase: SaveRoomToCacheUseCase,
     private val getRoomFromCacheUseCase: GetRoomFromCacheUseCase,
     private val getCachedQuestionsUseCase: GetCachedQuestionsUseCase,
-    private val user: FirebaseUser
+    private val user: FirebaseUser,
+    private val studentService : StudentBluetoothService
 ) :
     ViewModel() {
 
@@ -37,7 +38,7 @@ class StudentRoomViewModel(
     }
 
     fun sendQuestion(question: Question) {
-        ServiceHolder.studentService.sendQuestion(question)
+        studentService.sendQuestion(question)
     }
 
     fun onQuestionReceived(question: Question) {
@@ -86,7 +87,7 @@ class StudentRoomViewModel(
     fun handleQuestionLike(questionId: String) {
         val like = QuestionLike(questionId, user.uid)
         makeQuestionLikeAction(like)
-        ServiceHolder.studentService.sendQuestionLike(like, user.uid)
+        studentService.sendQuestionLike(like, user.uid)
     }
 
     private fun makeQuestionLikeAction(like: QuestionLike) {
@@ -103,12 +104,12 @@ class StudentRoomViewModel(
     }
 
     fun sendAnswer(answer: Answer) {
-        ServiceHolder.studentService.sendAnswer(answer)
+        studentService.sendAnswer(answer)
     }
 
     fun handleAnswerLike(answerLike: AnswerLike) {
         makeAnswerLikeAction(answerLike)
-        ServiceHolder.studentService.sendAnswerLike(answerLike)
+        studentService.sendAnswerLike(answerLike)
     }
 
     fun handleReceivedAnswerLike(answerLike: AnswerLike) {

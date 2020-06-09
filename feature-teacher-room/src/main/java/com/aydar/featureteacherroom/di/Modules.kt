@@ -15,6 +15,7 @@ val roomsViewModelModule = module {
     factory {
         TeacherRoomViewModel(
             get(),
+            get(),
             get()
         )
     }
