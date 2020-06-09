@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothService
+import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothServiceMediator
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.data.model.Session
@@ -18,7 +18,7 @@ class RoomDetailsViewModel(
     private val router: RoomDetailsRouter,
     private val getSessionsUseCase: GetSessionsUseCase,
     private val saveQuestionAnswerUseCase: SaveQuestionAnswerUseCase,
-    private val teacherService: TeacherBluetoothService
+    private val teacherService: TeacherBluetoothServiceMediator
 ) : ViewModel() {
 
     lateinit var currentRoom: Room

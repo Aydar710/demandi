@@ -18,11 +18,11 @@ import com.airbnb.lottie.LottieComposition
 import com.airbnb.lottie.LottieCompositionFactory
 import com.airbnb.lottie.LottieDrawable
 import com.airbnb.lottie.LottieTask
-import com.aydar.demandi.common.base.*
-import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothService
-import com.aydar.demandi.data.model.Question
-import com.aydar.demandi.data.model.QuestionLike
-import com.aydar.demandi.data.model.Room
+import com.aydar.demandi.common.base.BaseBluetoothActivity
+import com.aydar.demandi.common.base.EXTRA_ROOM
+import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothServiceMediator
+import com.aydar.demandi.common.base.getRoomNameFromFullRoomName
+import com.aydar.demandi.data.model.*
 import com.aydar.featureteacherroom.R
 import com.aydar.featureteacherroom.presentation.adapter.QuestionsAdapter
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
@@ -37,7 +37,7 @@ import java.util.*
 
 class TeacherRoomActivity : BaseBluetoothActivity() {
 
-    private val teacherService: TeacherBluetoothService by inject()
+    private val teacherService: TeacherBluetoothServiceMediator by inject()
     private val viewModel: TeacherRoomViewModel by viewModel()
     private lateinit var adapter: QuestionsAdapter
     private lateinit var room: Room

@@ -63,7 +63,7 @@ open class BaseBluetoothActivity : AppCompatActivity() {
     companion object {
         const val REQUEST_TURN_ON_BLUETOOTH = 123
         const val REQUEST_DISCOVERABLE = 1234
-        const val DISCOVERABLE_DURATION_SEC = 5 * 60
+        const val DISCOVERABLE_DURATION_SEC = 1 * 60
         const val DISCOVERABLE_DURATION_MILLIS = DISCOVERABLE_DURATION_SEC * 1000
 
         const val BLUETOOTH_ADDRESS = "bluetoothAddress"

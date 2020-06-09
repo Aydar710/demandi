@@ -4,5 +4,6 @@ import java.io.Serializable
 
 data class QuestionLike(
     val questionId: String,
-    val userId: String
-) : Serializable
+    val userId: String,
+    override val messageType: Int = MESSAGE_RECEIVED_QUESTION_LIKE
+) : Serializable, Message()
