@@ -4,7 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
+import com.aydar.demandi.common.base.MESSAGE_WRITE
+import com.aydar.demandi.common.base.bluetooth.teacher.StudentServiceFacade
+import com.aydar.demandi.common.base.bluetoothmessages.MessageSendAnswer
+import com.aydar.demandi.common.base.bluetoothmessages.MessageSendAnswerLike
+import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestion
+import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestionLike
 import com.aydar.demandi.data.model.*
 import com.aydar.demandi.featurestudentroom.domain.AnswerLikeCountComparator
 import com.aydar.demandi.featurestudentroom.domain.QuestionLikeCountComparator
@@ -22,7 +27,8 @@ class StudentRoomViewModel(
     private val getRoomFromCacheUseCase: GetRoomFromCacheUseCase,
     private val getCachedQuestionsUseCase: GetCachedQuestionsUseCase,
     private val user: FirebaseUser,
-    private val studentService : StudentBluetoothService
+    private val studentServiceFacade: StudentServiceFacade
+    /*private val studentService : StudentBluetoothService*/
 ) :
     ViewModel() {
 
@@ -38,7 +44,8 @@ class StudentRoomViewModel(
     }
 
     fun sendQuestion(question: Question) {
-        studentService.sendQuestion(question)
+        val msgQuestion = MessageSendQuestion(question)
+        studentServiceFacade.sendMessageWithHandlerMsg(msgQuestion, MESSAGE_WRITE)
     }
 
     fun onQuestionReceived(question: Question) {
@@ -87,7 +94,8 @@ class StudentRoomViewModel(
     fun handleQuestionLike(questionId: String) {
         val like = QuestionLike(questionId, user.uid)
         makeQuestionLikeAction(like)
-        studentService.sendQuestionLike(like, user.uid)
+        val msgSendQuestionLike = MessageSendQuestionLike(like)
+        studentServiceFacade.sendMessage(msgSendQuestionLike)
     }
 
     private fun makeQuestionLikeAction(like: QuestionLike) {
@@ -104,12 +112,14 @@ class StudentRoomViewModel(
     }
 
     fun sendAnswer(answer: Answer) {
-        studentService.sendAnswer(answer)
+        val msgSendAnswer = MessageSendAnswer(answer)
+        studentServiceFacade.sendMessage(msgSendAnswer)
     }
 
     fun handleAnswerLike(answerLike: AnswerLike) {
         makeAnswerLikeAction(answerLike)
-        studentService.sendAnswerLike(answerLike)
+        val msgSendAnswerLike = MessageSendAnswerLike(answerLike)
+        studentServiceFacade.sendMessage(msgSendAnswerLike)
     }
 
     fun handleReceivedAnswerLike(answerLike: AnswerLike) {
@@ -236,7 +246,7 @@ class StudentRoomViewModel(
 
     private fun deleteQuestion(question: Question) {
         val currentQuestions = _questionsLiveData.value as MutableList
-        currentQuestions.remove(question)
+        currentQuestions.removeQuestionById(question)
         _questionsLiveData.value = currentQuestions
     }
 
@@ -247,5 +257,14 @@ class StudentRoomViewModel(
             }
         }
         return false
+    }
+
+    private fun MutableList<Question>.removeQuestionById(question: Question) {
+        this.forEach {
+            if (it.id == question.id) {
+                this.remove(it)
+                return
+            }
+        }
     }
 }

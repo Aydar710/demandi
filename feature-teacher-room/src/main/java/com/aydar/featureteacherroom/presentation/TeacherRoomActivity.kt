@@ -20,9 +20,13 @@ import com.airbnb.lottie.LottieDrawable
 import com.airbnb.lottie.LottieTask
 import com.aydar.demandi.common.base.BaseBluetoothActivity
 import com.aydar.demandi.common.base.EXTRA_ROOM
-import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothServiceMediator
+import com.aydar.demandi.common.base.bluetooth.teacher.TeacherBluetoothServiceMediator
+import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestion
+import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestionLike
 import com.aydar.demandi.common.base.getRoomNameFromFullRoomName
-import com.aydar.demandi.data.model.*
+import com.aydar.demandi.data.model.Message
+import com.aydar.demandi.data.model.Question
+import com.aydar.demandi.data.model.Room
 import com.aydar.featureteacherroom.R
 import com.aydar.featureteacherroom.presentation.adapter.QuestionsAdapter
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
@@ -182,19 +186,24 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
 
     private fun initHandler() {
         teacherService.handler = Handler {
-            when (it.what) {
-                MESSAGE_READ -> {
-                    val question = it.obj as Question
-                    viewModel.addQuestion(question)
-                    true
+            if (it.what == 12345) {
+                when (val message = it.obj as Message) {
+                    is MessageSendQuestion -> {
+                        val question = message.question
+                        viewModel.addQuestion(question)
+                        true
+                    }
+                    is MessageSendQuestionLike -> {
+                        val questionLike = message.questionLike
+                        viewModel.handleLike(questionLike)
+                        true
+                    }
+                    else -> {
+                        false
+                    }
                 }
-                MESSAGE_RECEIVED_QUESTION_LIKE -> {
-                    val like = it.obj as QuestionLike
-                    viewModel.handleLike(like)
-                    true
-                }
-                else -> false
             }
+            true
         }
     }
 

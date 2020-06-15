@@ -1,4 +1,4 @@
-package com.aydar.demandi.common.base.bluetooth
+package com.aydar.demandi.common.base.bluetooth.teacher
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothServerSocket

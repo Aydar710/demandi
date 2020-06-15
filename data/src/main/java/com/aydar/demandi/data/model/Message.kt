@@ -4,5 +4,6 @@ import java.io.Serializable
 
 abstract class Message : Serializable {
 
-    abstract val messageType: Int
+    //TODO Вынести в константу
+    val messageType: Int = 12345
 }

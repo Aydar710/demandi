@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aydar.demandi.common.base.bluetooth.TeacherBluetoothServiceMediator
+import com.aydar.demandi.common.base.bluetooth.teacher.TeacherBluetoothServiceMediator
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.data.model.Session
@@ -28,7 +28,7 @@ class RoomDetailsViewModel(
         get() = _sessionLiveData
 
     fun openRoom(room: Room, activity: AppCompatActivity) {
-        teacherService.startRoomServer(room)
+        teacherService.startServer(room)
         router.moveToTeacherRoomActivity(room, activity)
     }
 

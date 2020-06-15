@@ -9,7 +9,11 @@ class RoomCacheRepository(private val database: RoomDao) {
 
     suspend fun saveRoom(room: Room) {
         withContext(Dispatchers.IO) {
-            database.saveRoom(room)
+            try {
+                database.saveRoom(room)
+            }catch (e : Exception){
+                e.printStackTrace()
+            }
         }
     }
 

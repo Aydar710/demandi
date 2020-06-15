@@ -22,13 +22,13 @@ import com.airbnb.lottie.LottieCompositionFactory
 import com.airbnb.lottie.LottieDrawable
 import com.airbnb.lottie.LottieTask
 import com.aydar.demandi.common.base.*
-import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
+import com.aydar.demandi.common.base.bluetooth.teacher.StudentServiceFacade
 import kotlinx.android.synthetic.main.activity_join_room.*
 import org.koin.android.ext.android.inject
 
 class JoinRoomActivity : BaseBluetoothActivity() {
 
-    private val studentService: StudentBluetoothService by inject()
+    private val studentServiceFacade: StudentServiceFacade by inject()
 
     private lateinit var adapter: JoinAdapter
 
@@ -82,7 +82,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
 
         initToolbar()
         initRecycler()
-        initProgressHandler()
+        initHandler()
         registerFoundReceiver()
         registerBondStateReceiver()
         btn_repeat.setOnClickListener {
@@ -146,8 +146,8 @@ class JoinRoomActivity : BaseBluetoothActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun initProgressHandler() {
-        studentService.handlerJoinRoom = Handler {
+    private fun initHandler(): Handler {
+        return Handler {
             when (it.what) {
                 MESSAGE_SHOW_DIALOG -> {
                     showProgress();
@@ -227,12 +227,12 @@ class JoinRoomActivity : BaseBluetoothActivity() {
 
     private fun connectToDevice(device: BluetoothDevice) {
         connectedDevice = device
-        studentService.startConnecting(connectedDevice)
+        val handler = initHandler()
+        studentServiceFacade.startConnecting(connectedDevice, handler)
     }
 
     private fun startStudentsRoomActivity(roomName: String) {
         router.moveToStudentsRoomActivityWithName(this, roomName)
-        studentService.handlerJoinRoom = null
     }
 
     private fun initRecycler() {

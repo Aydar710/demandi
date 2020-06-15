@@ -23,9 +23,11 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.amitshekhar.DebugDB
 import com.aydar.demandi.common.base.*
-import com.aydar.demandi.common.base.bluetooth.StudentBluetoothService
-import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
-import com.aydar.demandi.data.model.*
+import com.aydar.demandi.common.base.bluetooth.teacher.StudentServiceFacade
+import com.aydar.demandi.common.base.bluetoothmessages.*
+import com.aydar.demandi.data.model.AnswerLike
+import com.aydar.demandi.data.model.Message
+import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.featurestudentroom.R
 import com.aydar.demandi.featurestudentroom.presentation.adapter.QuestionsAdapter
 import com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
@@ -43,14 +45,14 @@ import java.util.*
 
 class StudentRoomActivity : BaseBluetoothActivity() {
 
-    private val studentService : StudentBluetoothService by inject()
+    private val studentServiceFacade: StudentServiceFacade by inject()
     private lateinit var sheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private val viewModel: StudentRoomViewModel by viewModel()
     private lateinit var adapter: QuestionsAdapter
     private val user: FirebaseUser by inject()
     private lateinit var snackbarLostConnection: Snackbar
     private val sharedPref: SharedPrefWrapper by inject()
-    private lateinit var progressDialog : ProgressDialog
+    private lateinit var progressDialog: ProgressDialog
 
     private val receiver = object : BroadcastReceiver() {
 
@@ -88,7 +90,8 @@ class StudentRoomActivity : BaseBluetoothActivity() {
 
         initClickListeners()
 
-        initHandler()
+        val handler = initHandler()
+        studentServiceFacade.setHandler(handler)
         initRecycler()
         initObservers()
 
@@ -97,7 +100,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         initLostConnectionSnackbar()
 
         initProgress()
-
     }
 
     private fun initProgress() {
@@ -115,9 +117,8 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     }
 
     private fun connectToDevice(device: BluetoothDevice) {
-        //ServiceHolder.studentService = StudentBluetoothService()
-        initHandler()
-        studentService.startConnecting(device)
+        val handler = initHandler()
+        studentServiceFacade.startConnecting(device, handler)
     }
 
     private fun setBottomSheetCallback() {
@@ -163,8 +164,59 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
-    private fun initHandler() {
-        studentService.handler = Handler {
+    private fun initHandler(): Handler {
+        return Handler {
+            if (it.what == 12345) {
+                when (val message = it.obj as Message) {
+                    is MessageSendQuestion -> {
+                        viewModel.onQuestionReceived(message.question)
+                        true
+                    }
+                    is MessageSendRoomInfo -> {
+                        viewModel.handleReceivedRoom(message.room)
+                        true
+                    }
+                    is MessageSendQuestionLike -> {
+                        viewModel.handleReceivedQuestionLike(message.questionLike)
+                        true
+                    }
+                    is MessageDeleteQuestion -> {
+                        viewModel.handleReceivedCommandDeleteQuestion(message.question)
+                        true
+                    }
+                    is MessageSendAnswer -> {
+                        adapter.addAnswer(message.answer)
+                        true
+                    }
+                    is MessageSendAnswerLike -> {
+                        viewModel.handleReceivedAnswerLike(message.answerLike)
+                        true
+                    }
+                    else -> false
+                }
+            } else {
+                when (it.what) {
+                    MESSAGE_WRITE -> {
+                        val question = it.obj as Question
+                        viewModel.addReceivedQuestion(question)
+                        true
+                    }
+                    MESSAGE_SOCKET_DISCONNECTED -> {
+                        snackbarLostConnection.show()
+                        true
+                    }
+                    MESSAGE_SHOW_DIALOG -> {
+                        showProgress()
+                        true
+                    }
+                    MESSAGE_CONNECTED_TO_ROOM -> {
+                        hideProgress()
+                        true
+                    }
+                    else -> false
+                }
+            }
+/*
             when (it.what) {
                 MESSAGE_WRITE -> {
                     val question = it.obj as Question
@@ -187,7 +239,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                     true
                 }
                 MESSAGE_COMMAND_DELETE_QUESTION -> {
-                    val command = it.obj as CommandDeleteQuestion
+                    val command = it.obj as MessageDeleteQuestion
                     viewModel.handleReceivedCommandDeleteQuestion(command.question)
                     true
                 }
@@ -215,6 +267,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                 }
                 else -> false
             }
+*/
         }
     }
 

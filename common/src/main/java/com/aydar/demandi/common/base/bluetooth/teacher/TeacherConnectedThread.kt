@@ -1,19 +1,20 @@
-package com.aydar.demandi.common.base.bluetooth
+package com.aydar.demandi.common.base.bluetooth.teacher
 
 import android.bluetooth.BluetoothSocket
 import android.os.Handler
-import com.aydar.demandi.common.base.bluetoothcommands.CommandDeleteQuestion
+import com.aydar.demandi.common.base.bluetoothmessages.MessageDeleteQuestion
+import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestion
+import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestionLike
 import com.aydar.demandi.common.base.messages.MessageCreator
 import com.aydar.demandi.common.base.messages.MessageCreatorImpl
-import com.aydar.demandi.data.model.Answer
 import com.aydar.demandi.data.model.Message
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
 import java.io.*
 
-class ConnectedThread(
+class TeacherConnectedThread(
     private val mmSocket: BluetoothSocket,
-    private val handler: Handler,
+    var handler: Handler,
     private val mediator: Mediator
 ) : Thread() {
 
@@ -34,26 +35,15 @@ class ConnectedThread(
         while (true) {
             try {
                 val readObj = objInStream.readObject()
-                if (readObj is Answer) {
-                    manageReadObj(readObj)
-                } else {
-                    manageReadObjWithSendingHandlerMsg(readObj)
-                }
-                /*when (readObj) {
-                    is Question -> {
-                        manageReadQuestion(readObj)
-                    }
-                    is Answer -> {
-                        manageReadAnswer(readObj)
-                    }
-                    is QuestionLike -> {
-                        manageReadQuestionLike(readObj)
-                    }
-                    is AnswerLike -> {
-                        manageReadAnswerLike(readObj)
-                    }
-                }*/
+                val readMsg = readObj as Message
+                val shouldSendHandlerMessage =
+                    readMsg is MessageSendQuestion || readMsg is MessageSendQuestionLike
 
+                if (shouldSendHandlerMessage) {
+                    manageReadObjWithSendingHandlerMsg(readMsg)
+                } else {
+                    sendMessageToStudents(readMsg)
+                }
             } catch (e: Exception) {
                 cancel()
             }
@@ -70,18 +60,24 @@ class ConnectedThread(
     }
 
     fun deleteQuestion(question: Question) {
-        val deleteCommand = CommandDeleteQuestion(question)
+        val deleteCommand = MessageDeleteQuestion(question)
         objOutStream.writeObject(deleteCommand)
     }
 
-    private fun manageReadObjWithSendingHandlerMsg(obj: Any) {
-        val msg = messageCreator.createMessage(obj as Message)
+    private fun manageReadObjWithSendingHandlerMsg(message: Message) {
+        val msg = messageCreator.createMessage(message)
         handler.sendMessage(msg)
-        mediator.sendMessage(obj, this)
+        mediator.sendMessage(message, this)
     }
 
-    private fun manageReadObj(obj: Any) {
-        mediator.sendMessage(obj as Message, this)
+/*
+    private fun manageReadObj(obj: Message) {
+        mediator.sendMessage(obj, this)
+    }
+*/
+
+    private fun sendMessageToStudents(msg: Message) {
+        mediator.sendMessage(msg, this)
     }
 
     // Call this method from the activity to shut down the connection.
