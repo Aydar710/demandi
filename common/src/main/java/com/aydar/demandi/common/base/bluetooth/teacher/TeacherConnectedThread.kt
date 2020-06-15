@@ -5,6 +5,7 @@ import android.os.Handler
 import com.aydar.demandi.common.base.bluetoothmessages.MessageDeleteQuestion
 import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestion
 import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestionLike
+import com.aydar.demandi.common.base.bluetoothmessages.MessageSendRoomInfo
 import com.aydar.demandi.common.base.messages.MessageCreator
 import com.aydar.demandi.common.base.messages.MessageCreatorImpl
 import com.aydar.demandi.data.model.Message
@@ -51,12 +52,17 @@ class TeacherConnectedThread(
     }
 
     fun sendMessage(message: Message) {
-        objOutStream.writeObject(message)
+        try {
+            objOutStream.writeObject(message)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun sendRoomToStudent(room: Room) {
         sleep(2000)
-        objOutStream.writeObject(room)
+        val roomMsg = MessageSendRoomInfo(room)
+        objOutStream.writeObject(roomMsg)
     }
 
     fun deleteQuestion(question: Question) {

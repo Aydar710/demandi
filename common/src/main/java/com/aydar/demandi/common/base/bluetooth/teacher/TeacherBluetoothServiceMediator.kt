@@ -1,6 +1,7 @@
 package com.aydar.demandi.common.base.bluetooth.teacher
 
 import android.os.Handler
+import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestion
 import com.aydar.demandi.data.model.Message
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.Room
@@ -23,13 +24,13 @@ class TeacherBluetoothServiceMediator :
         }
 
     override fun sendMessage(message: Message, sender: TeacherConnectedThread) {
-        /*if (message is Question) {
-            if (message.visibleToOthers) {
+        if (message is MessageSendQuestion) {
+            if (message.question.visibleToOthers) {
                 broadcastMessage(sender, message)
             }
         } else {
             broadcastMessage(sender, message)
-        }*/
+        }
     }
 
     fun startServer(room: Room) {

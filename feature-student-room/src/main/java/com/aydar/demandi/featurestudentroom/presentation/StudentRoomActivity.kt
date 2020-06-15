@@ -197,7 +197,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
             } else {
                 when (it.what) {
                     MESSAGE_WRITE -> {
-                        val question = it.obj as Question
+                        val question = (it.obj as MessageSendQuestion).question
                         viewModel.addReceivedQuestion(question)
                         true
                     }
