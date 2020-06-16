@@ -28,9 +28,7 @@ class StudentRoomViewModel(
     private val getCachedQuestionsUseCase: GetCachedQuestionsUseCase,
     private val user: FirebaseUser,
     private val studentServiceFacade: StudentServiceFacade
-    /*private val studentService : StudentBluetoothService*/
-) :
-    ViewModel() {
+) : ViewModel() {
 
     lateinit var currentRoom: Room
 
@@ -98,15 +96,6 @@ class StudentRoomViewModel(
         studentServiceFacade.sendMessage(msgSendQuestionLike)
     }
 
-    private fun makeQuestionLikeAction(like: QuestionLike) {
-        val isLikeExists = checkIfQuestionLikeExists(like)
-        if (isLikeExists) {
-            decrementQuestionLike(like)
-        } else {
-            incrementQuestionLike(like)
-        }
-    }
-
     fun handleReceivedCommandDeleteQuestion(question: Question) {
         deleteQuestion(question)
     }
@@ -124,6 +113,15 @@ class StudentRoomViewModel(
 
     fun handleReceivedAnswerLike(answerLike: AnswerLike) {
         makeAnswerLikeAction(answerLike)
+    }
+
+    private fun makeQuestionLikeAction(like: QuestionLike) {
+        val isLikeExists = checkIfQuestionLikeExists(like)
+        if (isLikeExists) {
+            decrementQuestionLike(like)
+        } else {
+            incrementQuestionLike(like)
+        }
     }
 
     private fun makeAnswerLikeAction(answerLike: AnswerLike) {

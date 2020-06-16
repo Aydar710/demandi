@@ -42,15 +42,12 @@ buildscript {
         ]
 
         viewModelLifeCycleDeps = [
-                lifeCycle   : 'androidx.lifecycle:lifecycle-extensions:2.2.0',
-                viewModelKtx: "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-alpha01"
+                viewModelKtx: "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
         ]
 
         roomDeps = [
                 roomRuntime : "androidx.room:room-runtime:2.2.5",
                 support     : "androidx.legacy:legacy-support-v4:1.0.0",
-                lifecycleExt: 'androidx.lifecycle:lifecycle-extensions:2.0.0',
-                viewModelKtx: 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0',
                 debugRoom   : 'com.amitshekhar.android:debug-db:1.0.6'
         ]
 
