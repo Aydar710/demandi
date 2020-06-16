@@ -76,12 +76,6 @@ class TeacherConnectedThread(
         mediator.sendMessage(message, this)
     }
 
-/*
-    private fun manageReadObj(obj: Message) {
-        mediator.sendMessage(obj, this)
-    }
-*/
-
     private fun sendMessageToStudents(msg: Message) {
         mediator.sendMessage(msg, this)
     }

@@ -216,58 +216,6 @@ class StudentRoomActivity : BaseBluetoothActivity() {
                     else -> false
                 }
             }
-/*
-            when (it.what) {
-                MESSAGE_WRITE -> {
-                    val question = it.obj as Question
-                    viewModel.addReceivedQuestion(question)
-                    true
-                }
-                MESSAGE_RECEIVED_ROOM_INFO -> {
-                    val room = it.obj as Room
-                    viewModel.handleReceivedRoom(room)
-                    true
-                }
-                MESSAGE_RECEIVED_QUESTION -> {
-                    val question = it.obj as Question
-                    viewModel.onQuestionReceived(question)
-                    true
-                }
-                MESSAGE_RECEIVED_QUESTION_LIKE -> {
-                    val like = it.obj as QuestionLike
-                    viewModel.handleReceivedQuestionLike(like)
-                    true
-                }
-                MESSAGE_COMMAND_DELETE_QUESTION -> {
-                    val command = it.obj as MessageDeleteQuestion
-                    viewModel.handleReceivedCommandDeleteQuestion(command.question)
-                    true
-                }
-                MESSAGE_ANSWER -> {
-                    val answer = it.obj as Answer
-                    adapter.addAnswer(answer)
-                    true
-                }
-                MESSAGE_RECEIVED_ANSWER_LIKE -> {
-                    val answerLike = it.obj as AnswerLike
-                    viewModel.handleReceivedAnswerLike(answerLike)
-                    true
-                }
-                MESSAGE_SOCKET_DISCONNECTED -> {
-                    snackbarLostConnection.show()
-                    true
-                }
-                MESSAGE_SHOW_DIALOG -> {
-                    showProgress()
-                    true
-                }
-                MESSAGE_CONNECTED_TO_ROOM -> {
-                    hideProgress()
-                    true
-                }
-                else -> false
-            }
-*/
         }
     }
 
