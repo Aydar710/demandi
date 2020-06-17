@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aydar.demandi.common.base.MESSAGE_WRITE
-import com.aydar.demandi.common.base.bluetooth.teacher.StudentServiceFacade
+import com.aydar.demandi.common.base.bluetooth.student.StudentServiceFacade
 import com.aydar.demandi.common.base.bluetoothmessages.MessageSendAnswer
 import com.aydar.demandi.common.base.bluetoothmessages.MessageSendAnswerLike
 import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestion
@@ -113,6 +113,10 @@ class StudentRoomViewModel(
 
     fun handleReceivedAnswerLike(answerLike: AnswerLike) {
         makeAnswerLikeAction(answerLike)
+    }
+
+    fun closeConnection(){
+        studentServiceFacade.closeConnection()
     }
 
     private fun makeQuestionLikeAction(like: QuestionLike) {

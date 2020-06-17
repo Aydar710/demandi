@@ -1,8 +1,9 @@
-package com.aydar.demandi.common.base.bluetooth.teacher
+package com.aydar.demandi.common.base.bluetooth.student
 
 import android.bluetooth.BluetoothDevice
 import android.os.Handler
 import com.aydar.demandi.common.base.bluetooth.student.StudentBluetoothService
+import com.aydar.demandi.common.base.bluetooth.student.StudentServiceFacade
 import com.aydar.demandi.data.model.Message
 
 class StudentServiceFacadeImpl(private val studentService: StudentBluetoothService) :
@@ -22,6 +23,9 @@ class StudentServiceFacadeImpl(private val studentService: StudentBluetoothServi
 
     override fun setHandler(handler: Handler?) {
         studentService.handler = handler
-        print("")
+    }
+
+    override fun closeConnection() {
+        studentService.closeConnection()
     }
 }

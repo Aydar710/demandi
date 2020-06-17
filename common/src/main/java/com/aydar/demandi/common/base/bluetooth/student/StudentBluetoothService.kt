@@ -48,4 +48,8 @@ class StudentBluetoothService {
     fun sendMessageWithHandlerMsg(message: Message, messageType: Int) {
         connectedThread?.writeMessageSendingHandlerMsg(message, messageType)
     }
+
+    fun closeConnection(){
+        connectedThread?.cancel()
+    }
 }

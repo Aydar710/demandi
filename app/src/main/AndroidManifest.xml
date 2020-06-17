@@ -22,11 +22,13 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity android:name="com.aydar.featureteacherroom.presentation.TeacherRoomActivity" />
-        <activity android:name="com.aydar.demandi.featurestudentroom.presentation.StudentRoomActivity" />
         <activity
-            android:parentActivityName=".featuremain.MainActivity"
+            android:name="com.aydar.demandi.featurestudentroom.presentation.StudentRoomActivity"
+            android:parentActivityName=".featuremain.MainActivity" />
+        <activity
             android:name="com.aydar.demandi.featurejoinroom.JoinRoomActivity"
-            android:label="@string/choose_auditorium" />
+            android:label="@string/choose_auditorium"
+            android:parentActivityName=".featuremain.MainActivity" />
         <activity android:name="com.aydar.demandi.featurecreateroom.presentation.CreateRoomActivity" />
         <activity android:name=".featuremain.MainActivity">
 

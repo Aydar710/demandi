@@ -1,4 +1,4 @@
-package com.aydar.demandi.common.base.bluetooth.teacher
+package com.aydar.demandi.common.base.bluetooth.student
 
 import android.bluetooth.BluetoothDevice
 import android.os.Handler
@@ -10,4 +10,5 @@ interface StudentServiceFacade {
     fun sendMessage(message: Message)
     fun sendMessageWithHandlerMsg(message: Message, messageType: Int)
     fun setHandler(handler: Handler?)
+    fun closeConnection()
 }

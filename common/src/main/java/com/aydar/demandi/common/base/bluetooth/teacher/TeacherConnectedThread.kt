@@ -45,8 +45,10 @@ class TeacherConnectedThread(
                 } else {
                     sendMessageToStudents(readMsg)
                 }
-            } catch (e: Exception) {
+            } catch (e: IOException) {
+                e.printStackTrace()
                 cancel()
+                break
             }
         }
     }

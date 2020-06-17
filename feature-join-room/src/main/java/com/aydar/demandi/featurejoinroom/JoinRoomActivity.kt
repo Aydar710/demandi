@@ -22,7 +22,7 @@ import com.airbnb.lottie.LottieCompositionFactory
 import com.airbnb.lottie.LottieDrawable
 import com.airbnb.lottie.LottieTask
 import com.aydar.demandi.common.base.*
-import com.aydar.demandi.common.base.bluetooth.teacher.StudentServiceFacade
+import com.aydar.demandi.common.base.bluetooth.student.StudentServiceFacade
 import kotlinx.android.synthetic.main.activity_join_room.*
 import org.koin.android.ext.android.inject
 
@@ -57,6 +57,7 @@ class JoinRoomActivity : BaseBluetoothActivity() {
                     }
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
+                    adapter.clear()
                     bluetoothMenuItem?.icon = animateBluetoothIcon
                     animateBluetoothIcon?.playAnimation()
                     Log.d("Bl", "Discovery started")

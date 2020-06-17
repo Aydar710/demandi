@@ -15,6 +15,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
@@ -23,7 +24,7 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.amitshekhar.DebugDB
 import com.aydar.demandi.common.base.*
-import com.aydar.demandi.common.base.bluetooth.teacher.StudentServiceFacade
+import com.aydar.demandi.common.base.bluetooth.student.StudentServiceFacade
 import com.aydar.demandi.common.base.bluetoothmessages.*
 import com.aydar.demandi.data.model.AnswerLike
 import com.aydar.demandi.data.model.Message
@@ -53,6 +54,7 @@ class StudentRoomActivity : BaseBluetoothActivity() {
     private lateinit var snackbarLostConnection: Snackbar
     private val sharedPref: SharedPrefWrapper by inject()
     private lateinit var progressDialog: ProgressDialog
+    private var doubleBackToExitPressedOnce = false
 
     private val receiver = object : BroadcastReceiver() {
 
@@ -100,6 +102,27 @@ class StudentRoomActivity : BaseBluetoothActivity() {
         initLostConnectionSnackbar()
 
         initProgress()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        if (doubleBackToExitPressedOnce) {
+            viewModel.closeConnection()
+            return super.onSupportNavigateUp()
+        } else {
+            doubleBackToExitPressedOnce = true
+            Toast.makeText(
+                this,
+                getString(R.string.press_again_to_exit_room),
+                Toast.LENGTH_SHORT
+            ).show()
+
+            Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+        }
+        return true
+    }
+
+    override fun onBackPressed() {
+        onSupportNavigateUp()
     }
 
     private fun initProgress() {

@@ -89,6 +89,7 @@ class StudentConnectedThread(private val mmSocket: BluetoothSocket, var handler:
         try {
             mmSocket.close()
         } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 }

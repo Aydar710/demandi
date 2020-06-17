@@ -150,7 +150,6 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
 
             Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
         }
-
     }
 
     private fun initToolbar() {
