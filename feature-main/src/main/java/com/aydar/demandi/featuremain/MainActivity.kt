@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private val firebaseAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
 
         tv_rooms.setOnClickListener {

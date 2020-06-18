@@ -3,7 +3,7 @@
     package="com.aydar.demandi.teacherrooms">
 
     <application>
-        <activity android:name=".presentation.TeacherRoomsActivity"></activity>
+
     </application>
 
 </manifest>

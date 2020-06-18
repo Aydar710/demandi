@@ -21,26 +21,36 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name="com.aydar.featureteacherroom.presentation.TeacherRoomActivity"
-            android:parentActivityName=".featuremain.MainActivity"/>
+        <activity
+            android:name="com.aydar.featureteacherroom.presentation.TeacherRoomActivity"
+            android:parentActivityName=".featuremain.MainActivity" />
+
         <activity
             android:name="com.aydar.demandi.featurestudentroom.presentation.StudentRoomActivity"
             android:parentActivityName=".featuremain.MainActivity" />
+
         <activity
             android:name="com.aydar.demandi.featurejoinroom.JoinRoomActivity"
             android:label="@string/choose_auditorium"
             android:parentActivityName=".featuremain.MainActivity" />
-        <activity android:name="com.aydar.demandi.featurecreateroom.presentation.CreateRoomActivity" />
-        <activity android:name=".featuremain.MainActivity">
 
-        </activity>
-        <activity android:name="com.aydar.featureauth.LoginActivity">
+        <activity android:name="com.aydar.demandi.featurecreateroom.presentation.CreateRoomActivity" />
+
+        <activity android:name=".featuremain.MainActivity" />
+
+        <activity
+            android:name=".teacherrooms.presentation.TeacherRoomsActivity"
+            android:parentActivityName=".featuremain.MainActivity" />
+
+        <activity android:name="com.aydar.featureauth.LoginActivity"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
