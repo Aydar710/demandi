@@ -14,6 +14,8 @@ import com.aydar.featureroomdetails.di.roomDetailsUseCaseModule
 import com.aydar.featureroomdetails.di.roomDetailsViewModelModule
 import com.aydar.featureteacherroom.di.roomsViewModelModule
 import com.aydar.featureteacherroom.di.teacherRoomModule
+import com.google.android.gms.common.util.CrashUtils
+import com.google.firebase.crashlytics.internal.common.CrashlyticsCore
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

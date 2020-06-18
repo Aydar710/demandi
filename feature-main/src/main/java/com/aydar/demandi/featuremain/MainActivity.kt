@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
+import java.lang.RuntimeException
 
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {

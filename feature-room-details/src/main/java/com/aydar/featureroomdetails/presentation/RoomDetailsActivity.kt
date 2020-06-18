@@ -124,4 +124,12 @@ class RoomDetailsActivity : BaseBluetoothActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
+
+    private fun showProgress() {
+        pb_room_details.visibility = View.VISIBLE
+    }
+
+    private fun hideProgress() {
+        pb_room_details.visibility = View.GONE
+    }
 }

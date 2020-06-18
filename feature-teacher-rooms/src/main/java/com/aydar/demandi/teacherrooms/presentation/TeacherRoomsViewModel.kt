@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aydar.demandi.common.base.SingleLiveEvent
 import com.aydar.demandi.data.model.Room
+import com.aydar.demandi.teacherrooms.TeacherRoomsCommands
 import com.aydar.demandi.teacherrooms.TeacherRoomsRouter
 import com.aydar.demandi.teacherrooms.domain.ShowRoomsUseCase
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +22,10 @@ class TeacherRoomsViewModel(
     val roomsLiveData: LiveData<List<Room>>
         get() = _roomsLiveData
 
+    private val _command = SingleLiveEvent<TeacherRoomsCommands>()
+    val command: LiveData<TeacherRoomsCommands>
+        get() = _command
+
     fun onAddClicked(activity: AppCompatActivity) {
         router.moveToCreateRoomActivity(activity)
     }
@@ -29,9 +35,16 @@ class TeacherRoomsViewModel(
     }
 
     fun showRooms() {
+        _command.value = TeacherRoomsCommands.ShowProgress
         viewModelScope.launch(Dispatchers.IO) {
+            _command.postValue(TeacherRoomsCommands.HideProgress)
             val rooms = showRoomsUseCase.invoke()
             _roomsLiveData.postValue(rooms)
+            rooms?.let {
+                if (it.isNullOrEmpty()) {
+                    _command.postValue(TeacherRoomsCommands.HasNoRooms)
+                }
+            }
         }
     }
 }

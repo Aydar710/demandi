@@ -2,10 +2,12 @@ package com.aydar.demandi.teacherrooms.presentation
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import com.aydar.demandi.teacherrooms.R
+import com.aydar.demandi.teacherrooms.TeacherRoomsCommands
 import kotlinx.android.synthetic.main.activity_teacher_rooms.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -23,6 +25,7 @@ class TeacherRoomsActivity : AppCompatActivity(R.layout.activity_teacher_rooms) 
 
         initToolbar()
         initRecycler()
+        observeCommands()
         showRooms()
     }
 
@@ -49,4 +52,28 @@ class TeacherRoomsActivity : AppCompatActivity(R.layout.activity_teacher_rooms) 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
+
+    private fun observeCommands() {
+        viewModel.command.observe(this, Observer {
+            when (it) {
+                is TeacherRoomsCommands.ShowProgress -> showProgress()
+                is TeacherRoomsCommands.HideProgress -> hideProgress()
+                is TeacherRoomsCommands.HasNoRooms -> showHasNoRoomInfo()
+            }
+        })
+    }
+
+    private fun showProgress() {
+        tv_empty_rooms.visibility = View.GONE
+        pb_teacher_rooms.visibility = View.VISIBLE
+    }
+
+    private fun hideProgress() {
+        pb_teacher_rooms.visibility = View.GONE
+    }
+
+    private fun showHasNoRoomInfo(){
+        tv_empty_rooms.visibility = View.VISIBLE
+    }
+
 }

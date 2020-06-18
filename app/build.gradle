@@ -48,6 +48,12 @@ dependencies {
 
     implementation "android.arch.lifecycle:extensions:1.1.1"
 
+    // Recommended: Add the Firebase SDK for Google Analytics.
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.3'
+
+    // Add the Firebase Crashlytics SDK.
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.1'
+
     implementation koinDeps.values()
     implementation roomDeps.values()
     implementation firebaseCrashlyticsDeps.values()

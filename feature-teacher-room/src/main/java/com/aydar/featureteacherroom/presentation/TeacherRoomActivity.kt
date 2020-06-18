@@ -133,13 +133,8 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
-    }
-
-    override fun onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-            super.onBackPressed()
+            super.onSupportNavigateUp()
         } else {
             doubleBackToExitPressedOnce = true
             Toast.makeText(
@@ -150,6 +145,11 @@ class TeacherRoomActivity : BaseBluetoothActivity() {
 
             Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
         }
+        return true
+    }
+
+    override fun onBackPressed() {
+        onSupportNavigateUp()
     }
 
     private fun initToolbar() {

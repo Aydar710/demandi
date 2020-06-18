@@ -22,28 +22,14 @@ class LoginActivity : AppCompatActivity() {
             router.moveToMainActivity(this)
         }
 
-        authHelper.onCodeSent = {
-            txt_input_received_code.visibility = View.VISIBLE
-            btn_sign_in.visibility = View.VISIBLE
-            Toast.makeText(this, "Код отправлен", Toast.LENGTH_SHORT).show()
-        }
+        initAuthCallbacks()
 
-        authHelper.onVerificationFailed = {
-            Toast.makeText(this, "Не удалось авторизоваться", Toast.LENGTH_SHORT).show()
-            txt_input_received_code.visibility = View.GONE
-            btn_sign_in.visibility = View.GONE
-        }
+        initClickListeners()
 
-        authHelper.onVerificationCompleted = {
-            et_received_code.setText(it)
-            btn_sign_in.isEnabled = false
-        }
+        initPhoneNumberTextWatcher()
+    }
 
-        authHelper.onSignedIn = {
-            router.moveToMainActivity(this)
-        }
-
-
+    private fun initClickListeners() {
         btn_send.setOnClickListener {
             authHelper.verifyPhoneNumber(et_phone.text.toString())
         }
@@ -51,7 +37,9 @@ class LoginActivity : AppCompatActivity() {
         btn_sign_in.setOnClickListener {
             authHelper.signInWithCode(et_received_code.text.toString())
         }
+    }
 
+    private fun initPhoneNumberTextWatcher() {
         et_phone.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
@@ -86,5 +74,28 @@ class LoginActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun initAuthCallbacks() {
+        authHelper.onCodeSent = {
+            txt_input_received_code.visibility = View.VISIBLE
+            btn_sign_in.visibility = View.VISIBLE
+            Toast.makeText(this, "Код отправлен", Toast.LENGTH_SHORT).show()
+        }
+
+        authHelper.onVerificationFailed = {
+            Toast.makeText(this, "Не удалось авторизоваться", Toast.LENGTH_SHORT).show()
+            txt_input_received_code.visibility = View.GONE
+            btn_sign_in.visibility = View.GONE
+        }
+
+        authHelper.onVerificationCompleted = {
+            et_received_code.setText(it)
+            btn_sign_in.isEnabled = false
+        }
+
+        authHelper.onSignedIn = {
+            router.moveToMainActivity(this)
+        }
     }
 }

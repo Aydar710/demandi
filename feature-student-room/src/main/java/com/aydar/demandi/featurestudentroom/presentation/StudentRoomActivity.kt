@@ -270,6 +270,8 @@ class StudentRoomActivity : BaseBluetoothActivity() {
             DragDropSwipeRecyclerView.ListOrientation.VERTICAL_LIST_WITH_VERTICAL_DRAGGING
 
         recycler.disableSwipeDirection(DragDropSwipeRecyclerView.ListOrientation.DirectionFlag.RIGHT)
+        //TODO: Удалить при разработке фичи удаления вопроса для студента
+        recycler.disableSwipeDirection(DragDropSwipeRecyclerView.ListOrientation.DirectionFlag.LEFT)
 
         val onItemSwipeListener = object : OnItemSwipeListener<Question> {
             override fun onItemSwiped(
