@@ -9,7 +9,7 @@ class CreateRoomUseCase(
     private val user: FirebaseUser
 ) {
 
-    fun invoke(room: Room): String {
+    suspend fun invoke(room: Room): String {
         val roomId = roomsRepository.addRoom(room, user.uid)
         return roomId
     }

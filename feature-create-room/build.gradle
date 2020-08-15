@@ -41,4 +41,5 @@ dependencies {
     implementation koinDeps.values()
     implementation androidDeps.values()
     implementation firebaseDeps.values()
+    implementation coroutinesDeps.values()
 }

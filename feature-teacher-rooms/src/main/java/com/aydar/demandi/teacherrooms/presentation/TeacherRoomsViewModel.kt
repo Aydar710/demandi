@@ -10,7 +10,6 @@ import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.teacherrooms.TeacherRoomsCommands
 import com.aydar.demandi.teacherrooms.TeacherRoomsRouter
 import com.aydar.demandi.teacherrooms.domain.ShowRoomsUseCase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TeacherRoomsViewModel(
@@ -36,7 +35,7 @@ class TeacherRoomsViewModel(
 
     fun showRooms() {
         _command.value = TeacherRoomsCommands.ShowProgress
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _command.postValue(TeacherRoomsCommands.HideProgress)
             val rooms = showRoomsUseCase.invoke()
             _roomsLiveData.postValue(rooms)
