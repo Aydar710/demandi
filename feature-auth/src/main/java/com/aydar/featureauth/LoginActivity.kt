@@ -15,6 +15,7 @@ class LoginActivity : AppCompatActivity() {
     private val router: AuthRouter by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 

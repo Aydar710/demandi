@@ -1,8 +1,8 @@
 package com.aydar.demandi.featurecreateroom.presentation
 
 import android.os.Bundle
-import com.aydar.demandi.common.base.BaseBluetoothActivity
-import com.aydar.demandi.common.base.createDeviceName
+import com.aydar.demandi.common.BaseBluetoothActivity
+import com.aydar.demandi.common.createDeviceName
 import com.aydar.demandi.featurecreateroom.R
 import kotlinx.android.synthetic.main.activity_create_room.*
 import org.koin.android.viewmodel.ext.android.viewModel

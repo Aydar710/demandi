@@ -2,7 +2,7 @@ package com.aydar.demandi.featurecreateroom.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
-import com.aydar.demandi.common.base.bluetooth.teacher.TeacherBluetoothServiceMediator
+import com.aydar.demandi.common.bluetooth.teacher.TeacherBluetoothServiceMediator
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurecreateroom.CreateRoomRouter
 import com.aydar.demandi.featurecreateroom.domain.CreateRoomUseCase

@@ -10,8 +10,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
-import com.aydar.demandi.common.base.BaseBluetoothActivity
-import com.aydar.demandi.common.base.EXTRA_ROOM
+import com.aydar.demandi.common.BaseBluetoothActivity
+import com.aydar.demandi.common.EXTRA_ROOM
 import com.aydar.demandi.data.model.Room
 import com.aydar.featureroomdetails.R
 import com.aydar.featureroomdetails.presentation.adapter.SessionsAdapter

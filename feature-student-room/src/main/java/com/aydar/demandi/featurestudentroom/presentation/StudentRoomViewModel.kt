@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aydar.demandi.common.base.MESSAGE_WRITE
-import com.aydar.demandi.common.base.bluetooth.student.StudentServiceFacade
-import com.aydar.demandi.common.base.bluetoothmessages.MessageSendAnswer
-import com.aydar.demandi.common.base.bluetoothmessages.MessageSendAnswerLike
-import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestion
-import com.aydar.demandi.common.base.bluetoothmessages.MessageSendQuestionLike
+import com.aydar.demandi.common.MESSAGE_WRITE
+import com.aydar.demandi.common.bluetooth.student.StudentServiceFacade
+import com.aydar.demandi.common.bluetoothmessages.MessageSendAnswer
+import com.aydar.demandi.common.bluetoothmessages.MessageSendAnswerLike
+import com.aydar.demandi.common.bluetoothmessages.MessageSendQuestion
+import com.aydar.demandi.common.bluetoothmessages.MessageSendQuestionLike
 import com.aydar.demandi.data.model.*
 import com.aydar.demandi.featurestudentroom.domain.AnswerLikeCountComparator
 import com.aydar.demandi.featurestudentroom.domain.QuestionLikeCountComparator
@@ -46,6 +46,13 @@ class StudentRoomViewModel(
         studentServiceFacade.sendMessageWithHandlerMsg(msgQuestion, MESSAGE_WRITE)
     }
 
+    fun addReceivedQuestion(question: Question) {
+        val questions = _questionsLiveData.value?.toMutableList()
+        questions?.add(question)
+        _questionsLiveData.value = questions
+        saveQuestionToCache(question)
+    }
+
     fun onQuestionReceived(question: Question) {
         val hasQuestion = checkIfHasQuestion(question)
         if (hasQuestion) {
@@ -60,13 +67,6 @@ class StudentRoomViewModel(
         } else {
             addReceivedQuestion(question)
         }
-    }
-
-    fun addReceivedQuestion(question: Question) {
-        val questions = _questionsLiveData.value?.toMutableList()
-        questions?.add(question)
-        _questionsLiveData.value = questions
-        saveQuestionToCache(question)
     }
 
     fun handleReceivedRoom(room: Room) {

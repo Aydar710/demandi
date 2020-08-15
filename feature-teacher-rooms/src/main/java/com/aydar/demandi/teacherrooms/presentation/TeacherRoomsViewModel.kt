@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aydar.demandi.common.base.SingleLiveEvent
+import com.aydar.demandi.common.SingleLiveEvent
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.teacherrooms.TeacherRoomsCommands
 import com.aydar.demandi.teacherrooms.TeacherRoomsRouter

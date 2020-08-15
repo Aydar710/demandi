@@ -1,7 +1,7 @@
 package com.aydar.demandi
 
 import android.app.Application
-import com.aydar.demandi.common.base.di.bluetoothServiceModule
+import com.aydar.demandi.common.di.bluetoothServiceModule
 import com.aydar.demandi.data.di.repositoryModule
 import com.aydar.demandi.data.di.roomModule
 import com.aydar.demandi.di.firebaseModule
@@ -14,11 +14,10 @@ import com.aydar.featureroomdetails.di.roomDetailsUseCaseModule
 import com.aydar.featureroomdetails.di.roomDetailsViewModelModule
 import com.aydar.featureteacherroom.di.roomsViewModelModule
 import com.aydar.featureteacherroom.di.teacherRoomModule
-import com.google.android.gms.common.util.CrashUtils
-import com.google.firebase.crashlytics.internal.common.CrashlyticsCore
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 
 class App : Application() {
 
@@ -26,7 +25,7 @@ class App : Application() {
         super.onCreate()
 
         startKoin {
-            androidLogger()
+            androidLogger(Level.ERROR)
             androidContext(this@App)
             modules(
                 routerModule,

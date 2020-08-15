@@ -1,6 +1,6 @@
 package com.aydar.demandi.data.repository
 
-import com.aydar.demandi.data.DAO.QuestionDao
+import com.aydar.demandi.data.dao.QuestionDao
 import com.aydar.demandi.data.model.QuestionCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

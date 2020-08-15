@@ -2,7 +2,7 @@ package com.aydar.demandi.router
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import com.aydar.demandi.common.base.EXTRA_ROOM
+import com.aydar.demandi.common.EXTRA_ROOM
 import com.aydar.demandi.data.model.Room
 import com.aydar.demandi.featurecreateroom.EXTRA_ROOM_NAME
 import com.aydar.demandi.featurecreateroom.presentation.CreateRoomActivity

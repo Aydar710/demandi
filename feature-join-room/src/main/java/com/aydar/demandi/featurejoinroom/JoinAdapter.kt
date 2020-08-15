@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.aydar.demandi.common.base.getRoomNameFromDeviceName
-import com.aydar.demandi.common.base.getSubjectNameFromDeviceName
+import com.aydar.demandi.common.getRoomNameFromDeviceName
+import com.aydar.demandi.common.getSubjectNameFromDeviceName
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_join_room.view.*
 

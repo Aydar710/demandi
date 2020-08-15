@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aydar.demandi.common.base.bluetooth.teacher.TeacherBluetoothServiceMediator
+import com.aydar.demandi.common.bluetooth.teacher.TeacherBluetoothServiceMediator
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.QuestionLike
 import com.aydar.demandi.data.model.Room

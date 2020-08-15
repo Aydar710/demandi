@@ -23,9 +23,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.amitshekhar.DebugDB
-import com.aydar.demandi.common.base.*
-import com.aydar.demandi.common.base.bluetooth.student.StudentServiceFacade
-import com.aydar.demandi.common.base.bluetoothmessages.*
+import com.aydar.demandi.common.BaseBluetoothActivity
+import com.aydar.demandi.common.SharedPrefWrapper
+import com.aydar.demandi.common.*
+import com.aydar.demandi.common.bluetooth.student.StudentServiceFacade
+import com.aydar.demandi.common.bluetoothmessages.*
 import com.aydar.demandi.data.model.AnswerLike
 import com.aydar.demandi.data.model.Message
 import com.aydar.demandi.data.model.Question

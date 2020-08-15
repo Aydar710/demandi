@@ -1,7 +1,9 @@
 package com.aydar.featureauth
 
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.aydar.demandi.common.getTag
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import java.util.concurrent.TimeUnit
@@ -26,7 +28,7 @@ class AuthHelper(private val activity: AppCompatActivity) {
         }
 
         override fun onVerificationFailed(e: FirebaseException) {
-            e.printStackTrace()
+            Log.e(getTag(), "onVerificationFailed: ", e)
             onVerificationFailed.invoke()
         }
 
