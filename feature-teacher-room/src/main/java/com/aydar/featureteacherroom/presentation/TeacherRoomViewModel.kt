@@ -50,8 +50,10 @@ class TeacherRoomViewModel(
     fun saveSession() {
         session =
             Session(date = Date())
-        val sessionId = saveSessionUseCase.invoke(session, room.id)
-        session.id = sessionId
+        viewModelScope.launch {
+            val sessionId = saveSessionUseCase.invoke(session, room.id)
+            session.id = sessionId
+        }
     }
 
     fun handleLike(like: QuestionLike) {

@@ -9,7 +9,7 @@ class SaveSessionUseCase(
     private val user: FirebaseUser
 ) {
 
-    fun invoke(session: Session, roomId: String): String {
+    suspend fun invoke(session: Session, roomId: String): String {
         val sessionId = sessionRepository.saveSession(session, roomId, user.uid)
         return sessionId
     }

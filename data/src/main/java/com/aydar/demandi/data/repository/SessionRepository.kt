@@ -7,13 +7,11 @@ import com.aydar.demandi.data.model.Session
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObjects
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class SessionRepository(private val db: FirebaseFirestore) {
 
-    fun saveSession(session: Session, roomId: String, userId: String): String {
+    suspend fun saveSession(session: Session, roomId: String, userId: String): String {
         val ref = db
             .collection(USERS_COLLECTION)
             .document(userId)
@@ -24,9 +22,7 @@ class SessionRepository(private val db: FirebaseFirestore) {
         val sessionId = ref.id
 
         session.id = sessionId
-        GlobalScope.launch {
-            ref.set(session)
-        }
+        ref.set(session)
         return sessionId
     }
 
