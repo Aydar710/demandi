@@ -1,4 +1,4 @@
-package com.aydar.demandi.data.dao
+package com.aydar.demandi.data.DAO
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -1,4 +1,4 @@
-package com.aydar.demandi.data.dao
+package com.aydar.demandi.data.DAO
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -9,10 +9,10 @@ import com.aydar.demandi.data.model.QuestionCache
 interface QuestionDao {
 
     @Insert
-    fun saveQuestion(question: QuestionCache)
+    suspend fun saveQuestion(question: QuestionCache)
 
     @Query("SELECT * FROM questions WHERE room_id == :roomId")
-    fun getQuestions(roomId: String) : List<QuestionCache>
+    suspend fun getQuestions(roomId: String) : List<QuestionCache>
 
     @Query("DELETE FROM questions ")
     fun clearQuestions()

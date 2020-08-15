@@ -1,5 +1,6 @@
 package com.aydar.demandi.featurestudentroom.presentation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import com.aydar.demandi.common.bluetoothmessages.MessageSendAnswer
 import com.aydar.demandi.common.bluetoothmessages.MessageSendAnswerLike
 import com.aydar.demandi.common.bluetoothmessages.MessageSendQuestion
 import com.aydar.demandi.common.bluetoothmessages.MessageSendQuestionLike
+import com.aydar.demandi.common.getTag
 import com.aydar.demandi.data.model.*
 import com.aydar.demandi.featurestudentroom.domain.AnswerLikeCountComparator
 import com.aydar.demandi.featurestudentroom.domain.QuestionLikeCountComparator
@@ -241,7 +243,7 @@ class StudentRoomViewModel(
             try {
                 saveQuestionToCacheUseCase.invoke(question, currentRoom)
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e(getTag(), "saveQuestionToCache", e);
             }
         }
     }

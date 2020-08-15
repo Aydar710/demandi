@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.aydar.demandi.data.dao.QuestionDao
-import com.aydar.demandi.data.dao.RoomDao
+import com.aydar.demandi.data.DAO.QuestionDao
+import com.aydar.demandi.data.DAO.RoomDao
 import com.aydar.demandi.data.model.QuestionCache
 
 @Database(entities = [QuestionCache::class, com.aydar.demandi.data.model.Room::class], version = 1)

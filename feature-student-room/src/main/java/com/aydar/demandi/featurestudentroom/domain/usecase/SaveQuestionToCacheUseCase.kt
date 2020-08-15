@@ -1,5 +1,7 @@
 package com.aydar.demandi.featurestudentroom.domain.usecase
 
+import android.util.Log
+import com.aydar.demandi.common.getTag
 import com.aydar.demandi.data.model.Question
 import com.aydar.demandi.data.model.QuestionCache
 import com.aydar.demandi.data.model.Room
@@ -12,7 +14,7 @@ class SaveQuestionToCacheUseCase(private val questionCacheRepository: QuestionCa
         try {
             questionCacheRepository.saveQuestion(questionCache)
         }catch (e : Exception){
-            e.printStackTrace()
+            Log.e(getTag(), "Error save question", e)
         }
     }
 }
