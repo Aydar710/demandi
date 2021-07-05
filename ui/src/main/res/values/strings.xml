@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Demandi</string>
+    <string name="my_rooms">Мои аудитории</string>
+    <string name="join_auditorium">Присоединиться к аудитории</string>
+    <string name="auditorium_name">Название аудитории</string>
+    <string name="create">Создать</string>
+    <string name="ask_question">Задать вопрос</string>
+    <string name="question">Вопрос</string>
+    <string name="send">Отправить</string>
+    <string name="choose_auditorium">Выберите аудиторию</string>
+    <string name="can_not_continue_without_bluetooth">Невозможно продолжить без включения bluetooth</string>
+</resources>

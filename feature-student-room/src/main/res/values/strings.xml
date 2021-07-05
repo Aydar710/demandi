@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="write_answer">Напишите ответ</string>
+    <string name="to_answer">Ответить</string>
+    <string name="visible_to_others">виден для остальных</string>
+    <string name="lost_connection">Потеряно соединение</string>
+    <string name="reconnect">Переподключиться</string>
+    <string name="press_again_to_exit_room">Нажмите еще раз, чтобы выйти из аудитории</string>
+</resources>

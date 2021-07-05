@@ -1,17 +1,86 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext {
+        koin_version = "2.1.6"
+
+        appCompatVersion = '1.0.2'
+        supportVersion = '1.0.0'
+        constraintVersion = '1.1.3'
+        firestoreVersion = '21.4.1'
+
+        coroutinesPlayServicesVersion = '1.1.1'
+        coroutinesVersion = "1.3.5"
+        lottieVersion = '3.4.0'
+
+        koinDeps = [
+                // Koin for Android
+                koinAdnroid  : "org.koin:koin-android:$koin_version",
+                // or Koin for Lifecycle scoping
+                koinScopes   : "org.koin:koin-android-scope:$koin_version",
+                // or Koin for Android Architecture ViewModel
+                koinViewModel: "org.koin:koin-android-viewmodel:$koin_version"
+        ]
+
+        androidDeps = [
+                cardView        : "androidx.cardview:cardview:$supportVersion",
+                recyclerView    : "androidx.recyclerview:recyclerview:$supportVersion",
+                constraintLayout: "androidx.constraintlayout:constraintlayout:$constraintVersion",
+                material        : "com.google.android.material:material:$supportVersion"
+        ]
+
+        firebaseDeps = [
+                firestore: "com.google.firebase:firebase-firestore-ktx:$firestoreVersion",
+                auth     : "com.google.firebase:firebase-auth:19.3.1"
+        ]
+
+        coroutinesDeps = [
+                playServices      : "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesPlayServicesVersion",
+                coroutineLifecycle: "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0-beta01",
+                coroutinesCore    : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion",
+                coroutinesAndroid : "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion",
+        ]
+
+        viewModelLifeCycleDeps = [
+                viewModelKtx: "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+        ]
+
+        roomDeps = [
+                roomRuntime: "androidx.room:room-runtime:2.2.5",
+                roomKtx    : "androidx.room:room-ktx:2.2.5",
+                debugRoom  : 'com.amitshekhar.android:debug-db:1.0.6'
+        ]
+
+        roomKapt = [
+                compiler: "androidx.room:room-compiler:2.2.5"
+        ]
+
+        firebaseCrashlyticsDeps = [
+                analytics  : 'com.google.firebase:firebase-analytics:17.3.0',
+                crashlytics: 'com.google.firebase:firebase-crashlytics:17.0.0-beta03'
+        ]
+
+        kotlinDeps = [
+                kotlinPermissions: "com.github.quickpermissions:quickpermissions-kotlin:0.4.0"
+        ]
+
+        lottieDeps = [
+                lottie: "com.airbnb.android:lottie:$lottieVersion"
+        ]
+    }
+    ext.kotlin_version = '1.4.0'
     repositories {
         google()
         jcenter()
-        
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.google.gms:google-services:4.3.3'
+
+        classpath 'com.google.gms:google-services:4.3.3'
+
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.1.1'
     }
 }
 
@@ -19,7 +88,8 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+        maven { url "http://jitpack.io/" }
+        mavenCentral()
     }
 }
 

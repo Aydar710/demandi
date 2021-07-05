@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_light_off"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_like_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/iv_light"
+        app:layout_constraintRight_toRightOf="@id/iv_light"
+        app:layout_constraintTop_toBottomOf="@id/iv_light"
+        tools:text="10" />
+
+    <TextView
+        android:id="@+id/tv_student_answer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toRightOf="@id/iv_light"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_light"
+        tools:text="sldkfngjnskdflm" />
+
+    <!--
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_answer"
+            android:layout_marginTop="8dp"
+            android:background="#455A64" />
+    -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

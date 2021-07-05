@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_teacher_room"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.TeacherRoomActivity">
+
+    <include
+        android:id="@+id/inc_toolbar"
+        layout="@layout/toolbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.ernestoyaquello.dragdropswiperecyclerview.DragDropSwipeRecyclerView
+        android:id="@+id/rv_questions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:orientation="vertical"
+        app:behind_swiped_item_bg_color="@color/swipeBehindBackground"
+        app:behind_swiped_item_custom_layout="@layout/item_swiped_bg"
+        app:behind_swiped_item_icon="@drawable/ic_remove_item"
+        app:behind_swiped_item_icon_centered="false"
+        app:behind_swiped_item_icon_margin="16dp"
+        app:item_layout="@layout/item_question_student"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inc_toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/item_question" />
+</androidx.constraintlayout.widget.ConstraintLayout>
